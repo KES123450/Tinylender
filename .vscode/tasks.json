@@ -1,0 +1,64 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ 활성 파일 빌드",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-I${workspaceFolder}/include",
+                "-L${workspaceFolder}/lib",
+                "${file}",
+                "-o",
+                "${workspaceRoot}/mains",
+                "-lglfw3"
+                
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "디버거에서 생성된 작업입니다."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: clang++ 활성 파일 빌드",
+            "command": "/usr/bin/clang++",
+            "args": [
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
+                "-g",
+                "-I${workspaceFolder}/include",
+                "-L${workspaceFolder}/lib",
+                "${workspaceFolder}/libglfw.3.dylib",
+                "${workspaceFolder}/src/glad.c",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-framework",
+                "Cocoa",
+                "-framework",
+                "OpenGL",
+                "-framework",
+                "IOKit",
+                "-lglfw3"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "디버거에서 생성된 작업입니다."
+        }
+    ],
+    "version": "2.0.0"
+}
