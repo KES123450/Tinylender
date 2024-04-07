@@ -13,8 +13,8 @@ class InputEventSystem{
         glm::vec2 position;
         eInputState inputState;
 
-        void inputPosCallback(GLFWwindow* window, double xpos, double ypos);
-        void inputButtonClaaback(GLFWwindow* window, int button, int action, int mods)
+        void inputPos(GLFWwindow* window, double xpos, double ypos);
+        void inputButton(GLFWwindow* window, int button, int action, int mods)
 
 
 

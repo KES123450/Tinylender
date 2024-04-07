@@ -27,7 +27,8 @@ void Button::draw(){
     glEnd();
 }
 
-void Button::mouseButtonEvent(GLFWwindow* window, double xpos, double ypos){
-    
+void Button::setbuttonCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)>& callback){
+    mbuttonCallback = callback;
 }
+
 

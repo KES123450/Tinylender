@@ -234,6 +234,7 @@ int main()
 
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glEnable(GL_DEPTH_TEST);  
+
     // 메인 루프
     while (!glfwWindowShouldClose(window))
     {
