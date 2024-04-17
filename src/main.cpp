@@ -1,13 +1,17 @@
 #include "Shader/Shader.h"
 #include "GUI/button.h"
+#include "GUI/Canvas.h"
+#include <memory>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <vector>
 #include <iostream>
 #include <cmath>
 #include <stdio.h>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -116,7 +120,7 @@ int main()
         return -1;
     }
 
-    Shader ourShader("vertexShader.glsl","fragmentShader.glsl");
+    Shader ourShader("Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
 
     float vertices[] ={
         0.0f,0.3f,0.0f,
@@ -235,9 +239,15 @@ int main()
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glEnable(GL_DEPTH_TEST);  
 
+    
+    Canvas* canvas = new Canvas();
+    std::unique_ptr<Button> btn(new Button(glm::vec3(0.2f,0.5f,0.0f),0.2f,0.2f));
+    canvas->AddWidget(std::move(btn));
+
     // 메인 루프
     while (!glfwWindowShouldClose(window))
     {
+
         // 입력 처리
         processInput(window);
         
@@ -245,17 +255,14 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
+        
+
         if(bLastLeftBtn==true){
             modifyVertex();
         }
 
         glm::mat4 model=glm::mat4(1.0f);;
-        //model = glm::rotate(model,(float) glfwGetTime() * glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
-     
-
         ourShader.use();
-        //int fragColorLoc =glGetUniformLocation(ourShader.ID,"val");
-        //glUniform1f(fragColorLoc,(float) glfwGetTime());
         unsigned int modelLoc =glGetUniformLocation(ourShader.ID,"model");
         unsigned int viewLoc =glGetUniformLocation(ourShader.ID,"view");
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
@@ -264,18 +271,24 @@ int main()
         glUniformMatrix4fv(viewLoc,1,GL_FALSE,&view[0][0]);
         ourShader.setMat4("projection",projection);
         glBindVertexArray(newVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
+
+        canvas->rendering();
 
         // 버퍼 출력
         glfwSwapBuffers(window);
         glfwPollEvents();
+        
+
     }
 
     // glDeleteVertexArrays(1, &VAO);
     // glDeleteBuffers(1, &VBO);
     //glDeleteProgram(shaderProgram);
 
+    delete(canvas);
     glfwTerminate();
+    
     return 0;
 }
 
@@ -326,6 +339,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 
     if(button == GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
+        printf("%s","click");
         if(searchVertex())
             bLastLeftBtn=true;
     }
@@ -405,5 +419,4 @@ void modifyVertex(){
     cube2[selectZ]+= x*right.z;
 
 }
-
 
