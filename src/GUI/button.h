@@ -35,20 +35,25 @@ class Button:public Widget{
 };
 
 Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY)
-: UIShader("src/Shader/UIVertexShader.glsl", "src/Shader/UIFragmentShader.glsl"){
+: UIShader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl"){
     mPushed=false;
+    mSizeX =sizeX;
+    mSizeY=sizeY;
     float halfX = mSizeX/2;
     float halfY = mSizeY/2;
 
-    glm::vec3 v1 = glm::vec3(buttonPos.x-halfX,buttonPos.y+halfY,0.0f);
-    glm::vec3 v2 = glm::vec3(buttonPos.x-halfX,buttonPos.y-halfY,0.0f);
-    glm::vec3 v3 = glm::vec3(buttonPos.x+halfX,buttonPos.y+halfY,0.0f);
-    glm::vec3 v4 = glm::vec3(buttonPos.x+halfX,buttonPos.y-halfY,0.0f);
+
+    glm::vec3 vertex[4];
+
+    vertex[0] = glm::vec3(buttonPos.x-halfX,buttonPos.y+halfY,0.0f);
+    vertex[1] = glm::vec3(buttonPos.x-halfX,buttonPos.y-halfY,0.0f);
+    vertex[2] = glm::vec3(buttonPos.x+halfX,buttonPos.y+halfY,0.0f);
+    vertex[3] = glm::vec3(buttonPos.x+halfX,buttonPos.y-halfY,0.0f);
 
     for(int i=0;i<4;i++){
-        mVertexArray[i*3+0] = v1.x;
-        mVertexArray[i*3+1] = v1.y;
-        mVertexArray[i*3+2] = v1.z;
+        mVertexArray[i*3+0] = vertex[i].x;
+        mVertexArray[i*3+1] = vertex[i].y;
+        mVertexArray[i*3+2] = vertex[i].z;
     }
 
     glGenBuffers(1,&mVBO);
@@ -71,7 +76,6 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY)
 }
 
 void Button::draw(){
-    printf("%s","draw");
     UIShader.use();
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);

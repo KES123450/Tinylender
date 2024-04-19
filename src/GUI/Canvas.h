@@ -9,7 +9,7 @@ class Canvas{
     public:
         // 자식들의 draw() bVisible 체크해서 호출
         void rendering();
-        void AddWidget(std::unique_ptr<Button> w);
+        void AddWidget(std::unique_ptr<Widget> w);
 
         //bVisible, 마우스 포인터 위치, 입력 여부에 따라  mChild의 buttonEvent 호출
         void handleButtonEvent();
@@ -22,7 +22,6 @@ class Canvas{
 };
 
 void Canvas::rendering(){
-    printf("%s","xxx");
     
     for(auto const& child : mChild){
         if(child->getVisible()){
@@ -33,7 +32,7 @@ void Canvas::rendering(){
 }
 
 
-void Canvas::AddWidget(std::unique_ptr<Button> w){
+void Canvas::AddWidget(std::unique_ptr<Widget> w){
     mChild.push_back(std::move(w));
 }
 
