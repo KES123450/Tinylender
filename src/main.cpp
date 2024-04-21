@@ -241,7 +241,7 @@ int main()
 
     
     Canvas* canvas = new Canvas();
-    std::unique_ptr<Button> btn(new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f));
+    std::unique_ptr<Button> btn(new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/rose.jpg"));
     canvas->AddWidget(std::move(btn));
 
     // 메인 루프
