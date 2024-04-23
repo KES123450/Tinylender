@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdio.h>
+#include "constants.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -23,9 +24,6 @@ bool searchVertex();
 void modifyVertex();
 
 
-// 스크린 크기
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
 const float CAMERA_ROTATE_SPEED = 15.0f;
 float lastX =0.0f,lastY=0.0f;
 float x=0.0f,y=0.0f;

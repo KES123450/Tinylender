@@ -26,9 +26,6 @@ class Button:public Widget{
 
     private:
         Shader UIShader;
-        glm::vec3 mButtonPos;
-        float mSizeX,mSizeY;
-        bool mPushed;
         unsigned int mVBO;
         unsigned int mVAO;
         unsigned int mEBO;
@@ -46,7 +43,7 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
     mPushed=false;
     mSizeX =sizeX;
     mSizeY=sizeY;
-    mButtonPos=buttonPos;
+    mPos=buttonPos;
 
     float halfX = mSizeX/2;
     float halfY = mSizeY/2;
@@ -90,10 +87,14 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
     glEnableVertexAttribArray(1);
 
     glGenTextures(1,&mTexture);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
 
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -102,7 +103,7 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
 
 
     if(data){
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNALED,data);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else{
@@ -110,11 +111,15 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
     }
 
     stbi_image_free(data);
+    UIShader.use();
+    glUniform1i(glGetUniformLocation(UIShader.ID, "ourTexture"), 0);
+    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), 0.6f,0.3f,0.5f,1.0f);
 
 
 }
 
 void Button::draw(){
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
     glBindVertexArray(mVAO);
