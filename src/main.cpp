@@ -12,6 +12,7 @@
 #include <cmath>
 #include <stdio.h>
 #include "constants.h"
+#include "InputEventSystem.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -24,7 +25,7 @@ bool searchVertex();
 void modifyVertex();
 
 
-const float CAMERA_ROTATE_SPEED = 15.0f;
+
 float lastX =0.0f,lastY=0.0f;
 float x=0.0f,y=0.0f;
 int selectX=0, selectY=1, selectZ=2;
@@ -54,37 +55,6 @@ float cube2[] ={
         0.5f,0.5f,0.5f, 0.7f, 0.3f,0.7f
 };
 
-const char *vertexShaderSource2 = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char *fragmentShaderSource2 = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
-
-const char *vertexShaderSource ="#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "   ourColor = aColor;\n"
-    "}\0";
-
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "in vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(ourColor, 1.0f);\n"
-    "}\n\0";
 int main()
 {
     
@@ -237,6 +207,7 @@ int main()
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glEnable(GL_DEPTH_TEST);  
 
+    InputEventSystem* eventSystem = new InputEventSystem();
     
     Canvas* canvas = new Canvas();
     std::unique_ptr<Button> btn(new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/rose.jpg"));
