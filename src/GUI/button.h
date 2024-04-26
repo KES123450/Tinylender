@@ -15,13 +15,13 @@ class Button:public Widget{
     public:
         Button(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath);
 
-        void setbuttonCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)>& callback) override;
-        void draw() override;
-        bool getVisible() const override{return bVisible;}
+        void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback) override;
+        void Draw() override;
+        bool GetVisible() const override{return bVisible;}
         
         std::function<void(GLFWwindow* window, double xpos, double ypos)>& getButtonCallback();
-        bool pushed() const {return mPushed;}
-        void setPushed(bool pushed) {mPushed=pushed;}
+        bool GetPushed() const {return mPushed;}
+        void Pushed();
         
 
     private:
@@ -32,6 +32,7 @@ class Button:public Widget{
         unsigned int mTexture;
         int mWidth, mHeight, mMinimaps;
         float mVertexArray[20];
+        glm::vec4 mColor= glm::vec4(1.0f,1.0f,1.0f,1.0f);
         unsigned int mIndices[6]={
             0,1,2,
             2,1,3
@@ -113,19 +114,32 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
     stbi_image_free(data);
     UIShader.use();
     glUniform1i(glGetUniformLocation(UIShader.ID, "ourTexture"), 0);
-    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), 0.6f,0.3f,0.5f,1.0f);
+    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
 
 
 }
 
-void Button::draw(){
+void Button::Draw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
+    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }
 
-void Button::setbuttonCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)>& callback){
+void Button::SetbuttonCallback(std::function<void(double xpos, double ypos)> callback){
     mbuttonCallback = callback;
+}
+
+void Button::Pushed(){
+    if(mPushed==true){
+        mPushed=false;
+        mColor =glm::vec4(0.3f,0.4f,0.9f,1.0f);
+    }
+    else{
+        mPushed=true;
+        mColor= glm::vec4(1.0f,1.0f,1.0f,1.0f);
+    }
+
 }

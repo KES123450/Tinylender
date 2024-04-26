@@ -24,6 +24,7 @@ void rotateView(float xoffset, float yoffset);
 bool searchVertex();
 void modifyVertex();
 
+InputEventSystem* eventSystem = new InputEventSystem();
 
 
 float lastX =0.0f,lastY=0.0f;
@@ -77,7 +78,10 @@ int main()
     glfwMakeContextCurrent(window);
     // buffer의 크기가 변경될 때 호출되는 콜백
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-   //B glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+
+    
+
+    //B glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window,mouse_button_callback);
 
@@ -207,11 +211,17 @@ int main()
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glEnable(GL_DEPTH_TEST);  
 
-    InputEventSystem* eventSystem = new InputEventSystem();
     
     Canvas* canvas = new Canvas();
-    std::unique_ptr<Button> btn(new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/rose.jpg"));
+    Button* btn= new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/rose.jpg");
+    auto btnCallback = [&btn](double xpos, double ypos){
+        btn->Pushed();
+
+    };
+    btn->SetbuttonCallback(std::function<void(double, double)>(btnCallback));
     canvas->AddWidget(std::move(btn));
+
+    eventSystem->AddPressedUp(canvas);
 
     // 메인 루프
     while (!glfwWindowShouldClose(window))
@@ -221,7 +231,7 @@ int main()
         processInput(window);
         
         // 버퍼 초기화
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
         
@@ -242,12 +252,11 @@ int main()
         glBindVertexArray(newVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
 
-        canvas->rendering();
+        canvas->Rendering();
 
         // 버퍼 출력
         glfwSwapBuffers(window);
         glfwPollEvents();
-        
 
     }
 
@@ -303,6 +312,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
     if(bLastRightBtn)
         rotateView(xoffset,yoffset);
+
+    if(eventSystem){
+        eventSystem->HandleInputPos(xpos,ypos);
+    }
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
@@ -322,6 +335,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
     if(button==GLFW_MOUSE_BUTTON_RIGHT && action==GLFW_RELEASE){
         bLastRightBtn=false;
+    }
+
+    if(eventSystem){
+        printf("%s","callback");
+        eventSystem->HandleInputEvent(button,action);
     }
 }
 

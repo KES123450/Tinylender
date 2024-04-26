@@ -8,25 +8,30 @@
 class Widget{
     public:
         virtual ~Widget();
-        virtual void setbuttonCallback(std::function<void(GLFWwindow* window, double xpos, double ypos)>& callback)=0;
-        virtual void draw()=0;
-        virtual bool getVisible() const =0;
+        virtual void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback)=0;
+        virtual void Draw()=0;
+        virtual bool GetVisible() const =0;
+
 
         glm::vec3 GetPos() const {return mPos;}
         glm::vec2 GetSize() const {return glm::vec2(mSizeX,mSizeY);}
+        void Callbtn();
 
 
 
     protected:
-        bool mPushed;
+        bool mPushed=false;
         glm::vec3 mPos;
         float mSizeX;
         float mSizeY;
         bool bVisible=true;
-        std::function<void(GLFWwindow* window, double xpos, double ypos)> mbuttonCallback;
+        std::function<void(double xpos, double ypos)> mbuttonCallback;
 
 };
 
+void Widget::Callbtn(){
+    mbuttonCallback(0.0f,0.0f);
+}
 Widget::~Widget() {
     // 가상 소멸자 정의
 }
