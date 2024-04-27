@@ -1,6 +1,7 @@
 #include "Shader/Shader.h"
 #include "GUI/button.h"
 #include "GUI/Canvas.h"
+#include "GUI/Panel.h"
 #include <memory>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -213,13 +214,17 @@ int main()
 
     
     Canvas* canvas = new Canvas();
-    Button* btn= new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/rose.jpg");
+    Button* btn= new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/dotIcon.png");
     auto btnCallback = [&btn](double xpos, double ypos){
         btn->Pushed();
 
     };
     btn->SetbuttonCallback(std::function<void(double, double)>(btnCallback));
     canvas->AddWidget(std::move(btn));
+
+    Panel* panel = new Panel(glm::vec3(-0.0013227514f,0.7407751938f,0.0f),1.85582f,0.173116f,"resource/Basic.png");
+    canvas->AddWidget(panel);
+
 
     eventSystem->AddPressedUp(canvas);
 

@@ -1,27 +1,16 @@
-#define STB_IMAGE_IMPLEMENTATION
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <string>
-#include <stb_image.h>
-#include <iostream>
 #include "Widget.h"
+#include <glm/glm.hpp>
 #include "../Shader/Shader.h"
 
-#pragma once
+class Panel :public Widget{
 
-class Button:public Widget{
     public:
-        Button(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath);
+        Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath);
 
         void Draw() override;
         bool GetVisible() const override{return bVisible;}
-        
-        bool GetPushed() const {return mPushed;}
-        void Pushed();
-        
-
+    //    void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback) override;
+       
     private:
         Shader UIShader;
         unsigned int mVBO;
@@ -37,9 +26,8 @@ class Button:public Widget{
         };
 };
 
-Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
+Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath)
 : UIShader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl"){
-    mPushed=false;
     mSizeX =sizeX;
     mSizeY=sizeY;
     mPos=buttonPos;
@@ -98,6 +86,7 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
+    stbi_set_flip_vertically_on_load(true); 
     unsigned char *data = stbi_load(texPath,&mWidth,&mHeight,&mMinimaps,0);
 
 
@@ -117,24 +106,10 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath)
 
 }
 
-void Button::Draw(){
+void Panel::Draw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
-    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-}
-
-
-void Button::Pushed(){
-    if(mPushed==true){
-        mPushed=false;
-        mColor =glm::vec4(0.3f,0.4f,0.9f,1.0f);
-    }
-    else{
-        mPushed=true;
-        mColor= glm::vec4(1.0f,1.0f,1.0f,1.0f);
-    }
-
 }
