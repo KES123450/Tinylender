@@ -12,7 +12,7 @@ class Widget{
         virtual bool GetVisible() const =0;
 
         void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback);
-        std::function<void(GLFWwindow* window, double xpos, double ypos)>& getButtonCallback();
+        std::function<void(double xpos, double ypos)> getButtonCallback() const {return mbuttonCallback;}
         
         glm::vec3 GetPos() const {return mPos;}
         glm::vec2 GetSize() const {return glm::vec2(mSizeX,mSizeY);}
@@ -26,7 +26,7 @@ class Widget{
         float mSizeX;
         float mSizeY;
         bool bVisible=true;
-        std::function<void(double xpos, double ypos)> mbuttonCallback;
+        std::function<void(double xpos, double ypos)> mbuttonCallback = NULL;
 
 };
 

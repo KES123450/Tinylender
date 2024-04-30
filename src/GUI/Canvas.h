@@ -56,8 +56,8 @@ void Canvas::OnPointerUp(float xpos, float ypos){
         &&ndcX<=(pos.x+sizeHalf.x)
         &&ndcY>=(pos.y-sizeHalf.y)
         &&ndcY<=(pos.y+sizeHalf.y)){
-            printf("%s", "   button!      ");
-            child->Callbtn();
+            if(child->getButtonCallback() != NULL)
+                child->Callbtn();
         }
 
 

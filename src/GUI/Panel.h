@@ -101,7 +101,7 @@ Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath)
     stbi_image_free(data);
     UIShader.use();
     glUniform1i(glGetUniformLocation(UIShader.ID, "ourTexture"), 0);
-    glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
+ //   glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
 
 
 }

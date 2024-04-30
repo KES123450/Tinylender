@@ -93,6 +93,10 @@ int main()
         return -1;
     }
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     Shader ourShader("Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
 
     float vertices[] ={
@@ -210,10 +214,10 @@ int main()
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glEnable(GL_DEPTH_TEST);  
 
     
     Canvas* canvas = new Canvas();
+    /*
     Button* btn= new Button(glm::vec3(-0.3f,0.5f,0.0f),0.2f,0.2f,"resource/dotIcon.png");
     auto btnCallback = [&btn](double xpos, double ypos){
         btn->Pushed();
@@ -221,13 +225,101 @@ int main()
     };
     btn->SetbuttonCallback(std::function<void(double, double)>(btnCallback));
     canvas->AddWidget(std::move(btn));
+*/
 
-    Panel* panel = new Panel(glm::vec3(-0.0013227514f,0.7407751938f,0.0f),1.85582f,0.173116f,"resource/Basic.png");
+
+    Button* layerBtn = new Button(glm::vec3(-0.8373015873015873f,0.8065173116089613f,0.0f)
+    ,0.08994708994708994f,0.1384928716904277f,"resource/layerIcon.jpg",eImageType::JPG);
+    auto layerBtnCallback =[&layerBtn](double xpos, double ypos){
+        layerBtn->Pushed();
+
+        if(layerBtn->GetPushed() == true){
+            layerBtn->SetTexture("resource/layerIconPushed.jpg",eImageType::JPG);
+
+        }
+        else{
+            layerBtn->SetTexture("resource/layerIcon.jpg",eImageType::JPG);
+        }
+    };
+    layerBtn->SetbuttonCallback(std::function<void(double, double)>(layerBtnCallback));
+    canvas ->AddWidget(layerBtn);
+
+    Button* dotBtn = new Button(glm::vec3(-0.701058201058201f,0.8065173116089613f,0.0f)
+    ,0.08994708994708994f,0.1384928716904277f,"resource/dotIcon.jpg",eImageType::JPG);
+    auto dotBtnCallback =[&dotBtn](double xpos, double ypos){
+        dotBtn->Pushed();
+
+        if(dotBtn->GetPushed() == true){
+            dotBtn->SetTexture("resource/dotIconPushed.jpg",eImageType::JPG);
+
+        }
+        else{
+            dotBtn->SetTexture("resource/dotIcon.jpg",eImageType::JPG);
+        }
+    };
+    dotBtn->SetbuttonCallback(std::function<void(double, double)>(dotBtnCallback));
+    canvas ->AddWidget(dotBtn);
+
+    Button* lineBtn = new Button(glm::vec3(-0.5886243386243386f,0.8065173116089613f,0.0f)
+    ,0.08994708994708994f,0.1384928716904277f,"resource/LineIcon.jpg",eImageType::JPG);
+    auto lineBtnCallback =[&lineBtn](double xpos, double ypos){
+        lineBtn->Pushed();
+
+        if(lineBtn->GetPushed() == true){
+            lineBtn->SetTexture("resource/LineIconPushed.jpg",eImageType::JPG);
+
+        }
+        else{
+            lineBtn->SetTexture("resource/LineIcon.jpg",eImageType::JPG);
+        }
+    };
+    lineBtn->SetbuttonCallback(std::function<void(double, double)>(lineBtnCallback));
+    canvas ->AddWidget(lineBtn);
+
+    Button* squareBtn = new Button(glm::vec3(-0.4801587301587301f,0.8065173116089613f,0.0f)
+    ,0.08994708994708994f,0.1384928716904277f,"resource/squareIcon.jpg",eImageType::JPG);
+    
+    canvas ->AddWidget(squareBtn);
+
+    Button* colorBtn = new Button(glm::vec3(-0.3234126984126984f,0.8044806517311609f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/ColorIcon.png",eImageType::PNG);
+    canvas ->AddWidget(colorBtn);
+
+    Button* purpleBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* pinkBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* redBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* orangeBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* yellowBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* greenBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* skyBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    canvas ->AddWidget(purpleBtn);
+
+    Button* blueBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
+    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+
+    Panel* panel = new Panel(glm::vec3(0.014f,0.7708757637474541f,0.0f),1.8558201058201058f,0.24643584521384929f,"resource/Basic.png");
     canvas->AddWidget(panel);
 
-
     eventSystem->AddPressedUp(canvas);
-
     // 메인 루프
     while (!glfwWindowShouldClose(window))
     {
@@ -238,9 +330,7 @@ int main()
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
-
         
-
         if(bLastLeftBtn==true){
             modifyVertex();
         }
@@ -256,6 +346,7 @@ int main()
         ourShader.setMat4("projection",projection);
         glBindVertexArray(newVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
+      
 
         canvas->Rendering();
 
@@ -269,6 +360,8 @@ int main()
     // glDeleteBuffers(1, &VBO);
     //glDeleteProgram(shaderProgram);
 
+    delete(layerBtn);
+   // delete(panel);
     delete(canvas);
     glfwTerminate();
     
