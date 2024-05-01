@@ -10,3 +10,10 @@ enum eImageType{
     JPG,
     PNG
 };
+
+enum eUIState{
+    LAYER,
+    DOT,
+    LINE,
+    SURFACE
+}

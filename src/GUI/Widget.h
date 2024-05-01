@@ -9,8 +9,8 @@ class Widget{
     public:
         virtual ~Widget();
         virtual void Draw()=0;
-        virtual bool GetVisible() const =0;
 
+        bool GetVisible() const {return bVisible;}
         void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback);
         std::function<void(double xpos, double ypos)> getButtonCallback() const {return mbuttonCallback;}
         

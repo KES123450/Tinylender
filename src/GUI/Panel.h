@@ -8,8 +8,6 @@ class Panel :public Widget{
         Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath);
 
         void Draw() override;
-        bool GetVisible() const override{return bVisible;}
-    //    void SetbuttonCallback(std::function<void(double xpos, double ypos)> callback) override;
        
     private:
         Shader UIShader;

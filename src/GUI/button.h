@@ -17,7 +17,6 @@ class Button:public Widget{
         Button(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath, eImageType imageType);
 
         void Draw() override;
-        bool GetVisible() const override{return bVisible;}
         
         bool GetPushed() const {return mPushed;}
         void Pushed();
@@ -98,13 +97,7 @@ void Button::SetTexture(const char *texPath,eImageType imageType){
 
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-    
-   // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-   // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-   // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
     stbi_set_flip_vertically_on_load(true); 
     unsigned char *data = stbi_load(texPath,&mWidth,&mHeight,&mMinimaps,0);
 
@@ -135,7 +128,6 @@ void Button::Draw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
-  //  glUniform4f(glGetUniformLocation(UIShader.ID, "pushedColor"), mColor.x,mColor.y,mColor.z,mColor.w);
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }

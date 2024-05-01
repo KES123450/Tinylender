@@ -29,7 +29,6 @@ class InputEventSystem{
         void AddPressedDown(IPressedDown* pressedDown);
         void AddPressedUp(IPressedUp* pressedUp);
 
-
     private:
         std::vector<IPressed*> mPressed;
         std::vector<IPressedDown*> mPressedDown;
@@ -39,7 +38,6 @@ class InputEventSystem{
         bool mLastLeftBtnPressed=false;
         bool mLastRightBtnPressed =false;
 
-        
 };
 
 void InputEventSystem::AddPressed(IPressed* pressed){
