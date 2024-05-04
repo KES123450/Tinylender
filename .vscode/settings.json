@@ -64,7 +64,10 @@
         "variant": "cpp",
         "vector": "cpp",
         "algorithm": "cpp",
-        "inputeventsystem": "c"
+        "inputeventsystem": "c",
+        "__verbose_abort": "cpp",
+        "execution": "cpp",
+        "unordered_set": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
