@@ -1,5 +1,7 @@
 {
     "configurations": [
+        
+
         {
             "name": "C/C++: g++ 활성 파일 빌드 및 디버그",
             "type": "cppdbg",

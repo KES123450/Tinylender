@@ -39,6 +39,7 @@
                 "-I${workspaceFolder}/include",
                 "-L${workspaceFolder}/lib",
                 "${workspaceFolder}/libglfw.3.dylib",
+                //"/usr/local/lib/libglfw.3.dylib",
                 "${workspaceFolder}/src/glad.c",
                 "${file}",
                 "-o",
@@ -60,7 +61,38 @@
                 "isDefault": true
             },
             "detail": "디버거에서 생성된 작업입니다."
+        },
+
+        {
+            "label": "add_rpath",
+            "type": "shell",
+            "command": "install_name_tool",
+            "args": [
+                "-add_rpath",
+                "/usr/local/lib",
+                "${workspaceFolder}/src/main"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Build",
+            "dependsOrder": "sequence",
+            "dependsOn" :["cppbuild","add_rpath"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
+
+        
     ],
     "version": "2.0.0"
 }
