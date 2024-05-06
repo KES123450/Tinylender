@@ -8,6 +8,14 @@
 
 class Mesh{
     public:
+        Mesh(std::vector<Vertex> vert,
+        std::vector<unsigned int> idx,
+        std::vector<Texture> tex,
+        const GLchar* vertexPath,
+        const GLchar* fragPath
+        );
+
+
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indice;
         std::vector<Texture> textures;
@@ -21,6 +29,17 @@ class Mesh{
 
 
 };
+
+Mesh::Mesh(
+    std::vector<Vertex> vert,
+    std::vector<unsigned int> idx,
+    std::vector<Texture> tex,
+    const GLchar* vertexPath,
+    const GLchar* fragPath) : mShader(vertexPath, fragPath) {
+        vertices=vert;
+        indice = idx;
+        textures = tex;
+}
 
 void Mesh::setMesh(){
 
@@ -49,5 +68,18 @@ void Mesh::setMesh(){
     glVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)offsetof(Vertex,Color));
     glEnableVertexAttribArray(3);
 
+    glBindVertexArray(0);
+}
+
+void Mesh::Draw(){
+    for(unsigned int i=0;i<textures.size();i++){
+        glActiveTexture(GL_TEXTURE0+i);
+        glBindTexture(GL_TEXTURE_2D,textures[i].id);
+    }
+    glActiveTexture(GL_TEXTURE0);
+    mShader.use();
+
+    glBindVertexArray(mVAO);
+    glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 }
