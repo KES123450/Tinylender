@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/a5520/Desktop/opengltest/build",
+  "command": "/usr/bin/clang++ -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -o CMakeFiles/OpenGLTest.dir/Users/a5520/Desktop/OpenGLTest/src/main.cpp.o -c /Users/a5520/Desktop/OpenGLTest/src/main.cpp",
+  "file": "/Users/a5520/Desktop/OpenGLTest/src/main.cpp",
+  "output": "CMakeFiles/OpenGLTest.dir/Users/a5520/Desktop/OpenGLTest/src/main.cpp.o"
+}
+]

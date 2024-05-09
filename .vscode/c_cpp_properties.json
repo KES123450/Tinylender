@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/include/GLFW"
+                "${workspaceFolder}/include/GLFW",
+                "/usr/local/include/assimp"
             ],
             "defines": [
                 "_DEBUG",
@@ -15,6 +16,14 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "gnu11",
             "cppStandard": "gnu++14",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "/usr/local/include/assimp" // Path to Assimp headers
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
             "intelliSenseMode": "gcc-x64"
         }
     ],

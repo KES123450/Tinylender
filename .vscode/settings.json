@@ -84,8 +84,15 @@
         "random": "cpp",
         "utility": "cpp",
         "format": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "queue": "cpp",
+        "semaphore": "cpp",
+        "thread": "cpp",
+        "stop_token": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "/Users/a5520/Desktop/OpenGLTest/.vscode",
  //   "cmake.sourceDirectory": "/Users/a5520/Desktop/OpenGLTest/include/glm"
 }

@@ -1,0 +1,3 @@
+/Users/a5520/Desktop/opengltest/build/CMakeFiles/OpenGLTest.dir
+/Users/a5520/Desktop/opengltest/build/CMakeFiles/edit_cache.dir
+/Users/a5520/Desktop/opengltest/build/CMakeFiles/rebuild_cache.dir

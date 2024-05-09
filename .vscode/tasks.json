@@ -48,7 +48,9 @@
                 "OpenGL",
                 "-framework",
                 "IOKit",
-                "-lglfw3"
+                "-lglfw3",
+                "-L/usr/local/Cellar/assimp/5.4.0/lib/",
+                "-lassimp"
             ],
             "options": {
                 "cwd": "${fileDirname}"
