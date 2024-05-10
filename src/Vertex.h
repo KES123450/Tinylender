@@ -13,5 +13,5 @@ struct Vertex
 
 struct Texture{
     unsigned int id;
-    string type;
+    std::string type;
 };

@@ -14,9 +14,7 @@
 #include <stdio.h>
 #include "constants.h"
 #include "InputEventSystem.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "Model.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -218,6 +216,8 @@ int main()
 
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
+    Model *cube = new Model("resource/cube.obj");
+    Model *backpack = new Model("resource/backpack/backpack.obj");
     
     Canvas* canvas = new Canvas();
 
@@ -349,9 +349,12 @@ int main()
         glUniformMatrix4fv(modelLoc,1,GL_FALSE,glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc,1,GL_FALSE,&view[0][0]);
         ourShader.setMat4("projection",projection);
-        glBindVertexArray(newVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
-      
+        
+       // glBindVertexArray(newVAO);
+       // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
+
+       // cube->Draw(ourShader);
+        backpack->Draw(ourShader);
 
         canvas->Rendering();
 
@@ -441,7 +444,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     }
 
     if(eventSystem){
-        printf("%s","callback");
         eventSystem->HandleInputEvent(button,action);
     }
 }

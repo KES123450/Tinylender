@@ -19,7 +19,7 @@ class Mesh{
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indice;
         std::vector<Texture> textures;
-        void Draw();
+        void Draw(Shader shader);
 
     private:
         void setMesh();
@@ -39,6 +39,7 @@ Mesh::Mesh(
         vertices=vert;
         indice = idx;
         textures = tex;
+        setMesh();
 }
 
 void Mesh::setMesh(){
@@ -49,11 +50,11 @@ void Mesh::setMesh(){
 
     glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER,mVBO);
-    glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),vertices,GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(Vertex),&vertices[0],GL_DYNAMIC_DRAW);
     
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,indice.size()*sizeof(unsigned int),indeices,GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,indice.size()*sizeof(unsigned int),&indice[0],GL_DYNAMIC_DRAW);
     
 
     glEnableVertexAttribArray(0);
@@ -62,7 +63,7 @@ void Mesh::setMesh(){
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)offsetof(Vertex,Normal));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)offsetof(Vertex,TexCoord));
+    glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)offsetof(Vertex,TexCoords));
     glEnableVertexAttribArray(2);
 
     glVertexAttribPointer(3,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)offsetof(Vertex,Color));
@@ -71,15 +72,17 @@ void Mesh::setMesh(){
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(){
+void Mesh::Draw(Shader shader){
     for(unsigned int i=0;i<textures.size();i++){
         glActiveTexture(GL_TEXTURE0+i);
         glBindTexture(GL_TEXTURE_2D,textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);
-    mShader.use();
 
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
+    for(int i=0;i<vertices.size(); i++){
+
+        //printf("  %f, %f, %f  ",vertices[i].Position.x,vertices[i].Position.y,vertices[i].Position.z);
+    }
 }

@@ -1,6 +1,7 @@
 #include <vector>
 #include "Mesh.h"
 #include <string>
+#include "Shader/Shader.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -10,25 +11,26 @@
 class Model
 {
     public:
-        Model(char *path,const GLchar* vertexPath,const GLchar* fragPath);
+        Model(std::string path);
         ~Model();
-        void Draw();
+        void Draw(Shader shader);
 
     private:
-        const GLchar* mVertexPath, mFragPath;
+        const GLchar* mVertexPath;
+        const GLchar* mFragPath;
         std::vector<Mesh> mMeshes;
         std::string mDirectory;
-        void loadModel(string path);
+        void loadModel(std::string path);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
 };
 
 
-Model::Model(char *path,const GLchar* vertexPath,const GLchar* fragPath)
+Model::Model(std::string path)
 {
-    mVertexPath = vertexPath;
-    mFragPath = fragPath;
+    //mVertexPath = vertexPath;
+    //mFragPath = fragPath;
     loadModel(path);
 }
 
@@ -36,14 +38,14 @@ Model::~Model()
 {
 }
 
-void Model::Draw(){
+void Model::Draw(Shader shader){
     for(unsigned int i=0; i<mMeshes.size(); i++){
-        mMeshes[i].Draw();
+        mMeshes[i].Draw(shader);
     }
 
 }
 
-void Model::loadModel(string path){
+void Model::loadModel(std::string path){
     Assimp::Importer import;
     const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -61,7 +63,7 @@ void Model::processNode(aiNode *node, const aiScene *scene){
 
     for(unsigned int i=0;i<node->mNumMeshes;i++){
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        mMeshes.push_back(processNode(mesh,scene));
+        mMeshes.push_back(processMesh(mesh,scene));
     }
 
     for(unsigned int i=0; i<node->mNumChildren; i++){
