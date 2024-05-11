@@ -5,15 +5,64 @@
 
 class Context{
     public:
-        Context(IState layerState, IState dotState, IState lineState, IState surfaceState);
+        Context(IState* layerState, IState* dotState, IState* lineState, IState* surfaceState);
         void Transition(eUIState state);
-        eUIState GetState() const {return mState};
+        void HandleState();
+        eUIState GetState() const {return mState;}
 
     private:
         eUIState mState;
-        IState mLayerState,mDotState,mLineState,mSurfaceState;
+        IState* mCurrentState=NULL;
+        IState* mLayerState;
+        IState* mDotState;
+        IState* mLineState;
+        IState* mSurfaceState;
+
+};
+
+Context::Context(IState* layerState, IState* dotState, IState* lineState, IState* surfaceState){
+    mLayerState=layerState;
+    mDotState =dotState;
+    mLineState =lineState;
+    mSurfaceState =surfaceState;
 }
 
-Context::Transition(eUIState state){
-    
+void Context::Transition(eUIState state)
+{
+
+    switch (state)
+    {
+        case EMPTY:
+            mState=state;
+            mCurrentState = NULL;
+            break;
+
+        case LAYER:
+            mState=state;
+            mCurrentState = mLayerState;
+            break;
+
+        case DOT:
+            mState=state;
+            mCurrentState = mDotState;
+            break;
+
+        case LINE:
+            mState=state;
+            mCurrentState = mLineState;
+            break;
+
+        case SURFACE:
+            mState=state;
+            mCurrentState = mSurfaceState;
+            break;
+        
+        default:
+            break;
+    }
+}
+
+void Context::HandleState(){
+    if(mCurrentState!=NULL)
+         mCurrentState->Handle();
 }

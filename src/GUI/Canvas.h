@@ -13,7 +13,7 @@ class Canvas : public IPressedUp{
         // 자식들의 draw() bVisible 체크해서 호출
         void Rendering();
         void AddWidget(Widget* w);
-        void OnPointerUp(float xpos, float ypos) override;
+        void OnPointerUp(float xpos, float ypos,float xdelta,float ydelta) override;
 
 
     private:
@@ -35,7 +35,7 @@ void Canvas::AddWidget(Widget* w){
     mChild.push_back(w);
 }
 
-void Canvas::OnPointerUp(float xpos, float ypos){
+void Canvas::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta){
     float ndcX = (2*xpos/SCR_WIDTH)-1;
     float ndcY = 1-(2*ypos/SCR_HEIGHT);
 

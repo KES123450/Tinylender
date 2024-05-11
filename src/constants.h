@@ -12,6 +12,7 @@ enum eImageType{
 };
 
 enum eUIState{
+    EMPTY,
     LAYER,
     DOT,
     LINE,

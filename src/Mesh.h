@@ -15,19 +15,19 @@ class Mesh{
         const GLchar* fragPath
         );
 
-
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indice;
         std::vector<Texture> textures;
-        void Draw(Shader shader);
+        void Draw();
+        void DrawSelected();
+        unsigned int GetVBO() const {return mVBO;}
 
     private:
         void setMesh();
         unsigned int mVAO, mVBO, mEBO;
+        bool bVisible;
         Shader mShader;
         
-
-
 };
 
 Mesh::Mesh(
@@ -72,7 +72,23 @@ void Mesh::setMesh(){
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader shader){
+void Mesh::Draw(){
+    for(unsigned int i=0;i<textures.size();i++){
+        glActiveTexture(GL_TEXTURE0+i);
+        glBindTexture(GL_TEXTURE_2D,textures[i].id);
+    }
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindVertexArray(mVAO);
+    glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
+    for(int i=0;i<vertices.size(); i++){
+
+        //printf("  %f, %f, %f  ",vertices[i].Position.x,vertices[i].Position.y,vertices[i].Position.z);
+    }
+}
+
+void Mesh::DrawSelected(){
+    mShader.use();
     for(unsigned int i=0;i<textures.size();i++){
         glActiveTexture(GL_TEXTURE0+i);
         glBindTexture(GL_TEXTURE_2D,textures[i].id);

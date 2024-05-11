@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include "../Shader/Shader.h"
 
+#pragma once
+
 class Panel :public Widget{
 
     public:

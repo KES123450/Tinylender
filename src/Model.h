@@ -11,9 +11,10 @@
 class Model
 {
     public:
-        Model(std::string path);
+        Model(std::string path,const GLchar* vertexPath,const GLchar* fragPath);
         ~Model();
-        void Draw(Shader shader);
+        std::vector<Mesh>* GetMeshes() {return &mMeshes;}
+        void Draw();
 
     private:
         const GLchar* mVertexPath;
@@ -27,10 +28,10 @@ class Model
 };
 
 
-Model::Model(std::string path)
+Model::Model(std::string path,const GLchar* vertexPath,const GLchar* fragPath)
 {
-    //mVertexPath = vertexPath;
-    //mFragPath = fragPath;
+    mVertexPath = vertexPath;
+    mFragPath = fragPath;
     loadModel(path);
 }
 
@@ -38,9 +39,9 @@ Model::~Model()
 {
 }
 
-void Model::Draw(Shader shader){
+void Model::Draw(){
     for(unsigned int i=0; i<mMeshes.size(); i++){
-        mMeshes[i].Draw(shader);
+        mMeshes[i].Draw();
     }
 
 }

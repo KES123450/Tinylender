@@ -1,5 +1,7 @@
+#pragma once
 
 class IState{
-    virtual ~IState() {};
-    virtual void Handle() =0;
-}
+    public:
+        virtual ~IState() {};
+        virtual void Handle() =0;
+};

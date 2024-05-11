@@ -34,7 +34,7 @@ class InputEventSystem{
         std::vector<IPressedDown*> mPressedDown;
         std::vector<IPressedUp*> mPressedUp;
 
-        float mLastX, mLastY;
+        float mLastX, mLastY, mDeltaX, mDeltaY;
         bool mLastLeftBtnPressed=false;
         bool mLastRightBtnPressed =false;
 
@@ -53,35 +53,47 @@ void InputEventSystem::AddPressedUp(IPressedUp* pressedUp){
 }
 
 void InputEventSystem::HandleInputPos(double xpos, double ypos){
+    mDeltaX= xpos-mLastX;
+    mDeltaY= ypos-mLastY;
     mLastX = xpos;
     mLastY= ypos;
+
+    if(mLastLeftBtnPressed==true){
+        printf(" pressed! ");
+
+        for(auto const& child : mPressed){
+            printf(" child: %p" , child);
+            child->OnPointer(mLastX,mLastY,mDeltaX,mDeltaY);
+        }
+
+
+        mLastLeftBtnPressed=true;
+        return;
+    }
 }
 
 
 void InputEventSystem::HandleInputEvent(int button, int action){
 
     if(mLastLeftBtnPressed==false && button==GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
+
+        printf(" pressedDown! ");
+
         for(auto const& child : mPressedDown){
-            child->OnPointerDown(mLastX,mLastY);
+            child->OnPointerDown(mLastX,mLastY,mDeltaX,mDeltaY);
         }
 
         mLastLeftBtnPressed=true;
         return;
     }
 
-    if(mLastLeftBtnPressed==true && button==GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
-        for(auto const& child : mPressed){
-            child->OnPointer(mLastX,mLastY);
-        }
-
-
-        mLastLeftBtnPressed=true;
-        return;
-    }
 
     if(mLastLeftBtnPressed==true && button==GLFW_MOUSE_BUTTON_LEFT && action==GLFW_RELEASE){
+
+        printf(" pressedUP! ");
+
         for(auto const& child : mPressedUp){
-            child->OnPointerUp(mLastX,mLastY);
+            child->OnPointerUp(mLastX,mLastY,mDeltaX,mDeltaY);
         }
 
         mLastLeftBtnPressed=false;

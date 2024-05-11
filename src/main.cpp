@@ -15,16 +15,15 @@
 #include "constants.h"
 #include "InputEventSystem.h"
 #include "Model.h"
+#include "Context.h"
+#include "ModifyVertex.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-glm::vec2 coordinatelocalToScreen(float x,float y, float z);
 void rotateView(float xoffset, float yoffset);
-bool searchVertex();
-void modifyVertex();
 
 InputEventSystem* eventSystem = new InputEventSystem();
 
@@ -42,21 +41,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f,1.0f,0.0f);
 float yaw, pitch;
 
 glm::mat4 view = glm::mat4(1.0f);
-glm::mat4 projection=glm::mat4(1.0f);;
-
-unsigned int newVAO;
-unsigned int newVBO;
-
-float cube2[] ={
-        -0.5f,-0.5f,0.5f, 0.2f,0.9f,0.3f,
-        0.5f,-0.5f,0.5f, 0.7f,0.3f,0.1f,
-        -0.5f,-0.5f,-0.5f, 0.4f,0.2f,0.7f,
-        0.5f,-0.5f,-0.5f, 0.3f,0.6f,0.2f,
-        -0.5f,0.5f,0.5f, 0.9f, 0.4f, 0.7f,
-        0.5f,0.5f,0.5f, 0.3f, 0.6f,0.1f,
-        -0.5f,0.5f,-0.5f, 0.2f, 0.6f,0.1f,
-        0.5f,0.5f,0.5f, 0.7f, 0.3f,0.7f
-};
+glm::mat4 projection=glm::mat4(1.0f);
 
 int main()
 {
@@ -100,124 +85,31 @@ int main()
 
     Shader ourShader("Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
 
-    float vertices[] ={
-        0.0f,0.3f,0.0f,
-        0.4f,0.1f,0.0f,
-        0.5f,0.8f,0.0f
-    };
-
-    float vertices2[] = {
-        0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f,
-        -0.5f,-0.5f,0.0f, 0.0f,1.0f,0.0f,
-        0.0f,0.5f,0.0f, 0.0f,0.0f,1.0f
-    };
-
-    glm::vec3 cubePositions[] ={
-        glm::vec3( 0.0f,  0.0f,  0.0f), 
-        glm::vec3( 2.0f,  5.0f, -15.0f), 
-        glm::vec3(-1.5f, -2.2f, -2.5f),  
-        glm::vec3(-3.8f, -2.0f, -12.3f),  
-        glm::vec3( 2.4f, -0.4f, -3.5f),  
-        glm::vec3(-1.7f,  3.0f, -7.5f),  
-        glm::vec3( 1.3f, -2.0f, -2.5f),  
-        glm::vec3( 1.5f,  2.0f, -2.5f), 
-        glm::vec3( 1.5f,  0.2f, -1.5f), 
-        glm::vec3(-1.3f,  1.0f, -1.5f) 
-    };
-
-    float vertices_cube[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    };
-
-    
-
-    unsigned int indeices[] ={
-        0,1,2,
-        1,2,3,
-        4,0,1,
-        4,1,5,
-        3,1,5,
-        5,3,7,
-        0,2,4,
-        4,2,6,
-        4,5,6,
-        6,5,7,
-        2,6,7,
-        7,2,3
-
-    };
-
-    
-    glGenVertexArrays(1,&newVAO);
-
-    
-    glGenBuffers(1,&newVBO);
-    unsigned int EBO;
-    glGenBuffers(1,&EBO);
-
-    glBindVertexArray(newVAO);
-    glBindBuffer(GL_ARRAY_BUFFER,newVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(cube2),cube2,GL_DYNAMIC_DRAW);
-    
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indeices),indeices,GL_STATIC_DRAW);
-    
-
-
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-
     
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
-    Model *cube = new Model("resource/cube.obj");
-    Model *backpack = new Model("resource/backpack/backpack.obj");
+    Model *cube = new Model("resource/cube.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
+    //Model *backpack = new Model("resource/backpack/backpack.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
+
+    ModifyVertex* layerState = new ModifyVertex();
+    ModifyVertex* dotState = new ModifyVertex();
+    ModifyVertex* lineState = new ModifyVertex();
+    ModifyVertex* surfaceState = new ModifyVertex();
+
+    eventSystem->AddPressed(dotState);
+    eventSystem->AddPressedDown(dotState);
+    eventSystem->AddPressedUp(dotState);
+
+    Context* context = new Context(layerState,dotState,lineState,surfaceState);
+
+
+    std::vector<Mesh>* meshes= cube->GetMeshes();
+    for(int i=0;i<meshes->size();i++){
+        Mesh* m = &(*meshes)[i];
+        Collection::GetInstance()->SetMesh(m);
+    }
+
     
     Canvas* canvas = new Canvas();
 
@@ -239,15 +131,16 @@ int main()
 
     Button* dotBtn = new Button(glm::vec3(-0.701058201058201f,0.8065173116089613f,0.0f)
     ,0.08994708994708994f,0.1384928716904277f,"resource/dotIcon.jpg",eImageType::JPG);
-    auto dotBtnCallback =[&dotBtn](double xpos, double ypos){
+    auto dotBtnCallback =[&dotBtn,&context](double xpos, double ypos){
         dotBtn->Pushed();
 
         if(dotBtn->GetPushed() == true){
             dotBtn->SetTexture("resource/dotIconPushed.png",eImageType::PNG);
-
+            context->Transition(eUIState::DOT);
         }
         else{
             dotBtn->SetTexture("resource/dotIcon.jpg",eImageType::JPG);
+            context->Transition(eUIState::EMPTY);
         }
     };
     dotBtn->SetbuttonCallback(std::function<void(double, double)>(dotBtnCallback));
@@ -335,10 +228,7 @@ int main()
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
-        
-        if(bLastLeftBtn==true){
-            modifyVertex();
-        }
+      
 
         glm::mat4 model=glm::mat4(1.0f);;
         ourShader.use();
@@ -354,8 +244,9 @@ int main()
        // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
 
        // cube->Draw(ourShader);
-        backpack->Draw(ourShader);
-
+        //backpack->Draw();
+        context->HandleState();
+        Collection::GetInstance()->Rendering();
         canvas->Rendering();
 
         // 버퍼 출력
@@ -380,6 +271,27 @@ int main()
 void processInput(GLFWwindow *window)
 {
     float cameraSpeed = 0.05f;
+
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(0);
+
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(1);
+
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(2);
+
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(3);
+    
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(4);
+    
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(5);
+
+    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+        Collection::GetInstance()->SelectMesh(6);
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -426,51 +338,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
-        printf("%s","click");
-        if(searchVertex())
-            bLastLeftBtn=true;
-    }
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action==GLFW_RELEASE){
-        bLastLeftBtn=false;
-    }
-
-    if(button==GLFW_MOUSE_BUTTON_RIGHT && action==GLFW_PRESS){
-        bLastRightBtn=true;
-    }
-
-    if(button==GLFW_MOUSE_BUTTON_RIGHT && action==GLFW_RELEASE){
-        bLastRightBtn=false;
-    }
-
     if(eventSystem){
         eventSystem->HandleInputEvent(button,action);
     }
 }
 
 
-bool searchVertex(){
-    for(int i=0; i<8;i++){
-        glm::vec2 screenCube = coordinatelocalToScreen(cube2[6*i+0],cube2[6*i+1],cube2[6*i+2]);
-        if(abs(screenCube.x- lastX)<=70 && abs(screenCube.y- (SCR_HEIGHT-lastY))<=70){
-            selectX = 6*i+0;
-            selectY = 6*i+1;
-            selectZ = 6*i+2;
-            return true;
-        }
-    }
-    return false;
-}
-
-glm::vec2 coordinatelocalToScreen(float x,float y, float z){
-    glm::vec4 local = glm::vec4(x,y,z,1.0f);
-    glm::vec4 viewCoord = view*local;
-    glm::vec4 clipCoord = projection * viewCoord;
-    glm::vec3 ndc = glm::vec3(clipCoord)/clipCoord.w;
-    glm::vec2 screen = glm::vec2((ndc.x+1)*(SCR_WIDTH/2),(ndc.y+1)*(SCR_HEIGHT/2));
-
-    return screen;
-}
 void rotateView(float xoffset, float yoffset){
 
     if(bfirstRotate){
@@ -494,21 +367,4 @@ void rotateView(float xoffset, float yoffset){
 
 }
 
-void modifyVertex(){
-
-    glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f);
-    glm::vec3 right = glm::normalize(glm::cross(up,-cameraFront));
-
-    float offset[3] ={cube2[selectX],cube2[selectY],cube2[selectZ]};
-    offset[0] += x*right.x;
-    offset[1] += y;
-    offset[2] += x*right.z;
-    glBindBuffer(GL_ARRAY_BUFFER,newVBO);
-    glBufferSubData(GL_ARRAY_BUFFER,selectX*sizeof(float),sizeof(offset),offset);
-
-    cube2[selectX]+= x*right.x;
-    cube2[selectY]+= y;
-    cube2[selectZ]+= x*right.z;
-
-}
 
