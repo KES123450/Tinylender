@@ -5,6 +5,7 @@
 #include "IPressed.h"
 #include "IPressedDown.h"
 #include "IPressedUp.h"
+#include "IMoved.h"
 
 #pragma once
 
@@ -28,11 +29,14 @@ class InputEventSystem{
         void AddPressed(IPressed* pressed);
         void AddPressedDown(IPressedDown* pressedDown);
         void AddPressedUp(IPressedUp* pressedUp);
+        void AddMoved(IMoved* moved);
 
     private:
         std::vector<IPressed*> mPressed;
         std::vector<IPressedDown*> mPressedDown;
         std::vector<IPressedUp*> mPressedUp;
+        std::vector<IMoved*> mMoved;
+
 
         float mLastX, mLastY, mDeltaX, mDeltaY;
         bool mLastLeftBtnPressed=false;
@@ -52,23 +56,28 @@ void InputEventSystem::AddPressedUp(IPressedUp* pressedUp){
     mPressedUp.push_back(pressedUp);
 }
 
+void InputEventSystem::AddMoved(IMoved* moved){
+    mMoved.push_back(moved);
+}
+
 void InputEventSystem::HandleInputPos(double xpos, double ypos){
     mDeltaX= xpos-mLastX;
     mDeltaY= ypos-mLastY;
     mLastX = xpos;
     mLastY= ypos;
 
+
     if(mLastLeftBtnPressed==true){
-        printf(" pressed! ");
 
         for(auto const& child : mPressed){
-            printf(" child: %p" , child);
             child->OnPointer(mLastX,mLastY,mDeltaX,mDeltaY);
         }
 
-
         mLastLeftBtnPressed=true;
-        return;
+    }
+
+    for(auto const& child: mMoved){
+        child->OnMove(mLastX,mLastY,mDeltaX,mDeltaY);
     }
 }
 
@@ -77,7 +86,6 @@ void InputEventSystem::HandleInputEvent(int button, int action){
 
     if(mLastLeftBtnPressed==false && button==GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
 
-        printf(" pressedDown! ");
 
         for(auto const& child : mPressedDown){
             child->OnPointerDown(mLastX,mLastY,mDeltaX,mDeltaY);
@@ -89,8 +97,6 @@ void InputEventSystem::HandleInputEvent(int button, int action){
 
 
     if(mLastLeftBtnPressed==true && button==GLFW_MOUSE_BUTTON_LEFT && action==GLFW_RELEASE){
-
-        printf(" pressedUP! ");
 
         for(auto const& child : mPressedUp){
             child->OnPointerUp(mLastX,mLastY,mDeltaX,mDeltaY);

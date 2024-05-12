@@ -4,6 +4,7 @@
 const unsigned int SCR_WIDTH = 1512;
 const unsigned int SCR_HEIGHT = 982;
 
+const float MODIFY_VERTEX_SPEED = 0.002f;
 const float CAMERA_ROTATE_SPEED = 15.0f;
 
 enum eImageType{

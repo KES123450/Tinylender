@@ -1,4 +1,5 @@
 #include <glm/glm.hpp>
+#include <vector>
 #include "Collection.h"
 #include "IPressed.h"
 #include "IPressedDown.h"
@@ -35,49 +36,34 @@ void ModifyVertex::Handle(){
     Mesh* m = Collection::GetInstance()->GetSelectedMesh();
 
     if(bPushed&&bFindVertex){
-        printf("%s"," in ");
         Mesh* selectMesh = Collection::GetInstance()->GetSelectedMesh();
         unsigned int VBO = Collection::GetInstance()->GetSelectedMesh() -> GetVBO();
         glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f);
         glm::vec3 right = glm::normalize(glm::cross(up,-(cameraFront)));
 
         Vertex offset = selectMesh->vertices[mSelectedIdx];
-        // printf(" deltaX : %f ", mDeltaX);
-        // printf(" deltaY : %f ", mDeltaY);
-        // printf(" before positionX : %f ", offset.Position.x);
-        // printf(" before positionY : %f ", offset.Position.y);
-        // printf(" before positionZ : %f ", offset.Position.z);
-        offset.Position.x += mDeltaX*right.x *0.001f;
-        offset.Position.y += -mDeltaY*0.001f;
-        offset.Position.z += mDeltaX*right.z*0.001f;
-        // printf(" after positionX : %f ", offset.Position.x);
-        // printf(" after positionY : %f ", offset.Position.y);
-        // printf(" after positionZ : %f ", offset.Position.z);
+        offset.Position.x += mDeltaX*right.x *MODIFY_VERTEX_SPEED;
+        offset.Position.y += -mDeltaY*MODIFY_VERTEX_SPEED;
+        offset.Position.z += mDeltaX*right.z*MODIFY_VERTEX_SPEED;
+
         glBindBuffer(GL_ARRAY_BUFFER,VBO);
         glBufferSubData(GL_ARRAY_BUFFER,mSelectedIdx*sizeof(Vertex),sizeof(offset),&offset);
 
-        selectMesh->vertices[mSelectedIdx].Position.x += mDeltaX*right.x*0.001f;
-        selectMesh->vertices[mSelectedIdx].Position.y += -mDeltaY*0.001f;
-        selectMesh->vertices[mSelectedIdx].Position.z += mDeltaX*right.z*0.001f;
+        selectMesh->vertices[mSelectedIdx].Position.x += mDeltaX*right.x*MODIFY_VERTEX_SPEED;
+        selectMesh->vertices[mSelectedIdx].Position.y += -mDeltaY*MODIFY_VERTEX_SPEED;
+        selectMesh->vertices[mSelectedIdx].Position.z += mDeltaX*right.z*MODIFY_VERTEX_SPEED;
     }
 
 }
 
 void ModifyVertex::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
     bPushed=true;
-    printf("%s","pushed");
     if(searchVertex(xpos, ypos)){
-        printf("%s","find");
         bFindVertex=true;
     }
 }
 
 void ModifyVertex::OnPointer(float xpos, float ypos,float xdelta,float ydelta){
-    printf(" xpos : %f ", xpos);
-    printf(" ypos  : %f ", ypos);
-    printf(" xdelta : %f ", xdelta);
-    printf(" ydelta : %f ", ydelta);
-
     mDeltaX=xdelta;
     mDeltaY=ydelta;
 }
@@ -99,14 +85,20 @@ glm::vec2 ModifyVertex::coordinatelocalToScreen(float x,float y, float z){
 }
 
 bool ModifyVertex::searchVertex(float xpos, float ypos){
-    Mesh* selectedMesh = Collection::GetInstance()->GetSelectedMesh();
-    
-    for(int i=0; i<selectedMesh->vertices.size(); i++){
-        glm::vec2 screenMesh = coordinatelocalToScreen(selectedMesh->vertices[i].Position.x,selectedMesh->vertices[i].Position.y,selectedMesh->vertices[i].Position.z);
-        if(abs(screenMesh.x- xpos)<=70 && abs(screenMesh.y- (SCR_HEIGHT-ypos))<=70){
-            mSelectedIdx = i;
-            return true;
+    std::vector<Mesh*> model = Collection::GetInstance()->GetModel();
+
+    for(int k=0; k<model.size();k++){
+        Mesh* selectedMesh = model[k];
+
+        for(int i=0; i<selectedMesh->vertices.size(); i++){
+            glm::vec2 screenMesh = coordinatelocalToScreen(selectedMesh->vertices[i].Position.x,selectedMesh->vertices[i].Position.y,selectedMesh->vertices[i].Position.z);
+            if(abs(screenMesh.x- xpos)<=70 && abs(screenMesh.y- (SCR_HEIGHT-ypos))<=70){
+                mSelectedIdx = i;
+                return true;
+            }   
         }
+
     }
+    
     return false;
 }

@@ -8,6 +8,8 @@ layout (location = 3) in vec3 aColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec3 val=vec3(1.0f);
+out vec3 valColor;
 out vec3 color;
 
 void main()
@@ -15,5 +17,6 @@ void main()
    //vec3 lightDir =vec3(0.5f,0.1f,0.2f);
    //vec4 normal = projection*view*model*vec4(aNormal.x,aNormal.y,aNormal.z,1.0f); 
    color=aNormal;
+   valColor=val;
    gl_Position = projection*view*model* vec4(aPos.x, aPos.y, aPos.z, 1.0);
 }

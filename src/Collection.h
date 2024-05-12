@@ -8,6 +8,7 @@ class Collection{
     public:
         static Collection* GetInstance();
         Mesh* GetSelectedMesh() const {return mMeshes[mSelected];}
+        std::vector<Mesh*> GetModel() const{return mMeshes;}
 
         void SetMesh(Mesh* mesh);
         void SelectMesh(int idx);

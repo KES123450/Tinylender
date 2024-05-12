@@ -89,8 +89,8 @@ int main()
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
-    Model *cube = new Model("resource/cube.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
-    //Model *backpack = new Model("resource/backpack/backpack.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
+    //Model *cube = new Model("resource/cube.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
+    Model *backpack = new Model("resource/backpack/backpack.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
 
     ModifyVertex* layerState = new ModifyVertex();
     ModifyVertex* dotState = new ModifyVertex();
@@ -104,7 +104,7 @@ int main()
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
 
-    std::vector<Mesh>* meshes= cube->GetMeshes();
+    std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
         Mesh* m = &(*meshes)[i];
         Collection::GetInstance()->SetMesh(m);
@@ -180,34 +180,74 @@ int main()
 
     Button* colorBtn = new Button(glm::vec3(-0.3234126984126984f,0.8044806517311609f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/ColorIcon.png",eImageType::PNG);
+    auto colorBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),1.0f,1.0f,1.0f);
+    };
+    colorBtn->SetbuttonCallback(std::function<void(double, double)>(colorBtnCallback));
     canvas ->AddWidget(colorBtn);
 
     Button* purpleBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
+    auto purpleBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.7f,0.3f,0.7f);
+    };
+    purpleBtn->SetbuttonCallback(std::function<void(double, double)>(purpleBtnCallback));
     canvas ->AddWidget(purpleBtn);
 
     Button* pinkBtn = new Button(glm::vec3(-0.09589947089947093f,0.8044806517311609f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Pink.png",eImageType::PNG);
+    auto pinkBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.6f,0.5f,0.5f);
+    };
+    pinkBtn->SetbuttonCallback(std::function<void(double, double)>(pinkBtnCallback));
     canvas ->AddWidget(pinkBtn);
 
     Button* redBtn = new Button(glm::vec3(0.017857142857142794f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Red.png",eImageType::PNG);
+    auto redBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.8f,0.5f,0.5f);
+    };
+    redBtn->SetbuttonCallback(std::function<void(double, double)>(redBtnCallback));
     canvas ->AddWidget(redBtn);
 
     Button* orangeBtn = new Button(glm::vec3(0.13161375661375652f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Orange.png",eImageType::PNG);
+    auto orangeBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.7f,0.7f,0.3f);
+    };
+    orangeBtn->SetbuttonCallback(std::function<void(double, double)>(orangeBtnCallback));
     canvas ->AddWidget(orangeBtn);
 
     Button* yellowBtn = new Button(glm::vec3(0.24537037037037046f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Yellow.png",eImageType::PNG);
+    auto yellowBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.5f,0.7f,0.3f);
+    };
+    yellowBtn->SetbuttonCallback(std::function<void(double, double)>(yellowBtnCallback));
     canvas ->AddWidget(yellowBtn);
 
     Button* greenBtn = new Button(glm::vec3(0.3591269841269842f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Green.png",eImageType::PNG);
+    auto greenBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.3f,0.7f,0.3f);
+    };
+    greenBtn->SetbuttonCallback(std::function<void(double, double)>(greenBtnCallback));
     canvas ->AddWidget(greenBtn);
 
     Button* skyBtn = new Button(glm::vec3(0.4728835978835979f,0.8065173116089613f,0.0f)
     ,0.051587301587301584f,0.0814663951120163f,"resource/Sky.png",eImageType::PNG);
+    auto skyBtnCallback =[&ourShader](double xpos, double ypos){
+        ourShader.use();
+        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.3f,0.3f,0.7f);
+    };
+    skyBtn->SetbuttonCallback(std::function<void(double, double)>(skyBtnCallback));
     canvas ->AddWidget(skyBtn);
 
     Button* blueBtn = new Button(glm::vec3(0.5866402116402116f,0.8065173116089613f,0.0f)
@@ -273,25 +313,25 @@ void processInput(GLFWwindow *window)
     float cameraSpeed = 0.05f;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(0);
+        Collection::GetInstance()->SelectMesh(30);
 
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(1);
+        Collection::GetInstance()->SelectMesh(31);
 
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(2);
+        Collection::GetInstance()->SelectMesh(32);
 
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(3);
+        Collection::GetInstance()->SelectMesh(34);
     
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(4);
+        Collection::GetInstance()->SelectMesh(35);
     
     if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(5);
+        Collection::GetInstance()->SelectMesh(36);
 
     if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(6);
+        Collection::GetInstance()->SelectMesh(37);
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -338,6 +378,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
 
+    if(button==GLFW_MOUSE_BUTTON_RIGHT && action==GLFW_PRESS){
+        bLastRightBtn=true;
+    }
+
+    if(button==GLFW_MOUSE_BUTTON_RIGHT && action==GLFW_RELEASE){
+        bLastRightBtn=false;
+    }
+    
     if(eventSystem){
         eventSystem->HandleInputEvent(button,action);
     }
