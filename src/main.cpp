@@ -17,7 +17,7 @@
 #include "Model.h"
 #include "Context.h"
 #include "ModifyVertex.h"
-
+#include "Pen.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -94,12 +94,16 @@ int main()
 
     ModifyVertex* layerState = new ModifyVertex();
     ModifyVertex* dotState = new ModifyVertex();
-    ModifyVertex* lineState = new ModifyVertex();
+    Pen* lineState = new Pen();
     ModifyVertex* surfaceState = new ModifyVertex();
 
     eventSystem->AddPressed(dotState);
     eventSystem->AddPressedDown(dotState);
     eventSystem->AddPressedUp(dotState);
+
+    eventSystem->AddPressedDown(lineState);
+    eventSystem->AddMoved(lineState);
+
 
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
@@ -148,15 +152,18 @@ int main()
 
     Button* lineBtn = new Button(glm::vec3(-0.5886243386243386f,0.8065173116089613f,0.0f)
     ,0.08994708994708994f,0.1384928716904277f,"resource/LineIcon.jpg",eImageType::JPG);
-    auto lineBtnCallback =[&lineBtn](double xpos, double ypos){
+    auto lineBtnCallback =[&lineBtn,&context](double xpos, double ypos){
         lineBtn->Pushed();
 
         if(lineBtn->GetPushed() == true){
             lineBtn->SetTexture("resource/LineIconPushed.png",eImageType::PNG);
+            context->Transition(eUIState::LINE);
 
         }
         else{
             lineBtn->SetTexture("resource/LineIcon.jpg",eImageType::JPG);
+            context->Transition(eUIState::EMPTY
+            );
         }
     };
     lineBtn->SetbuttonCallback(std::function<void(double, double)>(lineBtnCallback));

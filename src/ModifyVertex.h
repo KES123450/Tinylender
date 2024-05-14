@@ -21,6 +21,7 @@ class ModifyVertex:public IPressedDown,public IPressed, public IPressedUp,public
         void OnPointerDown(float xpos, float ypos,float xdelta,float ydelta) override;
         void OnPointerUp(float xpos, float ypos,float xdelta,float ydelta) override;
         void Handle() override;
+        void HandleOut() override {};
 
     private:
         bool bPushed=false;
@@ -74,7 +75,7 @@ void ModifyVertex::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta)
 }
 
 
-glm::vec2 ModifyVertex::coordinatelocalToScreen(float x,float y, float z){
+glm::vec2 ModifyVertex::coordinatelocalToScreen(float x,float y, float z){ //[TODO] 나중에 static으로 유틸함수로 빼버리기
     glm::vec4 local = glm::vec4(x,y,z,1.0f);
     glm::vec4 viewCoord = view*local;
     glm::vec4 clipCoord = projection * viewCoord;
@@ -102,3 +103,4 @@ bool ModifyVertex::searchVertex(float xpos, float ypos){
     
     return false;
 }
+

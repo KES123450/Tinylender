@@ -29,6 +29,10 @@ Context::Context(IState* layerState, IState* dotState, IState* lineState, IState
 
 void Context::Transition(eUIState state)
 {
+    if(mState!=state&&mCurrentState!=NULL){
+        mCurrentState->HandleOut();
+    }
+
     switch (state)
     {
         case EMPTY:
