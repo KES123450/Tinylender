@@ -44,5 +44,5 @@ void Collection::Rendering(){
         child->Draw();
     }
 
-    mMeshes[mSelected]->DrawSelected();
+   // mMeshes[mSelected]->DrawSelected();
 }

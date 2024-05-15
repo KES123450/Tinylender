@@ -111,5 +111,6 @@ void Panel::Draw(){
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
     glBindVertexArray(mVAO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }

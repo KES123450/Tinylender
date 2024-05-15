@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <algorithm>
 #include "Vertex.h"
 #include "Mesh.h"
 #include "IPressedDown.h"
@@ -97,13 +98,16 @@ void Pen::DrawMesh(){
 
     }
     else{
-        glBindBuffer(GL_ARRAY_BUFFER,mVBO);
-        glDrawElements(GL_TRIANGLES,mIndice.size(),GL_UNSIGNED_INT,0);
+        //glBindBuffer(GL_ARRAY_BUFFER,mVBO);
+        //glDrawElements(GL_TRIANGLES,mIndice.size(),GL_UNSIGNED_INT,0);
+
+        glBindVertexArray(mVAO);
+        glDrawArrays(GL_TRIANGLES,0,mVertices.size());
     }
 
     // 라인을 그려줌
    // glBindVertexArray(mLineVAO);
-    //glDrawArrays(GL_LINE,0,2);
+   // glDrawArrays(GL_LINE,0,2);
 }
 
 void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
@@ -111,7 +115,7 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-    printf(" %f, %f, %f ",point.x,point.y,point.z);
+   // printf(" %f, %f, %f ",point.x,point.y,point.z);
     Vertex vert = {point,glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
    
     if(glm::length(point-mVertices[0].Position) <= 0.1f &&mVertices.size()>3){
@@ -128,23 +132,39 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
 
         }
         else{
+            if(mVertices.size()>=3){
+
+            Vertex vert2 = mVertices[mVertices.size()-1];
+            mVertices.push_back(mVertices[0]);
+            mVertices.push_back(vert2);
+            mVertices.push_back(vert);
+            }
             mVertices.push_back(vert);
         }
         
-
+        glBindVertexArray(mVAO);
         glBindBuffer(GL_ARRAY_BUFFER,mVBO);
         glBufferData(GL_ARRAY_BUFFER,mVertices.size()*sizeof(Vertex),&mVertices[0],GL_DYNAMIC_DRAW);
 
 
         if(mVertices.size()>=3){
+            /*
             mIndice.push_back(0);
+            mIndice.push_back(mVertices.size()-2);
             mIndice.push_back(mVertices.size()-1);
-            mIndice.push_back(mVertices.size());
+
+            for(int i=0;i<mIndice.size();i++){
+                printf(" index %d :  %u  ", i,mIndice[i]);
+            }
+            printf("\n");
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,mIndice.size()*sizeof(unsigned int),&mIndice[0],GL_DYNAMIC_DRAW);
+            */
+
+
         }
         
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,mIndice.size()*sizeof(unsigned int),&mIndice[0],GL_DYNAMIC_DRAW);
 
     }
 
@@ -153,11 +173,11 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
 }
 
 void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
-    mLineVertices[1] = {glm::vec3(xpos,ypos,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
+    /*mLineVertices[1] = {glm::vec3(xpos,ypos,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
 
     glBindVertexArray(mLineVAO);
     glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);*/
 }
 
 glm::vec3 Pen::screenToLocal(glm::vec2 screen){  //[TODO] 나중에 static으로 유틸함수로 빼버리기
