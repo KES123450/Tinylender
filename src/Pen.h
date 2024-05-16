@@ -115,18 +115,20 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-   // printf(" %f, %f, %f ",point.x,point.y,point.z);
+    printf("x: %f, y:  %f, z: %f ",point.x,point.y,point.z);
     Vertex vert = {point,glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
    
     if(glm::length(point-mVertices[0].Position) <= 0.1f &&mVertices.size()>3){
         //mesh로 만들어서 collection에 추가
-        Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),NULL,NULL);
+        Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
         Collection::GetInstance()->SetMesh(mesh);
         mVertices.clear();
         mIndice.clear();
+        printf("%s","unbelivable! its Mesh;;");
     }
     else{
         mLineVertices[0] = vert;
+
         if(bFirst){
             mVertices[0] = vert;
 
@@ -138,8 +140,17 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
             mVertices.push_back(mVertices[0]);
             mVertices.push_back(vert2);
             mVertices.push_back(vert);
+
+             /*   for(int i=0;i<mVertices.size();i++){
+                    printf(" index %d :  x: %f, y: %f  ", i,mVertices[i].Position.x,mVertices[i].Position.y);
+                }
+                printf("\n");*/
             }
-            mVertices.push_back(vert);
+            else{
+                mVertices.push_back(vert);
+
+            }
+            
         }
         
         glBindVertexArray(mVAO);
@@ -182,12 +193,13 @@ void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
 
 glm::vec3 Pen::screenToLocal(glm::vec2 screen){  //[TODO] 나중에 static으로 유틸함수로 빼버리기
 
+
     glm::vec4 ndcCoord;
     ndcCoord.x = (2.0f * screen.x) / SCR_WIDTH - 1.0f;
-    ndcCoord.y = 1.0f - (2.0f * screen.y) / SCR_HEIGHT;
+    ndcCoord.y = 1.0f - (2.0f *screen.y) / SCR_HEIGHT;
     ndcCoord.z = 0.0f-1.0f;
     ndcCoord.w = 1.0f;
-
+/*
     // NDC 좌표를 클립 공간 좌표로 변환
     glm::vec4 clipCoord = glm::inverse(projection) * ndcCoord;
 
@@ -199,6 +211,8 @@ glm::vec3 Pen::screenToLocal(glm::vec2 screen){  //[TODO] 나중에 static으로
     }
     
 
-    return glm::vec3(worldCoord.x,worldCoord.y,0.0f);
+    return glm::vec3(worldCoord.x,worldCoord.y,0.0f);*/
+
+    return  glm::vec3(ndcCoord.x,ndcCoord.y,0.0f);
 
 }

@@ -18,5 +18,6 @@ void main()
    //vec4 normal = projection*view*model*vec4(aNormal.x,aNormal.y,aNormal.z,1.0f); 
    color=aNormal;
    valColor=val;
-   gl_Position = projection*view*model* vec4(aPos.x, aPos.y, aPos.z, 1.0);
+   //gl_Position = projection*view*model* vec4(aPos.x, aPos.y, aPos.z, 1.0);
+   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 }

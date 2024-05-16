@@ -80,7 +80,13 @@ void Mesh::Draw(){
     glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(mVAO);
-    glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
+    if(indice.size()>0){
+        glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
+    }
+    else{
+         glDrawArrays(GL_TRIANGLES,0,vertices.size());
+    }
+    
     for(int i=0;i<vertices.size(); i++){
 
         //printf("  %f, %f, %f  ",vertices[i].Position.x,vertices[i].Position.y,vertices[i].Position.z);
