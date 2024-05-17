@@ -36,9 +36,10 @@ class Pen: public IPressedDown,public IMoved,public IState{
         unsigned int mVAO;
         unsigned int mEBO;
 
-        float mLineVertices[6] = {
+        float mLineVertices[9] = {
         0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 0.0f};
+        0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f};
     
         unsigned int mLineVBO;
         unsigned int mLineVAO;
@@ -84,7 +85,7 @@ Pen::Pen(){
 
     glBindVertexArray(mLineVAO);
     glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
-    glBufferData(GL_ARRAY_BUFFER,6*sizeof(float),mLineVertices,GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,9*sizeof(float),&mLineVertices[0],GL_DYNAMIC_DRAW);
     
 
     glEnableVertexAttribArray(0);
@@ -114,21 +115,27 @@ void Pen::DrawMesh(){
         glBindVertexArray(mVAO);
         
         glDrawArrays(GL_LINES,0,2);
+        glBindVertexArray(0);
 
     }
     else{
         //glBindBuffer(GL_ARRAY_BUFFER,mVBO);
         //glDrawElements(GL_TRIANGLES,mIndice.size(),GL_UNSIGNED_INT,0);
-        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
         glBindVertexArray(mVAO);
         glDrawArrays(GL_TRIANGLES,0,mVertices.size());
+        glBindVertexArray(0);
     }
 
-    // 라인을 그려줌
-
-     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    // 라인을 그려줌Rb==뀨 죽을래?? 응???뀨
+    //아기끃 나 엉망진창으로 만들어줘.. 아앗 아핫 아앙~ 아아앙~~
      glBindVertexArray(mLineVAO);
-     glDrawArrays(GL_LINES,0,2);
+     glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
+     glBufferSubData(GL_ARRAY_BUFFER,3*sizeof(float),3*sizeof(float),&mLineVertices[3]);
+     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+     printf("Draw Line//   x: %f, y:  %f, z: %f \n",mLineVertices[3],mLineVertices[4],mLineVertices[5]);
+     
+     glDrawArrays(GL_TRIANGLES,0,3);
 }
 
 void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
@@ -156,6 +163,12 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
 
         if(bFirst){
             mVertices[0] = vert;
+            mLineVertices[6] = vert.Position.x;
+            mLineVertices[7] = vert.Position.y;
+            mLineVertices[8] = vert.Position.z;
+
+             glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
+             glBufferSubData(GL_ARRAY_BUFFER,6*sizeof(float),3*sizeof(float),&mLineVertices[6]);
 
         }
         else{
@@ -184,7 +197,7 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
 
         //glBindVertexArray(mLineVAO);
         glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
-        glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER,0,3*sizeof(float),&mLineVertices);
 
 
         if(mVertices.size()>=3){
@@ -217,7 +230,7 @@ void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-    //printf("x: %f, y:  %f, z: %f \n",point.x,point.y,point.z);
+    printf("x: %f, y:  %f, z: %f \n",point.x,point.y,point.z);
 
     mLineVertices[3] = point.x;
     mLineVertices[4] = point.y;
@@ -226,8 +239,8 @@ void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
   //  printf(" 1!!!!!! x: %f, y:  %f, z: %f \n",mLineVertices[1].Position.x,mLineVertices[1].Position.y,mLineVertices[1].Position.z);
 
 //    glBindVertexArray(mLineVAO);
-    glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
+    // glBufferSubData(GL_ARRAY_BUFFER,3*sizeof(float),3*sizeof(float),&mLineVertices);
 
 
 }
