@@ -39,6 +39,7 @@ void Collection::SetMesh(Mesh* mesh){
 }
 
 void Collection::Rendering(){
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     for(auto const& child : mMeshes){
        // printf("   %zu     ",mMeshes.size());
         child->Draw();

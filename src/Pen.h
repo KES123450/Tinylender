@@ -36,7 +36,10 @@ class Pen: public IPressedDown,public IMoved,public IState{
         unsigned int mVAO;
         unsigned int mEBO;
 
-        Vertex mLineVertices[2];
+        float mLineVertices[6] = {
+        0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 0.0f};
+    
         unsigned int mLineVBO;
         unsigned int mLineVAO;
         bool bDraw=false;
@@ -75,6 +78,20 @@ Pen::Pen(){
 
     glBindVertexArray(0);
 
+
+    glGenVertexArrays(1,&mLineVAO);
+    glGenBuffers(1,&mLineVBO);
+
+    glBindVertexArray(mLineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
+    glBufferData(GL_ARRAY_BUFFER,6*sizeof(float),mLineVertices,GL_DYNAMIC_DRAW);
+    
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
+
+    glBindVertexArray(0);
+
 }
 
 void Pen::Handle(){
@@ -93,21 +110,25 @@ void Pen::DrawMesh(){
         return;
 
     if(mVertices.size()==2){
-        //glBindVertexArray(mVAO);
-       // glDrawArrays(GL_LINE,0,2);
+        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+        glBindVertexArray(mVAO);
+        
+        glDrawArrays(GL_LINES,0,2);
 
     }
     else{
         //glBindBuffer(GL_ARRAY_BUFFER,mVBO);
         //glDrawElements(GL_TRIANGLES,mIndice.size(),GL_UNSIGNED_INT,0);
-
+        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
         glBindVertexArray(mVAO);
         glDrawArrays(GL_TRIANGLES,0,mVertices.size());
     }
 
     // 라인을 그려줌
-   // glBindVertexArray(mLineVAO);
-   // glDrawArrays(GL_LINE,0,2);
+
+     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+     glBindVertexArray(mLineVAO);
+     glDrawArrays(GL_LINES,0,2);
 }
 
 void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
@@ -115,7 +136,7 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-    printf("x: %f, y:  %f, z: %f ",point.x,point.y,point.z);
+   //printf("x: %f, y:  %f, z: %f ",point.x,point.y,point.z);
     Vertex vert = {point,glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
    
     if(glm::length(point-mVertices[0].Position) <= 0.1f &&mVertices.size()>3){
@@ -127,7 +148,11 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         printf("%s","unbelivable! its Mesh;;");
     }
     else{
-        mLineVertices[0] = vert;
+        mLineVertices[0] = point.x;
+        mLineVertices[1] = point.y;
+        mLineVertices[2] = point.z;
+        //printf("x: %f, y:  %f, z: %f \n",mLineVertices[0].Position.x,mLineVertices[0].Position.y,mLineVertices[0].Position.z);
+
 
         if(bFirst){
             mVertices[0] = vert;
@@ -157,6 +182,10 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         glBindBuffer(GL_ARRAY_BUFFER,mVBO);
         glBufferData(GL_ARRAY_BUFFER,mVertices.size()*sizeof(Vertex),&mVertices[0],GL_DYNAMIC_DRAW);
 
+        //glBindVertexArray(mLineVAO);
+        glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
+        glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);
+
 
         if(mVertices.size()>=3){
             /*
@@ -184,11 +213,23 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
 }
 
 void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
-    /*mLineVertices[1] = {glm::vec3(xpos,ypos,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
+    if(!bDraw)
+        return;
 
-    glBindVertexArray(mLineVAO);
+    glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
+    //printf("x: %f, y:  %f, z: %f \n",point.x,point.y,point.z);
+
+    mLineVertices[3] = point.x;
+    mLineVertices[4] = point.y;
+    mLineVertices[5] = point.z;
+
+  //  printf(" 1!!!!!! x: %f, y:  %f, z: %f \n",mLineVertices[1].Position.x,mLineVertices[1].Position.y,mLineVertices[1].Position.z);
+
+//    glBindVertexArray(mLineVAO);
     glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);*/
+    glBufferData(GL_ARRAY_BUFFER,sizeof(mLineVBO),mLineVertices,GL_DYNAMIC_DRAW);
+
+
 }
 
 glm::vec3 Pen::screenToLocal(glm::vec2 screen){  //[TODO] 나중에 static으로 유틸함수로 빼버리기

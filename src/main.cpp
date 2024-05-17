@@ -107,12 +107,12 @@ int main()
 
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
-
-  /*  std::vector<Mesh>* meshes= backpack->GetMeshes();
+    /*
+    std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
         Mesh* m = &(*meshes)[i];
         Collection::GetInstance()->SetMesh(m);
-    }*/
+    } */
 
     
     Canvas* canvas = new Canvas();

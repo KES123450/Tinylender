@@ -8,8 +8,8 @@ layout (location = 3) in vec3 aColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec3 val=vec3(1.0f);
-out vec3 valColor;
+uniform vec3 val=vec3(0.5f);
+out vec3 valColor=vec3(0.5f,0.5f,0.5f);
 out vec3 color;
 
 void main()

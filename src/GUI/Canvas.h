@@ -23,6 +23,7 @@ class Canvas : public IPressedUp{
 };
 
 void Canvas::Rendering(){
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     for(auto const& child : mChild){
         if(child->GetVisible()){
             child->Draw();
