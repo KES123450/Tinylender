@@ -127,13 +127,10 @@ void Pen::DrawMesh(){
         glBindVertexArray(0);
     }
 
-    // 라인을 그려줌Rb==뀨 죽을래?? 응???뀨
-    //아기끃 나 엉망진창으로 만들어줘.. 아앗 아핫 아앙~ 아아앙~~
      glBindVertexArray(mLineVAO);
      glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
      glBufferSubData(GL_ARRAY_BUFFER,3*sizeof(float),3*sizeof(float),&mLineVertices[3]);
      glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-     printf("Draw Line//   x: %f, y:  %f, z: %f \n",mLineVertices[3],mLineVertices[4],mLineVertices[5]);
      
      glDrawArrays(GL_TRIANGLES,0,3);
 }
@@ -143,7 +140,6 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-   //printf("x: %f, y:  %f, z: %f ",point.x,point.y,point.z);
     Vertex vert = {point,glm::vec3(1.0f),glm::vec2(1.0f),glm::vec3(1.0f)};
    
     if(glm::length(point-mVertices[0].Position) <= 0.1f &&mVertices.size()>3){
@@ -151,14 +147,15 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
         Collection::GetInstance()->SetMesh(mesh);
         mVertices.clear();
+        mVertices.push_back({glm::vec3(0.0f),glm::vec3(0.0f),glm::vec2(0.0f),glm::vec3(0.0f)});
         mIndice.clear();
-        printf("%s","unbelivable! its Mesh;;");
+        bFirst=true;
+        return;
     }
     else{
         mLineVertices[0] = point.x;
         mLineVertices[1] = point.y;
         mLineVertices[2] = point.z;
-        //printf("x: %f, y:  %f, z: %f \n",mLineVertices[0].Position.x,mLineVertices[0].Position.y,mLineVertices[0].Position.z);
 
 
         if(bFirst){
