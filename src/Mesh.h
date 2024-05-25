@@ -11,6 +11,7 @@ class Mesh{
         Mesh(std::vector<Vertex> vert,
         std::vector<unsigned int> idx,
         std::vector<Texture> tex,
+        std::vector<std::vector<unsigned int>> fcs,
         const GLchar* vertexPath,
         const GLchar* fragPath
         );
@@ -18,12 +19,13 @@ class Mesh{
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indice;
         std::vector<Texture> textures;
+        std::vector<std::vector<unsigned int>> faces;
         void Draw();
         void DrawSelected();
+        void SetMesh();
         unsigned int GetVBO() const {return mVBO;}
 
     private:
-        void setMesh();
         unsigned int mVAO, mVBO, mEBO;
         bool bVisible;
         Shader mShader;
@@ -34,15 +36,17 @@ Mesh::Mesh(
     std::vector<Vertex> vert,
     std::vector<unsigned int> idx,
     std::vector<Texture> tex,
+    std::vector<std::vector<unsigned int>> fcs,
     const GLchar* vertexPath,
     const GLchar* fragPath) : mShader(vertexPath, fragPath) {
         vertices=vert;
         indice = idx;
         textures = tex;
-        setMesh();
+        faces= fcs;
+        SetMesh();
 }
 
-void Mesh::setMesh(){
+void Mesh::SetMesh(){
 
     glGenVertexArrays(1,&mVAO);
     glGenBuffers(1,&mVBO);
@@ -79,6 +83,7 @@ void Mesh::Draw(){
     }
     glActiveTexture(GL_TEXTURE0);
 
+    //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     glBindVertexArray(mVAO);
     if(indice.size()>0){
         glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
@@ -103,8 +108,5 @@ void Mesh::DrawSelected(){
 
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES,indice.size(),GL_UNSIGNED_INT,0);
-    for(int i=0;i<vertices.size(); i++){
-
-        //printf("  %f, %f, %f  ",vertices[i].Position.x,vertices[i].Position.y,vertices[i].Position.z);
-    }
+   
 }

@@ -17,7 +17,7 @@ class Collection{
     private:
         static Collection* instance;
         std::vector<Mesh*> mMeshes;
-        int mSelected;
+        int mSelected=0;
 
 };
 

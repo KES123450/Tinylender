@@ -18,6 +18,7 @@
 #include "Context.h"
 #include "ModifyVertex.h"
 #include "Pen.h"
+#include "Extrude.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -95,7 +96,7 @@ int main()
     ModifyVertex* layerState = new ModifyVertex();
     ModifyVertex* dotState = new ModifyVertex();
     Pen* lineState = new Pen();
-    ModifyVertex* surfaceState = new ModifyVertex();
+    Extrude* surfaceState = new Extrude();
 
     eventSystem->AddPressed(dotState);
     eventSystem->AddPressedDown(dotState);
@@ -104,6 +105,9 @@ int main()
     eventSystem->AddPressedDown(lineState);
     eventSystem->AddMoved(lineState);
 
+    eventSystem->AddPressed(surfaceState);
+    eventSystem->AddPressedDown(surfaceState);
+    eventSystem->AddPressedUp(surfaceState);
 
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
@@ -162,8 +166,7 @@ int main()
         }
         else{
             lineBtn->SetTexture("resource/LineIcon.jpg",eImageType::JPG);
-            context->Transition(eUIState::EMPTY
-            );
+            context->Transition(eUIState::EMPTY);
         }
     };
     lineBtn->SetbuttonCallback(std::function<void(double, double)>(lineBtnCallback));
@@ -171,15 +174,17 @@ int main()
 
     Button* squareBtn = new Button(glm::vec3(-0.4801587301587301f,0.8065173116089613f,0.0f)
     ,0.08994708994708994f,0.1384928716904277f,"resource/squareIcon.jpg",eImageType::JPG);
-    auto squareBtnCallback =[&squareBtn](double xpos, double ypos){
+    auto squareBtnCallback =[&squareBtn,&context](double xpos, double ypos){
         squareBtn->Pushed();
 
         if(squareBtn->GetPushed() == true){
             squareBtn->SetTexture("resource/squareIconPushed.png",eImageType::PNG);
+            context->Transition(eUIState::SURFACE);
 
         }
         else{
             squareBtn->SetTexture("resource/squareIcon.jpg",eImageType::JPG);
+            context->Transition(eUIState::EMPTY);
         }
     };
     squareBtn->SetbuttonCallback(std::function<void(double, double)>(squareBtnCallback));

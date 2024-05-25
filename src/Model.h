@@ -112,6 +112,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
         }
     }
 
+    std::vector<std::vector<unsigned int>> face;
 
-    return Mesh(vertices,indice,textures,mVertexPath,mFragPath);
+    return Mesh(vertices,indice,textures,face,mVertexPath,mFragPath);
 }

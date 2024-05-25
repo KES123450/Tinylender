@@ -119,8 +119,6 @@ void Pen::DrawMesh(){
 
     }
     else{
-        //glBindBuffer(GL_ARRAY_BUFFER,mVBO);
-        //glDrawElements(GL_TRIANGLES,mIndice.size(),GL_UNSIGNED_INT,0);
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
         glBindVertexArray(mVAO);
         glDrawArrays(GL_TRIANGLES,0,mVertices.size());
@@ -144,7 +142,18 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
    
     if(glm::length(point-mVertices[0].Position) <= 0.1f &&mVertices.size()>3){
         //mesh로 만들어서 collection에 추가
-        Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
+        std::vector<std::vector<unsigned int>> faces;
+        std::vector<unsigned int> f;
+        faces.push_back(f);
+
+        for(int i=0;i<mVertices.size();i++){
+            faces[0].push_back(i);
+            faces[0].push_back(i);
+            faces[0].push_back(i);
+        }
+
+        
+        Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),faces,"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
         Collection::GetInstance()->SetMesh(mesh);
         mVertices.clear();
         mVertices.push_back({glm::vec3(0.0f),glm::vec3(0.0f),glm::vec2(0.0f),glm::vec3(0.0f)});
@@ -227,7 +236,6 @@ void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
         return;
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
-    printf("x: %f, y:  %f, z: %f \n",point.x,point.y,point.z);
 
     mLineVertices[3] = point.x;
     mLineVertices[4] = point.y;
