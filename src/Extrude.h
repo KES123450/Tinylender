@@ -24,9 +24,11 @@ class Extrude:public IState, public IPressedDown ,public IPressed, public IPress
         std::vector<Vertex> mNewVertices;
         std::vector<Vertex> mVertices;
         std::vector<std::vector<unsigned int>> mFaces;
+        std::vector<glm::vec3> mFacesNormal;
         void selectFace();
         void extrudeMesh(float xdelta, float ydelta);
-        void calculateVertexNormal();
+        void setVertexNormal();
+        glm::vec3 calculateVertexNormal(int index);
 };
 
 void Extrude::Handle(){
@@ -66,6 +68,80 @@ void Extrude::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         mVertices.push_back(mCurrentVertices[3*i+2]);
     }
 
+    glm::vec3 faceNormal = glm::cross(
+        mVertices[1].Position-mVertices[0].Position,
+        mVertices[2].Position-mVertices[1].Position);
+
+    std::vector<unsigned int> upFace;
+    for(int i=0;i<mCurrentVertices.size();i++){
+        upFace.push_back(i);
+    }
+    mFaces.push_back(upFace);
+    mFacesNormal.push_back(faceNormal);
+
+    std::vector<unsigned int> downFace;
+    for(int i=0;i<mNewVertices.size();i++){
+        upFace.push_back(i+mNewVertices.size());
+    }
+    mFaces.push_back(downFace);
+    mFacesNormal.push_back(glm::vec3(-faceNormal.x,-faceNormal.y,-faceNormal.z));
+
+    
+    for(int i=0;i<mNewVertices.size();i++){
+        mNewVertices[i].Position.x = (mNewVertices[i].Position.x -(faceNormal.x*0.1f));
+        mNewVertices[i].Position.y = (mNewVertices[i].Position.y -(faceNormal.y*0.1f));
+        mNewVertices[i].Position.z = (mNewVertices[i].Position.z -(faceNormal.z*0.1f));
+    }
+
+    mVertices[vertexNum]=mNewVertices[0];
+    mVertices[vertexNum+1]=mNewVertices[1];
+    mVertices[vertexNum+2]=mNewVertices[2];
+    for(int i=1;i<vertexNum-2;i++){
+        mVertices[vertexNum+2+i]=mNewVertices[3*i+2];
+    }
+
+    for(int i=0;i<vertexNum;i++){
+
+        std::vector<unsigned int> face;
+        face.push_back(i);
+        face.push_back(i+vertexNum);
+        face.push_back((i+1)%vertexNum+vertexNum);
+        face.push_back((i+1)%vertexNum);
+        mFaces.push_back(face);
+        mFacesNormal.push_back(glm::cross(
+            mVertices[(i+1)%vertexNum].Position-mVertices[i].Position,
+            mVertices[i+vertexNum].Position-mVertices[i].Position
+        ));
+    }
+
+    for(int index=0;index<mCurrentVertices.size();index++){
+        glm::vec3 sum = glm::vec3(0.0f);
+
+        for(int i=0;i<mFaces.size();i++){
+            for(int j=0;j<mFaces[i].size();j++){
+                if(mFaces[i][j]==index){
+                    sum+=mFacesNormal[index];
+                    break;
+                }
+            }
+        }
+        mCurrentVertices[index].Normal= glm::normalize(sum);
+    }
+
+    for(int index=0;index<mNewVertices.size();index++){
+        glm::vec3 sum = glm::vec3(0.0f);
+
+        for(int i=0;i<mFaces.size();i++){
+            for(int j=0;j<mFaces[i].size();j++){
+                if(mFaces[i][j]==index+vertexNum){
+                    sum+=mFacesNormal[index];
+                    break;
+                }
+            }
+        }
+        mNewVertices[index].Normal= glm::normalize(sum);
+    }
+
 }
 
 void Extrude::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta){
@@ -94,7 +170,11 @@ void Extrude::selectFace(){
 void Extrude::extrudeMesh(float xdelta, float ydelta){
     Mesh* mesh = Collection::GetInstance()->GetSelectedMesh(); 
 
-    glm::vec3 faceNormal = glm::vec3(0.3f,0.8f,0.7f);
+    glm::vec3 faceNormal = glm::normalize(glm::cross(
+        mCurrentVertices[1].Position-mCurrentVertices[0].Position,
+        mCurrentVertices[2].Position-mCurrentVertices[1].Position));
+
+
     for(int i=0;i<mNewVertices.size();i++){
         mNewVertices[i].Position.x = (mNewVertices[i].Position.x -(faceNormal.x*((ydelta+xdelta)/2))*0.03f);
         mNewVertices[i].Position.y = (mNewVertices[i].Position.y -(faceNormal.y*((ydelta+xdelta)/2))*0.03f);
@@ -129,6 +209,22 @@ void Extrude::extrudeMesh(float xdelta, float ydelta){
 
     mesh->SetMesh();
 
+
 }
 
 
+glm::vec3 Extrude::calculateVertexNormal(int index){
+    glm::vec3 sum = glm::vec3(0.0f);
+
+    for(int i=0;i<mFaces.size();i++){
+        for(int j=0;j<mFaces[i].size();j++){
+            if(mFaces[i][j]==index){
+                sum+=mFacesNormal[index];
+                break;
+            }
+        }
+    }
+
+    return glm::normalize(sum);
+
+}   
