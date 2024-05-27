@@ -11,6 +11,7 @@ uniform mat4 projection;
 uniform vec3 val=vec3(0.5f);
 out vec3 valColor=vec3(0.5f,0.5f,0.5f);
 out vec3 color;
+out vec3 FragPos;
 
 void main()
 {
@@ -18,6 +19,7 @@ void main()
    //vec4 normal = projection*view*model*vec4(aNormal.x,aNormal.y,aNormal.z,1.0f); 
    color=aNormal;
    valColor=val;
+   FragPos=vec3(model * vec4(aPos, 1.0));
    gl_Position = projection*view*model* vec4(aPos.x, aPos.y, aPos.z, 1.0);
    //gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 }

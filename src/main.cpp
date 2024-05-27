@@ -270,6 +270,8 @@ int main()
     canvas->AddWidget(panel);
 
     eventSystem->AddPressedUp(canvas);
+
+
     // 메인 루프튵ㅌㅌㅌ
     while (!glfwWindowShouldClose(window))
     {
