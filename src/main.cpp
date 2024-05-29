@@ -90,7 +90,7 @@ int main()
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     projection = glm::perspective<float>(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
-    //Model *cube = new Model("resource/cube.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
+    Model *cube = new Model("resource/cube.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
     Model *backpack = new Model("resource/backpack/backpack.obj","Shader/vertexShader.glsl","Shader/selectedFragShader.glsl");
 
     ModifyVertex* layerState = new ModifyVertex();
@@ -111,13 +111,18 @@ int main()
 
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
-    /*
-    std::vector<Mesh>* meshes= backpack->GetMeshes();
+    
+    /*std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
-        Mesh* m = &(*meshes)[i];
-        Collection::GetInstance()->SetMesh(m);
+         Mesh* m = &(*meshes)[i];
+         Collection::GetInstance()->SetMesh(m);
     } */
 
+    /*std::vector<Mesh>* meshes=cube->GetMeshes();
+     for(int i=0;i<meshes->size();i++){
+         Mesh* m = &(*meshes)[i];
+         Collection::GetInstance()->SetMesh(m);
+     } */
     
     Canvas* canvas = new Canvas();
 
@@ -281,10 +286,11 @@ int main()
         
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
+       //glClearColor(0.0f, 0.074509f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
       
 
-        glm::mat4 model=glm::mat4(1.0f);;
+        glm::mat4 model=glm::mat4(1.0f);
         ourShader.use();
         unsigned int modelLoc =glGetUniformLocation(ourShader.ID,"model");
         unsigned int viewLoc =glGetUniformLocation(ourShader.ID,"view");
@@ -293,7 +299,7 @@ int main()
         glUniformMatrix4fv(modelLoc,1,GL_FALSE,glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc,1,GL_FALSE,&view[0][0]);
         ourShader.setMat4("projection",projection);
-        
+        glUniform3f(glGetUniformLocation(ourShader.ID,"cameraPosition"),cameraPos.x,cameraPos.y,cameraPos.z);
        // glBindVertexArray(newVAO);
        // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
 

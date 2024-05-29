@@ -147,18 +147,18 @@ void Extrude::setVertexNormal(){
         mVertices[2].Position-mVertices[1].Position);
 
     std::vector<unsigned int> upFace;
-    for(int i=0;i<mCurrentVertices.size();i++){
+    for(int i=0;i<vertexNum;i++){
         upFace.push_back(i);
     }
     faces.push_back(upFace);
-    facesNormal.push_back(glm::vec3(-faceNormal.x,-faceNormal.y,-faceNormal.z));
+    facesNormal.push_back(faceNormal);
 
     std::vector<unsigned int> downFace;
-    for(int i=0;i<mNewVertices.size();i++){
-        downFace.push_back(i+mNewVertices.size());
+    for(int i=vertexNum;i<vertexNum*2;i++){
+        downFace.push_back(i);
     }
     faces.push_back(downFace);
-    facesNormal.push_back(faceNormal);
+    facesNormal.push_back(glm::vec3(-faceNormal.x,-faceNormal.y,-faceNormal.z));
 
     
     for(int i=0;i<mNewVertices.size();i++){
@@ -200,7 +200,7 @@ void Extrude::setVertexNormal(){
         for(int i=0;i<faces.size();i++){
             for(int j=0;j<faces[i].size();j++){
                 if(faces[i][j]==k){
-                    sum+=facesNormal[k];
+                    sum+=facesNormal[i];
                     break;
                 }
             }
@@ -220,7 +220,7 @@ void Extrude::setVertexNormal(){
         for(int i=0;i<faces.size();i++){
             for(int j=0;j<faces[i].size();j++){
                 if(faces[i][j]==k+vertexNum){
-                    sum+=facesNormal[k];
+                    sum+=facesNormal[i];
                     break;
                 }
             }
