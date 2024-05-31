@@ -151,7 +151,6 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
             faces[0].push_back(i);
             faces[0].push_back(i);
         }
-
         
         Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),faces,"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
         Collection::GetInstance()->SetMesh(mesh);
@@ -184,15 +183,9 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
             mVertices.push_back(mVertices[0]);
             mVertices.push_back(vert2);
             mVertices.push_back(vert);
-
-             /*   for(int i=0;i<mVertices.size();i++){
-                    printf(" index %d :  x: %f, y: %f  ", i,mVertices[i].Position.x,mVertices[i].Position.y);
-                }
-                printf("\n");*/
             }
             else{
                 mVertices.push_back(vert);
-
             }
             
         }
@@ -220,15 +213,9 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER,mIndice.size()*sizeof(unsigned int),&mIndice[0],GL_DYNAMIC_DRAW);
             */
-
-
         }
-        
-
     }
-
     bFirst=false;
-   
 }
 
 void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
@@ -237,11 +224,9 @@ void Pen::OnMove(float xpos, float ypos,float xdelta,float ydelta){
 
     glm::vec3 point = screenToLocal(glm::vec2(xpos,ypos));
 
-    mLineVertices[3] = point.x;
-    mLineVertices[4] = point.y;
-    mLineVertices[5] = point.z;
-
-  //  printf(" 1!!!!!! x: %f, y:  %f, z: %f \n",mLineVertices[1].Position.x,mLineVertices[1].Position.y,mLineVertices[1].Position.z);
+    mLineVertices[3] = point.x * PEN_SPEED;
+    mLineVertices[4] = point.y * PEN_SPEED;
+    mLineVertices[5] = point.z * PEN_SPEED;
 
 //    glBindVertexArray(mLineVAO);
     // glBindBuffer(GL_ARRAY_BUFFER,mLineVBO);
