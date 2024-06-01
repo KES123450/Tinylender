@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <vector>
 #include "Shader/Shader.h"
+#include "Layer.h"
 
 #pragma once
 
@@ -16,7 +17,7 @@ class Collection{
 
     private:
         static Collection* instance;
-        std::vector<Mesh*> mMeshes;
+        Layer* mRootLayer;
         int mSelected=0;
 
 };

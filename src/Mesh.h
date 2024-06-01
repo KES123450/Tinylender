@@ -27,7 +27,6 @@ class Mesh{
 
     private:
         unsigned int mVAO, mVBO, mEBO;
-        bool bVisible;
         Shader mShader;
         
 };
