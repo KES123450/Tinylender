@@ -36,27 +36,27 @@ void Context::Transition(eUIState state)
 
     switch (state)
     {
-        case EMPTY:
+        case eUIState::EMPTY:
             mState=state;
             mCurrentState = NULL;
             break;
 
-        case LAYER:
+        case eUIState::LAYER:
             mState=state;
             mCurrentState = mLayerState;
             break;
 
-        case DOT:
+        case eUIState::DOT:
             mState=state;
             mCurrentState = mDotState;
             break;
 
-        case LINE:
+        case eUIState::LINE:
             mState=state;
             mCurrentState = mLineState;
             break;
 
-        case SURFACE:
+        case eUIState::SURFACE:
             mState=state;
             mCurrentState = mSurfaceState;
             break;

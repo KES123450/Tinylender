@@ -2,23 +2,26 @@
 #include <vector>
 #include "Shader/Shader.h"
 #include "Layer.h"
+#include "ShapeLayer.h"
 
 #pragma once
 
 class Collection{
     public:
         static Collection* GetInstance();
-        Mesh* GetSelectedMesh() const {return mMeshes[mSelected];}
-        std::vector<Mesh*> GetModel() const{return mMeshes;}
+        Layer* GetSelectedLayer() const {return mSelectedLayer;}
+        Layer* GetRootLayer() const {return mRootLayer;}
+        //std::vector<Mesh*> GetModel() const{return mMeshes;}
 
-        void SetMesh(Mesh* mesh);
-        void SelectMesh(int idx);
-        void Rendering();
+        void AddLayer(Layer* layer,eLayerType layerType);
+        void AddLayer(Layer* layer);
+        void SelectLayer(Layer* selected);
+        void Rendering(Layer* layer);
 
     private:
         static Collection* instance;
-        Layer* mRootLayer;
-        int mSelected=0;
+        Layer* mRootLayer = new Layer();
+        Layer* mSelectedLayer=mRootLayer;
 
 };
 
@@ -30,21 +33,39 @@ Collection* Collection::GetInstance(){
     return instance;
 }
 
-void Collection::SelectMesh(int idx){
-    if(idx <= mMeshes.size())
-        mSelected=idx;
+void Collection::SelectLayer(Layer* selected){
+    mSelectedLayer = selected;
 }
 
-void Collection::SetMesh(Mesh* mesh){
-    mMeshes.push_back(mesh);
-}
+void Collection::AddLayer(Layer* layer,eLayerType layerType){
+    Layer* newLayer;
+    switch (layerType)
+    {
+        case eLayerType::SHAPE:
+            newLayer= new ShapeLayer();
+            break;
 
-void Collection::Rendering(){
-    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-    for(auto const& child : mMeshes){
-       // printf("   %zu     ",mMeshes.size());
-        child->Draw();
+        default:
+            break;
     }
 
-   // mMeshes[mSelected]->DrawSelected();
+    mRootLayer->children.push_back(newLayer);
+}
+
+void Collection::AddLayer(Layer* layer){
+    mRootLayer->children.push_back(layer);
+}
+
+void Collection::Rendering(Layer* layer){
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+    if(layer->visible&&layer->layerType==eLayerType::SHAPE){
+        static_cast<ShapeLayer*>(layer)->mesh->Draw();
+    }
+    
+    if(layer->children.size()==0)
+        return;
+
+    for(Layer* child : mRootLayer->children){
+        Rendering(child);
+    }
 }

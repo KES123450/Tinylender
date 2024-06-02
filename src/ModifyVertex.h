@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "Vertex.h"
 #include "constants.h"
+#include "Layer.h"
 
 #pragma once
 
@@ -34,11 +35,14 @@ class ModifyVertex:public IPressedDown,public IPressed, public IPressedUp,public
 
 
 void ModifyVertex::Handle(){
-    Mesh* m = Collection::GetInstance()->GetSelectedMesh();
+    Layer* layer = Collection::GetInstance()-> GetSelectedLayer();
+    if(layer->layerType != eLayerType::SHAPE){
+        return;
+    }
 
     if(bPushed&&bFindVertex){
-        Mesh* selectMesh = Collection::GetInstance()->GetSelectedMesh();
-        unsigned int VBO = Collection::GetInstance()->GetSelectedMesh() -> GetVBO();
+        Mesh* selectMesh = static_cast<ShapeLayer*>(layer)->mesh;
+        unsigned int VBO = static_cast<ShapeLayer*>(layer)->mesh-> GetVBO();
         glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f);
         glm::vec3 right = glm::normalize(glm::cross(up,-(cameraFront)));
 
@@ -86,20 +90,22 @@ glm::vec2 ModifyVertex::coordinatelocalToScreen(float x,float y, float z){ //[TO
 }
 
 bool ModifyVertex::searchVertex(float xpos, float ypos){
-    std::vector<Mesh*> model = Collection::GetInstance()->GetModel();
-
-    for(int k=0; k<model.size();k++){
-        Mesh* selectedMesh = model[k];
-
-        for(int i=0; i<selectedMesh->vertices.size(); i++){
-            glm::vec2 screenMesh = coordinatelocalToScreen(selectedMesh->vertices[i].Position.x,selectedMesh->vertices[i].Position.y,selectedMesh->vertices[i].Position.z);
-            if(abs(screenMesh.x- xpos)<=70 && abs(screenMesh.y- (SCR_HEIGHT-ypos))<=70){
-                mSelectedIdx = i;
-                return true;
-            }   
-        }
-
+    Layer* layer = Collection::GetInstance()-> GetSelectedLayer();
+    if(layer->layerType != eLayerType::SHAPE){
+        return false;
     }
+    Mesh* model = static_cast<ShapeLayer*>(layer)->mesh;
+
+    
+    for(int i=0; i<model->vertices.size(); i++){
+        glm::vec2 screenMesh = coordinatelocalToScreen(model->vertices[i].Position.x,model->vertices[i].Position.y,model->vertices[i].Position.z);
+        if(abs(screenMesh.x- xpos)<=70 && abs(screenMesh.y- (SCR_HEIGHT-ypos))<=70){
+            mSelectedIdx = i;
+            return true;
+        }   
+    }
+
+    
     
     return false;
 }

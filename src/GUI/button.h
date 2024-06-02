@@ -104,12 +104,12 @@ void Button::SetTexture(const char *texPath,eImageType imageType){
 
     if(data){
         switch(imageType){
-            case JPG:
+            case eImageType::JPG:
                 glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
                 glGenerateMipmap(GL_TEXTURE_2D);
                 break;
             
-            case PNG:
+            case eImageType::PNG:
                 glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
                 glGenerateMipmap(GL_TEXTURE_2D);
                 break;

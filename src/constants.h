@@ -8,15 +8,24 @@ const float MODIFY_VERTEX_SPEED = 0.002f;
 const float CAMERA_ROTATE_SPEED = 15.0f;
 const float PEN_SPEED = 1.0f;
 
-enum eImageType{
+enum class eImageType{
     JPG,
     PNG
 };
 
-enum eUIState{
+enum class eUIState{
     EMPTY,
     LAYER,
     DOT,
     LINE,
     SURFACE
+};
+
+enum class eLayerType{
+    EMPTY,
+    SHAPE,
+    CAMERA,
+    LIGHT,
+    TEXT,
+    MODEL
 };

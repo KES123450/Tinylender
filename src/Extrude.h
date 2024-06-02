@@ -5,6 +5,8 @@
 #include "Collection.h"
 #include "Mesh.h"
 #include "Vertex.h"
+#include "Layer.h"
+#include "ShapeLayer.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -21,6 +23,7 @@ class Extrude:public IState, public IPressedDown ,public IPressed, public IPress
 
     private:
         bool bState=false;
+        bool bShape=false; // 임시땜빵
         std::vector<Vertex> mCurrentVertices;
         std::vector<Vertex> mNewVertices;
         std::vector<Vertex> mVertices;
@@ -43,7 +46,10 @@ void Extrude::HandleOut(){
 void Extrude::OnPointer(float xpos, float ypos,float xdelta,float ydelta){
     if(!bState)
         return;
-    
+
+    if(!bShape)
+        return;
+
     extrudeMesh(xdelta,ydelta);
 }
 
@@ -52,6 +58,9 @@ void Extrude::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         return;
     
     selectFace();
+
+    if(!bShape)
+        return;
 
     unsigned int vertexNum = (mCurrentVertices.size()/3)+2;
     mVertices.push_back(mCurrentVertices[0]);
@@ -82,7 +91,14 @@ void Extrude::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta){
 }
 
 void Extrude::selectFace(){
-    Mesh* mesh = Collection::GetInstance()->GetSelectedMesh();
+    Layer* layer = Collection::GetInstance()->GetSelectedLayer();
+    if(layer->layerType!=eLayerType::SHAPE){
+        bShape=false;
+        return;
+    }
+
+    bShape=true;
+    Mesh* mesh = static_cast<ShapeLayer*>(layer)-> mesh;
     std::vector<unsigned int> faceIdx = mesh->faces[0]; // 일단 무조건 0번 면을 가져오도록 하드코딩
 
     for(int i=0;i<faceIdx.size()/3;i++){
@@ -100,7 +116,12 @@ void Extrude::extrudeMesh(float xdelta, float ydelta){
         return;
     }
 
-    Mesh* mesh = Collection::GetInstance()->GetSelectedMesh(); 
+    Layer* layer = Collection::GetInstance()->GetSelectedLayer();
+    if(layer->layerType!= eLayerType::SHAPE){
+        return;
+    }
+
+    Mesh* mesh = static_cast<ShapeLayer*>(layer) ->mesh;
 
     glm::vec3 faceNormal = glm::normalize(glm::cross(
         mCurrentVertices[1].Position-mCurrentVertices[0].Position,

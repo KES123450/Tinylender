@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
+#include "constants.h"
 
 #pragma once
 
@@ -13,4 +14,5 @@ class Layer{
         glm::vec3 scale = glm::vec3(1.0f);
 
         bool visible = true;
-}
+        eLayerType layerType=eLayerType::EMPTY;
+};

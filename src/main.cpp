@@ -306,7 +306,7 @@ int main()
        // cube->Draw(ourShader);
         //backpack->Draw();
         context->HandleState();
-        Collection::GetInstance()->Rendering();
+        Collection::GetInstance()->Rendering(Collection::GetInstance()->GetRootLayer());
         canvas->Rendering();
 
         // 버퍼 출력
@@ -331,27 +331,6 @@ int main()
 void processInput(GLFWwindow *window)
 {
     float cameraSpeed = 0.05f;
-
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(30);
-
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(31);
-
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(32);
-
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(34);
-    
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(35);
-    
-    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(36);
-
-    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
-        Collection::GetInstance()->SelectMesh(37);
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
