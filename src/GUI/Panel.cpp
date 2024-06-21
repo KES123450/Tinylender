@@ -1,8 +1,8 @@
-#include "button.h"
+#include "Panel.h"
 
-Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath, eImageType imageType)
+
+Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath)
 : UIShader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl"){
-    mPushed=false;
     mSizeX =sizeX;
     mSizeY=sizeY;
     mPos=buttonPos;
@@ -49,60 +49,43 @@ Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath,
     glEnableVertexAttribArray(1);
 
     glGenTextures(1,&mTexture);
-    SetTexture(texPath,imageType);
-
-}
-
-void Button::SetTexture(const char *texPath,eImageType imageType){
-    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
 
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
     stbi_set_flip_vertically_on_load(true); 
     unsigned char *data = stbi_load(texPath,&mWidth,&mHeight,&mMinimaps,0);
 
 
     if(data){
-        switch(imageType){
-            case eImageType::JPG:
-                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-                glGenerateMipmap(GL_TEXTURE_2D);
-                break;
-            
-            case eImageType::PNG:
-                glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
-                glGenerateMipmap(GL_TEXTURE_2D);
-                break;
-        }
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
     else{
         printf("%s","textureFail");
     }
 
-    stbi_image_free(data);
+    stbi_image_free(data); 
     UIShader.use();
     glUniform1i(glGetUniformLocation(UIShader.ID, "ourTexture"), 0);
+
 }
 
-void Button::Draw(){
+void Panel::Draw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,mTexture);
     UIShader.use();
     glBindVertexArray(mVAO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }
 
-
-void Button::Pushed(){
-    if(mPushed==true){
-        mPushed=false;
-    }
-    else{
-        mPushed=true;
-    }
-
-}
 

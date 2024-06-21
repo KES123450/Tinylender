@@ -1,6 +1,7 @@
+
+
 #include <glm/glm.hpp>
 #include <string>
-
 #pragma once
 
 struct Vertex

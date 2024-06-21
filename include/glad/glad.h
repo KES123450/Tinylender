@@ -18,7 +18,7 @@
     Online:
         https://glad.dav1d.de/#profile=compatibility&language=c&specification=gl&loader=on&api=gl%3D4.0
 */
-
+#pragma once
 
 #ifndef __glad_h_
 #define __glad_h_

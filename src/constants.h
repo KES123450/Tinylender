@@ -8,6 +8,9 @@ const float MODIFY_VERTEX_SPEED = 0.002f;
 const float CAMERA_ROTATE_SPEED = 15.0f;
 const float PEN_SPEED = 1.0f;
 
+const float layerX = 0.2962962962962963f;
+const float layerY = 0.04073319755600815f;
+
 enum class eImageType{
     JPG,
     PNG
@@ -28,4 +31,11 @@ enum class eLayerType{
     LIGHT,
     TEXT,
     MODEL
+};
+
+enum eInputState{
+    Pressed,
+    Released,
+    PressedAndReleased,
+    NotChanged
 };

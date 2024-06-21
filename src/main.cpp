@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "Shader/Shader.h"
 #include "GUI/button.h"
 #include "GUI/Canvas.h"
@@ -19,6 +21,9 @@
 #include "ModifyVertex.h"
 #include "Pen.h"
 #include "Extrude.h"
+#include "GUI/CollectionCanvas.h"
+#include "GUI/LayerUI.h"
+#include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -124,6 +129,8 @@ int main()
          Collection::GetInstance()->SetMesh(m);
      } */
     
+    CollectionCanvas* collectionCanvas = new CollectionCanvas();
+    Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
     Button* layerBtn = new Button(glm::vec3(-0.8373015873015873f,0.8065173116089613f,0.0f)
@@ -133,6 +140,7 @@ int main()
 
         if(layerBtn->GetPushed() == true){
             layerBtn->SetTexture("resource/layerIconPushed.png",eImageType::PNG);
+            printf("%s","  layerBTN  ");
 
         }
         else{
@@ -167,6 +175,7 @@ int main()
         if(lineBtn->GetPushed() == true){
             lineBtn->SetTexture("resource/LineIconPushed.png",eImageType::PNG);
             context->Transition(eUIState::LINE);
+            printf("%s","  lineBTN  ");
 
         }
         else{
@@ -185,6 +194,7 @@ int main()
         if(squareBtn->GetPushed() == true){
             squareBtn->SetTexture("resource/squareIconPushed.png",eImageType::PNG);
             context->Transition(eUIState::SURFACE);
+            printf("%s","  squreBTN  ");
 
         }
         else{
@@ -306,8 +316,12 @@ int main()
        // cube->Draw(ourShader);
         //backpack->Draw();
         context->HandleState();
-        Collection::GetInstance()->Rendering(Collection::GetInstance()->GetRootLayer());
+        Collection* instance = Collection::GetInstance();
+        Collection::GetInstance()->Rendering(instance->GetRootLayer());
         canvas->Rendering();
+        LayerUI* rootLayerUI = collectionCanvas->GetRootLayerUI();
+        collectionCanvas->Rendering(rootLayerUI);
+
 
         // 버퍼 출력
         glfwSwapBuffers(window);

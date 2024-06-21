@@ -1,7 +1,11 @@
-#include<iostream>
+//#define STB_IMAGE_IMPLEMENTATION
 
-#include <GLFW/glfw3.h>
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+//#include "../stb_image.h"
+#include<iostream>
+#include <glm/glm.hpp>
 
 #pragma once
 
@@ -29,14 +33,3 @@ class Widget{
         std::function<void(double xpos, double ypos)> mbuttonCallback = NULL;
 
 };
-
-void Widget::Callbtn(){
-    mbuttonCallback(0.0f,0.0f);
-}
-
-void Widget::SetbuttonCallback(std::function<void(double xpos, double ypos)> callback){
-    mbuttonCallback = callback;
-}
-Widget::~Widget() {
-    // 가상 소멸자 정의
-}
