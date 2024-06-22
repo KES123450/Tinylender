@@ -68,7 +68,7 @@ LayerUI::LayerUI(Layer* layer,float layerSizeX,float layerSizeY,glm::vec3 layerP
 
 
     if(data){
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else{
@@ -81,10 +81,13 @@ LayerUI::LayerUI(Layer* layer,float layerSizeX,float layerSizeY,glm::vec3 layerP
 }
 void LayerUI::SelectLayerUI(){
     bSelected=true;
+    SetTexture("resource/SelectedLayer.jpg",eImageType::JPG);
+
 }
 
 void LayerUI::UnSelectLayerUI(){
     bSelected=false;
+    SetTexture("resource/Layer.jpg",eImageType::JPG);
 }
 
 
@@ -105,3 +108,36 @@ void LayerUI::Draw(){
 }
 
 
+void LayerUI::SetTexture(const char *texPath,eImageType imageType){
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,mTexture);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+
+    stbi_set_flip_vertically_on_load(true); 
+    unsigned char *data = stbi_load(texPath,&mWidth,&mHeight,&mMinimaps,0);
+
+
+    if(data){
+        switch(imageType){
+            case eImageType::JPG:
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                break;
+            
+            case eImageType::PNG:
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                break;
+        }
+    }
+    else{
+        printf("%s","textureFail");
+    }
+
+    stbi_image_free(data);
+    mLayerUIShader->use();
+    glUniform1i(glGetUniformLocation(mLayerUIShader->ID, "ourTexture"), 0);
+}

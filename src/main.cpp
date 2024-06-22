@@ -285,6 +285,7 @@ int main()
     canvas->AddWidget(panel);
 
     eventSystem->AddPressedUp(canvas);
+    eventSystem->AddPressedDown(collectionCanvas);
 
 
     // 메인 루프튵ㅌㅌㅌ
@@ -404,6 +405,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
+void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+    if(eventSystem){
+        
+    }
+}
 
 void rotateView(float xoffset, float yoffset){
 

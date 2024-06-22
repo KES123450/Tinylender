@@ -8,7 +8,7 @@
 class ShapeLayer : public Layer{
     public:
         ShapeLayer() {};
-        ShapeLayer(Mesh* m);
+        ShapeLayer(Mesh* m, std::string name);
         Mesh* mesh;
 
 };

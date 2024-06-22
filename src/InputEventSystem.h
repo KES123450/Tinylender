@@ -8,6 +8,7 @@
 #include "IPressedDown.h"
 #include "IPressedUp.h"
 #include "IMoved.h"
+#include "IScrolled.h"
 #include "constants.h"
 #pragma once
 
@@ -19,17 +20,20 @@ class InputEventSystem{
         void HandleInputPos(double xpos, double ypos);
         //현재 있는 canvas에 접근하여 지금 인풋 위치 범위에 있는 UI의 callback함수 호출
         void HandleInputEvent(int button, int action);
+        void HandleScrollEvent(double xoffset, double yoffset);
 
         void AddPressed(IPressed* pressed);
         void AddPressedDown(IPressedDown* pressedDown);
         void AddPressedUp(IPressedUp* pressedUp);
         void AddMoved(IMoved* moved);
+        void AddScrolled(IScrolled* scrolled);
 
     private:
         std::vector<IPressed*> mPressed;
         std::vector<IPressedDown*> mPressedDown;
         std::vector<IPressedUp*> mPressedUp;
         std::vector<IMoved*> mMoved;
+        std::vector<IScrolled*> mScrolled;
 
 
         float mLastX, mLastY, mDeltaX, mDeltaY;

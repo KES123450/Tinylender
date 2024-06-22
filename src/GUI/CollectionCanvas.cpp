@@ -4,8 +4,8 @@
 
 CollectionCanvas::CollectionCanvas(){
     Collection* collection = Collection::GetInstance();
-    glm::vec3 layerUIPos = glm::vec3(-0.7f,0.2f,0.0f);
-    mRootLayerUI = new LayerUI(collection->GetRootLayer(),mLayerSizeX,mLayerSizeY,layerUIPos);
+    glm::vec3 layerUIPos = glm::vec3(-0.8f,0.1f,0.0f);
+    mRootLayerUI = new LayerUI(collection->GetRootLayer(),0.0f,0.0f,layerUIPos);
 }
 
 void CollectionCanvas::Rendering(LayerUI* layer, int depth,int count){
@@ -24,7 +24,7 @@ void CollectionCanvas::Rendering(LayerUI* layer, int depth,int count){
 void CollectionCanvas::AddLayerUI(Layer* layer){
     mCount=1;
     int nodeCount = countNodes(mRootLayerUI);
-    glm::vec3 layerUIPos = glm::vec3(mLayerSizeX/2,-mLayerOffsetY+(-mLayerSizeY)*nodeCount+(-mLayerSizeY/2),0.0f);
+    glm::vec3 layerUIPos = glm::vec3(-1+mLayerSizeX/2,-mLayerOffsetY+(-mLayerSizeY)*nodeCount+(-mLayerSizeY/2),0.0f);
     LayerUI* ui = new LayerUI(layer,mLayerSizeX,mLayerSizeY,layerUIPos);
     mRootLayerUI->children.push_back(ui);
 }
@@ -33,18 +33,23 @@ void CollectionCanvas::OnPointerDown(float xpos, float ypos,float xdelta,float y
     float ndcX = (2*xpos/SCR_WIDTH)-1;
     float ndcY = 1-(2*ypos/SCR_HEIGHT);
 
-    if(ndcX >=mLayerSizeX&& ndcY >= 1-mLayerOffsetY)
+    if(ndcX >=-1+mLayerSizeX || ndcY >= 1-mLayerOffsetY)
         return;
-    
-    int selectedLayerIndex = findLayer(ypos,mRootLayerUI);
+
+    mCount=0;
+    int selectedLayerIndex = findLayer(ndcY,mRootLayerUI);
     if(selectedLayerIndex==-1)
         return;
-    
-    prevSelectedLayerUI -> UnSelectLayerUI();
-    LayerUI* selectedLayerUI = findLayer(selectedLayerIndex,mRootLayerUI);
+  
+    if(mPrevSelectedLayerUI!=nullptr){
+        mPrevSelectedLayerUI -> UnSelectLayerUI();
+    }
+
+    mCount=selectedLayerIndex;
+    LayerUI* selectedLayerUI = findLayer(mRootLayerUI);
     selectedLayerUI -> SelectLayerUI();
     Collection::GetInstance() -> SelectLayer(selectedLayerUI->GetLayer());
-    prevSelectedLayerUI = selectedLayerUI;
+    mPrevSelectedLayerUI = selectedLayerUI;
 }
 
 void CollectionCanvas::OnPointer(float xpos, float ypos,float xdelta,float ydelta){
@@ -55,18 +60,15 @@ void CollectionCanvas::OnPointerUp(float xpos, float ypos,float xdelta,float yde
 
 }
 
-int CollectionCanvas::findLayer(float yPos,LayerUI* layer,int count){
-    //조건에 부합하는 레이어를 못찾은 경우
-    if(layer->children.size()==0)
-        return -1;
+int CollectionCanvas::findLayer(float yPos,LayerUI* layer){
+    mCount++;
 
     if(yPos<=(layer->GetPos().y+layer->GetSize().y/2)
     && yPos>=(layer->GetPos().y-layer->GetSize().y/2))
-        return count;
-
+        return mCount;
 
     for(LayerUI* child : layer->children){
-        int result = findLayer(yPos,child,count+1);
+        int result = findLayer(yPos,child);
         if(result != -1){
             return result;
         }
@@ -75,23 +77,16 @@ int CollectionCanvas::findLayer(float yPos,LayerUI* layer,int count){
     return -1;
 }
 
-LayerUI* CollectionCanvas::findLayer(int index, LayerUI* layerUI){
-    if(layerUI->children.size()==0){
-        return nullptr;
-    }
-
-    if(index==0){
+LayerUI* CollectionCanvas::findLayer(LayerUI* layerUI){
+    mCount--;
+    if(mCount==0){
         return layerUI;
     }
     
     for(LayerUI* child :layerUI->children){
-        LayerUI* findLayerUI = findLayer(index-1,child);
-        if(findLayerUI==nullptr){
-            findLayerUI = findLayer(index-1,child);
-        }
-        else{
+        LayerUI* findLayerUI = findLayer(child);
+        if(findLayerUI != nullptr)
             return findLayerUI;
-        }
     }
     return nullptr;
 }

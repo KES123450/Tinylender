@@ -23,12 +23,12 @@ class CollectionCanvas : public IPressed, public IPressedDown, public IPressedUp
         float mLayerOffsetY=0.2f; //전부 NDC
         float mLayerSizeX=0.4f;
         float mLayerSizeY=0.15f;
-        float mDepthOfssetX=0.1f;
+        float mDepthOfssetX=0.2f;
         int mCount=0;
         LayerUI* mRootLayerUI;
-        LayerUI* prevSelectedLayerUI;
+        LayerUI* mPrevSelectedLayerUI=nullptr;
 
         int countNodes(LayerUI* layer);
-        int findLayer(float yPos,LayerUI* layer,int count=0);
-        LayerUI* findLayer(int index, LayerUI* layerUI);
+        int findLayer(float yPos,LayerUI* layer);
+        LayerUI* findLayer(LayerUI* layerUI);
 };

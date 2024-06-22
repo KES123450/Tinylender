@@ -104,8 +104,9 @@ void Pen::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
         }
         
         Mesh* mesh= new Mesh(mVertices,mIndice,std::vector<Texture>(0),faces,"Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
-        ShapeLayer* shape = new ShapeLayer(mesh);
+        ShapeLayer* shape = new ShapeLayer(mesh,std::to_string(mVertices.size()));
         Collection::GetInstance()->AddLayer(shape);
+
         mVertices.clear();
         mVertices.push_back({glm::vec3(0.0f),glm::vec3(0.0f),glm::vec2(0.0f),glm::vec3(0.0f)});
         mIndice.clear();

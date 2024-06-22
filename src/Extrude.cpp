@@ -10,6 +10,9 @@ void Extrude::HandleOut(){
 }
 
 void Extrude::OnPointer(float xpos, float ypos,float xdelta,float ydelta){
+    if(xpos<=UI_GAURD_SCR_X)
+        return;
+
     if(!bState)
         return;
 
@@ -20,6 +23,9 @@ void Extrude::OnPointer(float xpos, float ypos,float xdelta,float ydelta){
 }
 
 void Extrude::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
+    if(xpos<=UI_GAURD_SCR_X)
+        return;
+
     if(!bState)
         return;
     
@@ -48,6 +54,9 @@ void Extrude::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
     
 }
 void Extrude::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta){
+    if(xpos<=UI_GAURD_SCR_X)
+        return;
+        
     if(!bState)
         return;
 

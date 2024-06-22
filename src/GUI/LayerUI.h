@@ -19,6 +19,7 @@ class LayerUI: public Widget{
         std::vector<LayerUI*> children;
         void SelectLayerUI();
         void UnSelectLayerUI();
+        void SetTexture(const char *texPath,eImageType imageType);
 
     private:
         Shader* mLayerUIShader;
@@ -29,7 +30,7 @@ class LayerUI: public Widget{
         unsigned int mVBO;
         unsigned int mVAO;
         unsigned int mEBO;
-        const char *mTexPath;
+        const char *mTexPath="resource/Layer.jpg";
         unsigned int mTexture;
         int mWidth, mHeight, mMinimaps;
         float mVertexArray[20];

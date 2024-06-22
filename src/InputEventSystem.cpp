@@ -17,6 +17,10 @@ void InputEventSystem::AddMoved(IMoved* moved){
     mMoved.push_back(moved);
 }
 
+void InputEventSystem::AddScrolled(IScrolled* scrolled){
+    mScrolled.push_back(scrolled);
+}
+
 void InputEventSystem::HandleInputPos(double xpos, double ypos){
     mDeltaX= xpos-mLastX;
     mDeltaY= ypos-mLastY;
@@ -61,6 +65,13 @@ void InputEventSystem::HandleInputEvent(int button, int action){
 
         mLastLeftBtnPressed=false;
         return;
+    }
+
+}
+
+void InputEventSystem::HandleScrollEvent(double xoffset, double yoffset){
+    for(IScrolled* child : mScrolled){
+        child->OnScroll(xoffset, yoffset);
     }
 
 }

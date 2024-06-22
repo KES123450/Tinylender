@@ -11,6 +11,9 @@ const float PEN_SPEED = 1.0f;
 const float layerX = 0.2962962962962963f;
 const float layerY = 0.04073319755600815f;
 
+const float UI_GAURD_SCR_X = 310.0f;
+
+
 enum class eImageType{
     JPG,
     PNG
