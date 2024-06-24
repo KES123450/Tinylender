@@ -20,6 +20,8 @@ class LayerUI: public Widget{
         void SelectLayerUI();
         void UnSelectLayerUI();
         void SetTexture(const char *texPath,eImageType imageType);
+        void ScrollLayerUI(float xoffset, float yoffset);
+        
 
     private:
         Shader* mLayerUIShader;

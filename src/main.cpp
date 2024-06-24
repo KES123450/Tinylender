@@ -29,6 +29,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void rotateView(float xoffset, float yoffset);
 
 InputEventSystem* eventSystem = new InputEventSystem();
@@ -77,6 +78,7 @@ int main()
     //B glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window,mouse_button_callback);
+    glfwSetScrollCallback(window, mouse_scroll_callback);
 
     // glad 로드
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -281,11 +283,12 @@ int main()
     ,0.051587301587301584f,0.0814663951120163f,"resource/Blue.png",eImageType::PNG);
     canvas ->AddWidget(blueBtn);
 
-    Panel* panel = new Panel(glm::vec3(0.014f,0.7708757637474541f,0.0f),1.8558201058201058f,0.24643584521384929f,"resource/Basic.png");
+    Panel* panel = new Panel(glm::vec3(0.0f,0.9390243902439024f,0.0f),2.0f,0.12195121951219512f,"resource/StatePanel.jpg",eImageType::JPG);
     canvas->AddWidget(panel);
 
     eventSystem->AddPressedUp(canvas);
     eventSystem->AddPressedDown(collectionCanvas);
+    eventSystem -> AddScrolled(collectionCanvas);
 
 
     // 메인 루프튵ㅌㅌㅌ
@@ -407,7 +410,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
     if(eventSystem){
-        
+        eventSystem->HandleScrollEvent(xoffset,yoffset);
     }
 }
 

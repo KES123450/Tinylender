@@ -24,7 +24,7 @@ void CollectionCanvas::Rendering(LayerUI* layer, int depth,int count){
 void CollectionCanvas::AddLayerUI(Layer* layer){
     mCount=1;
     int nodeCount = countNodes(mRootLayerUI);
-    glm::vec3 layerUIPos = glm::vec3(-1+mLayerSizeX/2,-mLayerOffsetY+(-mLayerSizeY)*nodeCount+(-mLayerSizeY/2),0.0f);
+    glm::vec3 layerUIPos = glm::vec3(-1+mLayerSizeX/2,1-mLayerOffsetY+(-mLayerSizeY)*nodeCount+(-mLayerSizeY/2)+mScrollDiscanceY,0.0f);
     LayerUI* ui = new LayerUI(layer,mLayerSizeX,mLayerSizeY,layerUIPos);
     mRootLayerUI->children.push_back(ui);
 }
@@ -37,7 +37,7 @@ void CollectionCanvas::OnPointerDown(float xpos, float ypos,float xdelta,float y
         return;
 
     mCount=0;
-    int selectedLayerIndex = findLayer(ndcY,mRootLayerUI);
+    int selectedLayerIndex = findLayer(ndcY-mScrollDiscanceY,mRootLayerUI);
     if(selectedLayerIndex==-1)
         return;
   
@@ -57,6 +57,12 @@ void CollectionCanvas::OnPointer(float xpos, float ypos,float xdelta,float ydelt
 }
 
 void CollectionCanvas::OnPointerUp(float xpos, float ypos,float xdelta,float ydelta){
+
+}
+
+void CollectionCanvas::OnScroll(float xoffset, float yoffset){
+    ScrollLayer(mRootLayerUI,xoffset,yoffset);
+    mScrollDiscanceY+=yoffset*SCROLL_SPEED;
 
 }
 
@@ -102,4 +108,17 @@ int CollectionCanvas::countNodes(LayerUI* layer){
     }
 
     return count;
+}
+
+void CollectionCanvas::ScrollLayer(LayerUI* layer, float xoffset, float yoffset,int depth,int count){
+    layer->ScrollLayerUI(xoffset,yoffset);
+
+    if(layer->children.size()==0)
+        return;
+
+    int c =0;
+    for(LayerUI* child : mRootLayerUI->children){
+        ScrollLayer(child,xoffset,yoffset,depth+1,c);
+        c++;
+    }
 }

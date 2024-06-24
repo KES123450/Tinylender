@@ -1,7 +1,7 @@
 #include "Panel.h"
 
 
-Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath)
+Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath,eImageType imageType)
 : UIShader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl"){
     mSizeX =sizeX;
     mSizeY=sizeY;
@@ -64,10 +64,18 @@ Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath)
     stbi_set_flip_vertically_on_load(true); 
     unsigned char *data = stbi_load(texPath,&mWidth,&mHeight,&mMinimaps,0);
 
-
     if(data){
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        switch(imageType){
+            case eImageType::JPG:
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,mWidth,mHeight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                break;
+            
+            case eImageType::PNG:
+                glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,mWidth,mHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                break;
+        }
     }
     else{
         printf("%s","textureFail");

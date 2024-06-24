@@ -3,13 +3,14 @@
 #include <glm/glm.hpp>
 #include "../Shader/Shader.h"
 #include "../stb_image.h"
+#include "../constants.h"
 
 #pragma once
 
 class Panel :public Widget{
 
     public:
-        Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath);
+        Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath,eImageType imageType);
 
         void Draw() override;
        

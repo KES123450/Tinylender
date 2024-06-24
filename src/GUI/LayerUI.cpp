@@ -1,7 +1,7 @@
 #include "LayerUI.h"
 
 LayerUI::LayerUI(Layer* layer,float layerSizeX,float layerSizeY,glm::vec3 layerPos){
-    mLayerUIShader = new Shader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl");
+    mLayerUIShader = new Shader("Shader/LayerUIVertexShader.glsl", "Shader/UIFragmentShader.glsl");
     mLayer=layer;
 
     mSizeX =layerSizeX;
@@ -140,4 +140,24 @@ void LayerUI::SetTexture(const char *texPath,eImageType imageType){
     stbi_image_free(data);
     mLayerUIShader->use();
     glUniform1i(glGetUniformLocation(mLayerUIShader->ID, "ourTexture"), 0);
+}
+
+void LayerUI::ScrollLayerUI(float xoffset, float yoffset){
+
+    //glUniform1f(glGetUniformLocation(mLayerUIShader->ID,"yoffset"),yoffset*SCROLL_SPEED);
+    
+    float offset[20]={0,};
+    for(int i = 0; i < 20; ++i) {
+        offset[i] = mVertexArray[i];
+    }
+
+    for(int i=0;i<4;i++){
+        offset[i*5+1] = offset[i*5+1]+yoffset*SCROLL_SPEED;
+    }
+    glBindBuffer(GL_ARRAY_BUFFER,mVBO);
+    glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(offset),&offset);
+
+    for(int i = 0; i < 20; ++i) {
+        mVertexArray[i] = offset[i];
+    }
 }

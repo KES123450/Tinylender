@@ -3,6 +3,6 @@
 class IScrolled{
     public:
         virtual ~IScrolled() {};
-        virtual void OnScroll(double xoffset, double yoffset)=0;
+        virtual void OnScroll(float xoffset, float yoffset)=0;
 
-}
+};
