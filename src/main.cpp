@@ -135,6 +135,7 @@ int main()
     Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
+
     Button* layerBtn = new Button(glm::vec3(-0.8373015873015873f,0.8065173116089613f,0.0f)
     ,0.08994708994708994f,0.1384928716904277f,"resource/layerIcon.jpg",eImageType::JPG);
     auto layerBtnCallback =[&layerBtn](double xpos, double ypos){
@@ -283,8 +284,12 @@ int main()
     ,0.051587301587301584f,0.0814663951120163f,"resource/Blue.png",eImageType::PNG);
     canvas ->AddWidget(blueBtn);
 
-    Panel* panel = new Panel(glm::vec3(0.0f,0.9390243902439024f,0.0f),2.0f,0.12195121951219512f,"resource/StatePanel.jpg",eImageType::JPG);
-    canvas->AddWidget(panel);
+    Panel* layerPanel = new Panel(glm::vec3(-0.844311377245509f,-0.060975609756097615f,0.0f),0.31137724550898205f,1.8780487804878048f,"resource/LayerPanel.jpg",eImageType::JPG);
+    canvas->AddWidget(layerPanel);
+
+    Panel* statePanel = new Panel(glm::vec3(0.0f,0.9390243902439024f,0.0f),2.0f,0.12195121951219512f,"resource/StatePanel.jpg",eImageType::JPG);
+    canvas->AddWidget(statePanel);
+
 
     eventSystem->AddPressedUp(canvas);
     eventSystem->AddPressedDown(collectionCanvas);
@@ -322,9 +327,10 @@ int main()
         context->HandleState();
         Collection* instance = Collection::GetInstance();
         Collection::GetInstance()->Rendering(instance->GetRootLayer());
-        canvas->Rendering();
         LayerUI* rootLayerUI = collectionCanvas->GetRootLayerUI();
         collectionCanvas->Rendering(rootLayerUI);
+        canvas->Rendering();
+    
 
 
         // 버퍼 출력

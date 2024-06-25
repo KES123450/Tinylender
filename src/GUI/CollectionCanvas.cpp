@@ -37,7 +37,7 @@ void CollectionCanvas::OnPointerDown(float xpos, float ypos,float xdelta,float y
         return;
 
     mCount=0;
-    int selectedLayerIndex = findLayer(ndcY-mScrollDiscanceY,mRootLayerUI);
+    int selectedLayerIndex = findLayer(ndcY,mRootLayerUI);
     if(selectedLayerIndex==-1)
         return;
   
@@ -63,7 +63,7 @@ void CollectionCanvas::OnPointerUp(float xpos, float ypos,float xdelta,float yde
 void CollectionCanvas::OnScroll(float xoffset, float yoffset){
     ScrollLayer(mRootLayerUI,xoffset,yoffset);
     mScrollDiscanceY+=yoffset*SCROLL_SPEED;
-
+    
 }
 
 int CollectionCanvas::findLayer(float yPos,LayerUI* layer){

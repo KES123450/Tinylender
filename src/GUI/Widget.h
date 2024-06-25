@@ -19,6 +19,7 @@ class Widget{
         std::function<void(double xpos, double ypos)> getButtonCallback() const {return mbuttonCallback;}
         
         glm::vec3 GetPos() const {return mPos;}
+        void SetPos(glm::vec3 offset);
         glm::vec2 GetSize() const {return glm::vec2(mSizeX,mSizeY);}
         void Callbtn();
 

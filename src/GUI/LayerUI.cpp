@@ -144,8 +144,8 @@ void LayerUI::SetTexture(const char *texPath,eImageType imageType){
 
 void LayerUI::ScrollLayerUI(float xoffset, float yoffset){
 
-    //glUniform1f(glGetUniformLocation(mLayerUIShader->ID,"yoffset"),yoffset*SCROLL_SPEED);
-    
+    SetPos(glm::vec3(0.0f,yoffset*SCROLL_SPEED,0.0f));
+
     float offset[20]={0,};
     for(int i = 0; i < 20; ++i) {
         offset[i] = mVertexArray[i];
