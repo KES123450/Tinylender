@@ -91,6 +91,10 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
     Shader ourShader("Shader/vertexShader.glsl","Shader/fragmentShader.glsl");
 
     
@@ -136,160 +140,120 @@ int main()
     Canvas* canvas = new Canvas();
 
 
-    Button* layerBtn = new Button(glm::vec3(-0.8373015873015873f,0.8065173116089613f,0.0f)
-    ,0.08994708994708994f,0.1384928716904277f,"resource/layerIcon.jpg",eImageType::JPG);
-    auto layerBtnCallback =[&layerBtn](double xpos, double ypos){
-        layerBtn->Pushed();
+    Button* fileBtn = new Button(glm::vec3(-0.957418496340652f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/fileIcon.png",eImageType::PNG);
+    auto fileBtnCallback =[&fileBtn](double xpos, double ypos){
+        fileBtn->Pushed();
 
-        if(layerBtn->GetPushed() == true){
-            layerBtn->SetTexture("resource/layerIconPushed.png",eImageType::PNG);
+        if(fileBtn->GetPushed() == true){
+            fileBtn->SetTexture("resource/state/fileIconPushed.png",eImageType::PNG);
             printf("%s","  layerBTN  ");
 
         }
         else{
-            layerBtn->SetTexture("resource/layerIcon.jpg",eImageType::JPG);
+            fileBtn->SetTexture("resource/state/fileIcon.png",eImageType::PNG);
         }
     };
-    layerBtn->SetbuttonCallback(std::function<void(double, double)>(layerBtnCallback));
-    canvas ->AddWidget(layerBtn);
+    fileBtn->SetbuttonCallback(std::function<void(double, double)>(fileBtnCallback));
+    canvas ->AddWidget(fileBtn);
 
-    Button* dotBtn = new Button(glm::vec3(-0.701058201058201f,0.8065173116089613f,0.0f)
-    ,0.08994708994708994f,0.1384928716904277f,"resource/dotIcon.jpg",eImageType::JPG);
+    Button* dotBtn = new Button(glm::vec3(-0.8775781769793746f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/dotIcon.png",eImageType::PNG);
     auto dotBtnCallback =[&dotBtn,&context](double xpos, double ypos){
         dotBtn->Pushed();
 
         if(dotBtn->GetPushed() == true){
-            dotBtn->SetTexture("resource/dotIconPushed.png",eImageType::PNG);
+            dotBtn->SetTexture("resource/state/dotIconPushed.png",eImageType::PNG);
             context->Transition(eUIState::DOT);
         }
         else{
-            dotBtn->SetTexture("resource/dotIcon.jpg",eImageType::JPG);
+            dotBtn->SetTexture("resource/state/dotIcon.png",eImageType::PNG);
             context->Transition(eUIState::EMPTY);
         }
     };
     dotBtn->SetbuttonCallback(std::function<void(double, double)>(dotBtnCallback));
     canvas ->AddWidget(dotBtn);
 
-    Button* lineBtn = new Button(glm::vec3(-0.5886243386243386f,0.8065173116089613f,0.0f)
-    ,0.08994708994708994f,0.1384928716904277f,"resource/LineIcon.jpg",eImageType::JPG);
+    Button* lineBtn = new Button(glm::vec3(-0.7964071856287425f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/lineIcon.png",eImageType::PNG);
     auto lineBtnCallback =[&lineBtn,&context](double xpos, double ypos){
         lineBtn->Pushed();
 
         if(lineBtn->GetPushed() == true){
-            lineBtn->SetTexture("resource/LineIconPushed.png",eImageType::PNG);
+            lineBtn->SetTexture("resource/state/lineIconPushed.png",eImageType::PNG);
             context->Transition(eUIState::LINE);
             printf("%s","  lineBTN  ");
 
         }
         else{
-            lineBtn->SetTexture("resource/LineIcon.jpg",eImageType::JPG);
+            lineBtn->SetTexture("resource/state/lineIcon.png",eImageType::PNG);
             context->Transition(eUIState::EMPTY);
         }
     };
     lineBtn->SetbuttonCallback(std::function<void(double, double)>(lineBtnCallback));
     canvas ->AddWidget(lineBtn);
 
-    Button* squareBtn = new Button(glm::vec3(-0.4801587301587301f,0.8065173116089613f,0.0f)
-    ,0.08994708994708994f,0.1384928716904277f,"resource/squareIcon.jpg",eImageType::JPG);
+    Button* squareBtn = new Button(glm::vec3(-0.7165668662674651f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/extrudeIcon.png",eImageType::PNG);
     auto squareBtnCallback =[&squareBtn,&context](double xpos, double ypos){
         squareBtn->Pushed();
 
         if(squareBtn->GetPushed() == true){
-            squareBtn->SetTexture("resource/squareIconPushed.png",eImageType::PNG);
+            squareBtn->SetTexture("resource/state/extrudeIconPushed.png",eImageType::PNG);
             context->Transition(eUIState::SURFACE);
             printf("%s","  squreBTN  ");
 
         }
         else{
-            squareBtn->SetTexture("resource/squareIcon.jpg",eImageType::JPG);
+            squareBtn->SetTexture("resource/state/extrudeIcon.png",eImageType::PNG);
             context->Transition(eUIState::EMPTY);
         }
     };
     squareBtn->SetbuttonCallback(std::function<void(double, double)>(squareBtnCallback));
     canvas ->AddWidget(squareBtn);
 
-    Button* colorBtn = new Button(glm::vec3(-0.3234126984126984f,0.8044806517311609f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/ColorIcon.png",eImageType::PNG);
-    auto colorBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),1.0f,1.0f,1.0f);
+    Button* selectBtn = new Button(glm::vec3(-0.7165668662674651f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/selectIcon.png",eImageType::PNG);
+    auto selectBtnCallback =[&selectBtn,&context](double xpos, double ypos){
+        selectBtn->Pushed();
+
+        if(selectBtn->GetPushed() == true){
+            selectBtn->SetTexture("resource/state/selectIconPushed.png",eImageType::PNG);
+            context->Transition(eUIState::SURFACE);
+
+        }
+        else{
+            selectBtn->SetTexture("resource/state/selectIcon.png",eImageType::PNG);
+            context->Transition(eUIState::EMPTY);
+        }
     };
-    colorBtn->SetbuttonCallback(std::function<void(double, double)>(colorBtnCallback));
-    canvas ->AddWidget(colorBtn);
+    selectBtn->SetbuttonCallback(std::function<void(double, double)>(selectBtnCallback));
+    canvas ->AddWidget(selectBtn);
 
-    Button* purpleBtn = new Button(glm::vec3(-0.20965608465608465f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Purple.png",eImageType::PNG);
-    auto purpleBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.7f,0.3f,0.7f);
+    Button* textBtn = new Button(glm::vec3(-0.5555555555555556f,0.9390243902439024f,0.0f)
+    ,0.05056553559547571f,0.09268292682926829f,"resource/state/textIcon.png",eImageType::PNG);
+    auto textBtnCallback =[&textBtn,&context](double xpos, double ypos){
+        textBtn->Pushed();
+
+        if(textBtn->GetPushed() == true){
+            textBtn->SetTexture("resource/state/textIconPushed.png",eImageType::PNG);
+            context->Transition(eUIState::SURFACE);
+
+        }
+        else{
+            textBtn->SetTexture("resource/state/textIcon.png",eImageType::PNG);
+            context->Transition(eUIState::EMPTY);
+        }
     };
-    purpleBtn->SetbuttonCallback(std::function<void(double, double)>(purpleBtnCallback));
-    canvas ->AddWidget(purpleBtn);
+    textBtn->SetbuttonCallback(std::function<void(double, double)>(textBtnCallback));
+    canvas ->AddWidget(textBtn);
 
-    Button* pinkBtn = new Button(glm::vec3(-0.09589947089947093f,0.8044806517311609f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Pink.png",eImageType::PNG);
-    auto pinkBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.6f,0.5f,0.5f);
-    };
-    pinkBtn->SetbuttonCallback(std::function<void(double, double)>(pinkBtnCallback));
-    canvas ->AddWidget(pinkBtn);
-
-    Button* redBtn = new Button(glm::vec3(0.017857142857142794f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Red.png",eImageType::PNG);
-    auto redBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.8f,0.5f,0.5f);
-    };
-    redBtn->SetbuttonCallback(std::function<void(double, double)>(redBtnCallback));
-    canvas ->AddWidget(redBtn);
-
-    Button* orangeBtn = new Button(glm::vec3(0.13161375661375652f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Orange.png",eImageType::PNG);
-    auto orangeBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.7f,0.7f,0.3f);
-    };
-    orangeBtn->SetbuttonCallback(std::function<void(double, double)>(orangeBtnCallback));
-    canvas ->AddWidget(orangeBtn);
-
-    Button* yellowBtn = new Button(glm::vec3(0.24537037037037046f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Yellow.png",eImageType::PNG);
-    auto yellowBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.5f,0.7f,0.3f);
-    };
-    yellowBtn->SetbuttonCallback(std::function<void(double, double)>(yellowBtnCallback));
-    canvas ->AddWidget(yellowBtn);
-
-    Button* greenBtn = new Button(glm::vec3(0.3591269841269842f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Green.png",eImageType::PNG);
-    auto greenBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.3f,0.7f,0.3f);
-    };
-    greenBtn->SetbuttonCallback(std::function<void(double, double)>(greenBtnCallback));
-    canvas ->AddWidget(greenBtn);
-
-    Button* skyBtn = new Button(glm::vec3(0.4728835978835979f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Sky.png",eImageType::PNG);
-    auto skyBtnCallback =[&ourShader](double xpos, double ypos){
-        ourShader.use();
-        glUniform3f(glGetUniformLocation(ourShader.ID,"val"),0.3f,0.3f,0.7f);
-    };
-    skyBtn->SetbuttonCallback(std::function<void(double, double)>(skyBtnCallback));
-    canvas ->AddWidget(skyBtn);
-
-    Button* blueBtn = new Button(glm::vec3(0.5866402116402116f,0.8065173116089613f,0.0f)
-    ,0.051587301587301584f,0.0814663951120163f,"resource/Blue.png",eImageType::PNG);
-    canvas ->AddWidget(blueBtn);
-
-    Panel* layerPanel = new Panel(glm::vec3(-0.844311377245509f,-0.060975609756097615f,0.0f),0.31137724550898205f,1.8780487804878048f,"resource/LayerPanel.jpg",eImageType::JPG);
-    canvas->AddWidget(layerPanel);
 
     Panel* statePanel = new Panel(glm::vec3(0.0f,0.9390243902439024f,0.0f),2.0f,0.12195121951219512f,"resource/StatePanel.jpg",eImageType::JPG);
     canvas->AddWidget(statePanel);
 
+    Panel* layerPanel = new Panel(glm::vec3(-0.844311377245509f,-0.060975609756097615f,0.0f),0.31137724550898205f,1.8780487804878048f,"resource/LayerPanel.jpg",eImageType::JPG);
+    canvas->AddWidget(layerPanel);
 
     eventSystem->AddPressedUp(canvas);
     eventSystem->AddPressedDown(collectionCanvas);
@@ -306,7 +270,7 @@ int main()
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
        //glClearColor(0.0f, 0.074509f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
       
 
         glm::mat4 model=glm::mat4(1.0f);
@@ -321,14 +285,14 @@ int main()
         glUniform3f(glGetUniformLocation(ourShader.ID,"cameraPosition"),cameraPos.x,cameraPos.y,cameraPos.z);
        // glBindVertexArray(newVAO);
        // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
-
+        glStencilFunc(GL_ALWAYS, 1, 0x00);
+        glStencilMask(0x00);
        // cube->Draw(ourShader);
         //backpack->Draw();
         context->HandleState();
         Collection* instance = Collection::GetInstance();
         Collection::GetInstance()->Rendering(instance->GetRootLayer());
-        LayerUI* rootLayerUI = collectionCanvas->GetRootLayerUI();
-        collectionCanvas->Rendering(rootLayerUI);
+        collectionCanvas->Rendering();
         canvas->Rendering();
     
 
@@ -343,7 +307,7 @@ int main()
     // glDeleteBuffers(1, &VBO);
     //glDeleteProgram(shaderProgram);
 
-    delete(layerBtn);
+    delete(fileBtn);
    // delete(panel);
     delete(canvas);
     glfwTerminate();

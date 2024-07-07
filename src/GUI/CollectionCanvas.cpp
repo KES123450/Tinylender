@@ -3,12 +3,72 @@
 
 
 CollectionCanvas::CollectionCanvas(){
+    mMaskShader= new Shader("Shader/UIVertexShader.glsl","Shader/maskFragShader.glsl");
     Collection* collection = Collection::GetInstance();
     glm::vec3 layerUIPos = glm::vec3(-0.8f,0.1f,0.0f);
-    mRootLayerUI = new LayerUI(collection->GetRootLayer(),0.0f,0.0f,layerUIPos);
+    mRootLayerUI = new LayerUI(collection->GetRootLayer(),0.3f,0.3f,layerUIPos);
+
+
+
+    glm::vec3 vertex[4];
+    vertex[0] = glm::vec3(-1.0f,1.0f-mLayerOffsetY,0.0f); //1 3
+    vertex[1] = glm::vec3(-1.0f,-1.0f,0.0f); //2 4 
+    vertex[2] = glm::vec3(-1+mLayerSizeX,1.0f-mLayerOffsetY,0.0f);
+    vertex[3] = glm::vec3(-1+mLayerSizeX,-1.0f,0.0f);
+
+    glm::vec2 texCoord[4];
+    texCoord[0] = glm::vec2(0.0f,1.0f);
+    texCoord[1] = glm::vec2(0.0f,0.0f);
+    texCoord[2] = glm::vec2(1.0f,1.0f);
+    texCoord[3] = glm::vec2(1.0f,0.0f);
+
+    float maskVertex[20] ={0.0f,};
+    for(int i=0;i<4;i++){
+        maskVertex[i*5+0] = vertex[i].x;
+        maskVertex[i*5+1] = vertex[i].y;
+        maskVertex[i*5+2] = vertex[i].z;
+        maskVertex[i*5+3] = texCoord[i].x;
+        maskVertex[i*5+4] = texCoord[i].y;
+    }
+
+    glGenBuffers(1,&mMaskVBO);
+    glGenVertexArrays(1,&mMaskVAO);
+    glGenBuffers(1,&mMaskEBO);
+
+    glBindVertexArray(mMaskVAO);
+    glBindBuffer(GL_ARRAY_BUFFER,mMaskVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(maskVertex),maskVertex,GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mMaskEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(mMaskIndices),mMaskIndices,GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);  
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
 }
 
-void CollectionCanvas::Rendering(LayerUI* layer, int depth,int count){
+void CollectionCanvas::Rendering(){
+    glEnable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    drawMask();
+
+    glEnable(GL_DEPTH_TEST);
+    glStencilMask(0x00);
+    glStencilFunc(GL_EQUAL,1,0xFF);
+    
+    RenderingLayer(mRootLayerUI);
+    
+    glStencilFunc(GL_ALWAYS, 0, 0xFF); // Restore default stencil function
+    glStencilMask(0xFF);
+    glEnable(GL_DEPTH_TEST);
+    
+}
+
+void CollectionCanvas::RenderingLayer(LayerUI* layer, int depth,int count){
     layer->Draw();
 
     if(layer->children.size()==0)
@@ -16,7 +76,7 @@ void CollectionCanvas::Rendering(LayerUI* layer, int depth,int count){
 
     int c =0;
     for(LayerUI* child : mRootLayerUI->children){
-        Rendering(child,depth+1,c);
+        RenderingLayer(child,depth+1,c);
         c++;
     }
 }
@@ -121,4 +181,12 @@ void CollectionCanvas::ScrollLayer(LayerUI* layer, float xoffset, float yoffset,
         ScrollLayer(child,xoffset,yoffset,depth+1,c);
         c++;
     }
+}
+
+void CollectionCanvas::drawMask(){
+    mMaskShader->use();
+   // glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    //glStencilMask(0xFF);
+    glBindVertexArray(mMaskVAO);
+    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 }
