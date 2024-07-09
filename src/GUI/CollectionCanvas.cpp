@@ -5,8 +5,8 @@
 CollectionCanvas::CollectionCanvas(){
     mMaskShader= new Shader("Shader/UIVertexShader.glsl","Shader/maskFragShader.glsl");
     Collection* collection = Collection::GetInstance();
-    glm::vec3 layerUIPos = glm::vec3(-0.8f,0.1f,0.0f);
-    mRootLayerUI = new LayerUI(collection->GetRootLayer(),0.3f,0.3f,layerUIPos);
+    glm::vec3 layerUIPos = glm::vec3(-0.8510978043912175f,0.8338536585365853f,0.0f);
+    mRootLayerUI = new LayerUI(collection->GetRootLayer(),0.08351219512195122f,0.0f,layerUIPos);
 
 
 
@@ -121,8 +121,16 @@ void CollectionCanvas::OnPointerUp(float xpos, float ypos,float xdelta,float yde
 }
 
 void CollectionCanvas::OnScroll(float xoffset, float yoffset){
-    ScrollLayer(mRootLayerUI,xoffset,yoffset);
-    mScrollDiscanceY+=yoffset*SCROLL_SPEED;
+    float scrollDistanceTest = (mScrollDiscanceY + -yoffset*SCROLL_SPEED)*SCR_HEIGHT;
+    float layerLength = (LAYER_SIZE_Y/2) * SCR_HEIGHT * (countNodes(mRootLayerUI)+1);
+    
+    if(layerLength<SCR_HEIGHT-mLayerOffsetY*SCR_HEIGHT
+        || abs(scrollDistanceTest)>=layerLength-SCR_HEIGHT
+        || scrollDistanceTest<=0) 
+        return;
+    
+    ScrollLayer(mRootLayerUI,xoffset,-yoffset);
+    mScrollDiscanceY+=-yoffset*SCROLL_SPEED;
     
 }
 

@@ -1,5 +1,6 @@
 
 #include <glm/glm.hpp>
+#include <cmath>
 #include "LayerUI.h"
 #include "../Layer.h"
 #include "../IPressed.h"
@@ -28,7 +29,7 @@ class CollectionCanvas : public IPressed, public IPressedDown, public IPressedUp
         float mLayerSizeX= 0.3111111111111111f; 
         float mLayerSizeY=0.08351219512195122f;
         float mDepthOfssetX=0.2f;
-        float mScrollDiscanceY=0;
+        float mScrollDiscanceY=0; //NDC
         int mCount=0;
         LayerUI* mRootLayerUI;
         LayerUI* mPrevSelectedLayerUI=nullptr;
@@ -40,7 +41,7 @@ class CollectionCanvas : public IPressed, public IPressedDown, public IPressedUp
         unsigned int mMaskIndices[6]={
         0,1,2,
         2,1,3
-    };
+        };
 
         int countNodes(LayerUI* layer);
         int findLayer(float yPos,LayerUI* layer);

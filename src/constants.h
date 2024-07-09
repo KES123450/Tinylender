@@ -9,8 +9,8 @@ const float CAMERA_ROTATE_SPEED = 15.0f;
 const float PEN_SPEED = 1.0f;
 const float SCROLL_SPEED =0.003f;
 
-const float layerX = 0.2962962962962963f;
-const float layerY = 0.04073319755600815f;
+const float LAYER_SIZE_X = 0.3111111111111111f;
+const float LAYER_SIZE_Y = 0.08351219512195122f;
 
 const float UI_GAURD_SCR_X = 310.0f;
 
