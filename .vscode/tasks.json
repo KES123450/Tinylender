@@ -36,7 +36,9 @@
                 "-g",
                 "-std=c++14",
                 "-I${workspaceFolder}/include",
+                "-I/usr/local/include/freetype2",
                 "-L${workspaceFolder}/lib",
+                "-L/usr/local/lib",
                 "${workspaceFolder}/libglfw.3.dylib",
                 "${workspaceFolder}/src/glad.c",
                 //"${workspaceFolder}/src/*.cpp",
@@ -65,7 +67,14 @@
                 "IOKit",
                 "-lglfw3",
                 "-L/usr/local/Cellar/assimp/5.4.0/lib/",
-                "-lassimp"
+                "-L/usr/local/Cellar/freetype/2.13.2/lib",
+                "-lassimp",
+                "-lfreetype" ,
+                "-lbz2",          // 추가
+                "-lbrotlidec",    // 추가
+                "-lharfbuzz",     // 추가
+                 "-lz",            // 추가
+                "-lpng"           // 추가
             ],
             "options": {
                 "cwd": "${fileDirname}"
@@ -97,6 +106,16 @@
                 "reveal": "silent"
             },
             "problemMatcher": []
+        },
+
+        {
+            "label": "CMake: build",
+            "type": "shell",
+            "command": "cmake --build build",
+            "group": {
+              "kind": "build",
+              "isDefault": true
+            }
         },
 
         {

@@ -93,6 +93,7 @@
         "stop_token": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
+    "cmake.configureOnOpen": true,
     "cmake.sourceDirectory": "/Users/a5520/Desktop/OpenGLTest/.vscode",
  //   "cmake.sourceDirectory": "/Users/a5520/Desktop/OpenGLTest/include/glm"
 }
