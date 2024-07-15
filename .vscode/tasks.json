@@ -43,6 +43,7 @@
                 "${workspaceFolder}/src/glad.c",
                 //"${workspaceFolder}/src/*.cpp",
                 //"${workspaceFolder}/src/GUI/*.cpp",
+                
                 "${workspaceFolder}/src/ShapeLayer.cpp",
                 "${workspaceFolder}/src/Pen.cpp",
                 "${workspaceFolder}/src/ModifyVertex.cpp",
@@ -58,6 +59,8 @@
                 "${workspaceFolder}/src/GUI/CollectionCanvas.cpp",
                 "${workspaceFolder}/src/GUI/Canvas.cpp",
                 "${workspaceFolder}/src/GUI/Button.cpp",
+                "${workspaceFolder}/src/GUI/TextBox.cpp",
+                "${workspaceFolder}/src/Utils.cpp",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",

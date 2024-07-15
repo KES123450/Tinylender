@@ -1,3 +1,4 @@
+#pragma once
 #include <glm/glm.hpp>
 
 struct Character
@@ -7,5 +8,3 @@ struct Character
     glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
     unsigned int Advance; 
 };
-
-std::map<char, Character> Characters;

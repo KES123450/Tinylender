@@ -1,6 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include <ft2build.h>
-#include FT_FREETYPE_H 
+#include <map>
 #include "Shader/Shader.h"
 #include "GUI/button.h"
 #include "GUI/Canvas.h"
@@ -15,12 +14,14 @@
 #include <iostream>
 #include <cmath>
 #include <stdio.h>
+#include "Fucking.h"
 #include "constants.h"
 #include "InputEventSystem.h"
 #include "Model.h"
 #include "Context.h"
 #include "ModifyVertex.h"
 #include "Pen.h"
+#include "GUI/TextBox.h"
 #include "Extrude.h"
 #include "GUI/CollectionCanvas.h"
 #include "GUI/LayerUI.h"
@@ -28,12 +29,15 @@
 #include "Character.h"
 
 
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void rotateView(float xoffset, float yoffset);
+void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color);
 
 InputEventSystem* eventSystem = new InputEventSystem();
 
@@ -52,6 +56,9 @@ float yaw, pitch;
 
 glm::mat4 view = glm::mat4(1.0f);
 glm::mat4 projection=glm::mat4(1.0f);
+
+std::map<GLchar, Character> Characters;
+unsigned int VAO, VBO;
 
 int main()
 {
@@ -82,6 +89,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window,mouse_button_callback);
     glfwSetScrollCallback(window, mouse_scroll_callback);
+    glfwSetKeyCallback(window,key_callback);
 
     // glad 로드
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -137,7 +145,13 @@ int main()
          Mesh* m = &(*meshes)[i];
          Collection::GetInstance()->SetMesh(m);
      } */
+
     
+    Shader textShader("Shader/fontVertex.glsl", "Shader/fontFrag.glsl");
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
+    textShader.use();
+    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
     FT_Library ft;
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft))
@@ -213,13 +227,25 @@ int main()
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
 
-
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     //------------------------
     CollectionCanvas* collectionCanvas = new CollectionCanvas();
     Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
+    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,"Fuck",true);
+    eventSystem->AddKeyDown(t);
+    eventSystem->AddPressedDown(t);
+    canvas->AddWidget(t);
 
     Button* fileBtn = new Button(glm::vec3(-0.957418496340652f,0.9390243902439024f,0.0f)
     ,0.05056553559547571f,0.09268292682926829f,"resource/state/fileIcon.png",eImageType::PNG);
@@ -350,10 +376,9 @@ int main()
         
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
-       //glClearColor(0.0f, 0.074509f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
       
-
+        //RenderText(textShader, "Tinylender is vert very very tiny lender2343454565", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
         glm::mat4 model=glm::mat4(1.0f);
         ourShader.use();
         unsigned int modelLoc =glGetUniformLocation(ourShader.ID,"model");
@@ -364,8 +389,6 @@ int main()
         glUniformMatrix4fv(viewLoc,1,GL_FALSE,&view[0][0]);
         ourShader.setMat4("projection",projection);
         glUniform3f(glGetUniformLocation(ourShader.ID,"cameraPosition"),cameraPos.x,cameraPos.y,cameraPos.z);
-       // glBindVertexArray(newVAO);
-       // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
         glStencilFunc(GL_ALWAYS, 1, 0x00);
         glStencilMask(0x00);
        // cube->Draw(ourShader);
@@ -375,9 +398,7 @@ int main()
         Collection::GetInstance()->Rendering(instance->GetRootLayer());
         collectionCanvas->Rendering();
         canvas->Rendering();
-    
-
-
+       
         // 버퍼 출력
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -420,7 +441,13 @@ void processInput(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}          
+}   
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+    if(eventSystem){
+        eventSystem->HandleKeyEvent(key,action);
+    }
+}
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     
@@ -489,3 +516,47 @@ void rotateView(float xoffset, float yoffset){
 }
 
 
+void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color)
+{
+    // activate corresponding render state	
+    shader.use();
+    glUniform3f(glGetUniformLocation(shader.ID, "textColor"), color.x, color.y, color.z);
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(VAO);
+
+    // iterate through all characters
+    std::string::const_iterator c;
+    for (c = text.begin(); c != text.end(); c++) 
+    {
+        Character ch = Characters[*c];
+
+        float xpos = x + ch.Bearing.x * scale;
+        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+        float w = ch.Size.x * scale;
+        float h = ch.Size.y * scale;
+        // update VBO for each character
+        float vertices[6][4] = {
+            { xpos,     ypos + h,   0.0f, 0.0f },            
+            { xpos,     ypos,       0.0f, 1.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + w, ypos + h,   1.0f, 0.0f }           
+        };
+        // render glyph texture over quad
+        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+        // update content of VBO memory
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+        x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+    }
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}

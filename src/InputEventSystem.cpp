@@ -21,6 +21,10 @@ void InputEventSystem::AddScrolled(IScrolled* scrolled){
     mScrolled.push_back(scrolled);
 }
 
+void InputEventSystem::AddKeyDown(IKeyDown* keyDown){
+    mKeyDown.push_back(keyDown);
+}
+
 void InputEventSystem::HandleInputPos(double xpos, double ypos){
     mDeltaX= xpos-mLastX;
     mDeltaY= ypos-mLastY;
@@ -76,3 +80,77 @@ void InputEventSystem::HandleScrollEvent(double xoffset, double yoffset){
 
 }
 
+void InputEventSystem::HandleKeyEvent(int key, int action){
+    if(key == GLFW_KEY_0 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("0");
+        }
+        return;
+    }
+
+    if(key == GLFW_KEY_1 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("1");
+        }
+        return;
+    }
+
+    if(key == GLFW_KEY_2 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("2");
+        }
+        return;
+    }
+    
+    if(key == GLFW_KEY_3 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("3");
+        }
+        return;
+    }
+    
+        if(key == GLFW_KEY_4 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("4");
+        }
+        return;
+    }
+    
+    if(key == GLFW_KEY_5 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("5");
+        }
+        return;
+    }
+    
+    if(key == GLFW_KEY_6 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("6");
+        }
+        return;
+    }
+    
+    if(key == GLFW_KEY_7 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("7");
+        }
+        return;
+    }
+    
+        if(key == GLFW_KEY_8 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("8");
+        }
+        return;
+    }
+    
+        if(key == GLFW_KEY_9 && action == GLFW_PRESS){
+        for(IKeyDown* child : mKeyDown){
+            child->GeyKeyDown("9");
+        }
+        return;
+    }
+    
+        
+        
+}
