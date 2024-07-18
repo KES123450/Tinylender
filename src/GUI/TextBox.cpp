@@ -1,57 +1,56 @@
 #include "TextBox.h"
 
-TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text, bool stringFlag){
-    mPushed=false;
-    mSizeX =sizeX;
-    mSizeY=sizeY;
-    mPos=textBoxPos;
+TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text,float textSize,bool stringFlag)
+{
+    mPushed = false;
+    mSizeX = sizeX;
+    mSizeY = sizeY;
+    mPos = textBoxPos;
 
-    float halfX = mSizeX/2;
-    float halfY = mSizeY/2;
-
+    float halfX = mSizeX / 2;
+    float halfY = mSizeY / 2;
 
     glm::vec3 vertex[4];
-    vertex[0] = glm::vec3(textBoxPos.x-halfX,textBoxPos.y+halfY,0.0f);
-    vertex[1] = glm::vec3(textBoxPos.x-halfX,textBoxPos.y-halfY,0.0f);
-    vertex[2] = glm::vec3(textBoxPos.x+halfX,textBoxPos.y+halfY,0.0f);
-    vertex[3] = glm::vec3(textBoxPos.x+halfX,textBoxPos.y-halfY,0.0f);
+    vertex[0] = glm::vec3(textBoxPos.x - halfX, textBoxPos.y + halfY, 0.0f);
+    vertex[1] = glm::vec3(textBoxPos.x - halfX, textBoxPos.y - halfY, 0.0f);
+    vertex[2] = glm::vec3(textBoxPos.x + halfX, textBoxPos.y + halfY, 0.0f);
+    vertex[3] = glm::vec3(textBoxPos.x + halfX, textBoxPos.y - halfY, 0.0f);
 
     glm::vec2 texCoord[4];
-    texCoord[0] = glm::vec2(0.0f,1.0f);
-    texCoord[1] = glm::vec2(0.0f,0.0f);
-    texCoord[2] = glm::vec2(1.0f,1.0f);
-    texCoord[3] = glm::vec2(1.0f,0.0f);
+    texCoord[0] = glm::vec2(0.0f, 1.0f);
+    texCoord[1] = glm::vec2(0.0f, 0.0f);
+    texCoord[2] = glm::vec2(1.0f, 1.0f);
+    texCoord[3] = glm::vec2(1.0f, 0.0f);
 
-    for(int i=0;i<4;i++){
-        mVertexArray[i*5+0] = vertex[i].x;
-        mVertexArray[i*5+1] = vertex[i].y;
-        mVertexArray[i*5+2] = vertex[i].z;
-        mVertexArray[i*5+3] = texCoord[i].x;
-        mVertexArray[i*5+4] = texCoord[i].y;
-
+    for (int i = 0; i < 4; i++)
+    {
+        mVertexArray[i * 5 + 0] = vertex[i].x;
+        mVertexArray[i * 5 + 1] = vertex[i].y;
+        mVertexArray[i * 5 + 2] = vertex[i].z;
+        mVertexArray[i * 5 + 3] = texCoord[i].x;
+        mVertexArray[i * 5 + 4] = texCoord[i].y;
     }
 
-    glGenBuffers(1,&mVBO);
-    glGenVertexArrays(1,&mVAO);
-    glGenBuffers(1,&mEBO);
+    glGenBuffers(1, &mVBO);
+    glGenVertexArrays(1, &mVAO);
+    glGenBuffers(1, &mEBO);
 
     glBindVertexArray(mVAO);
-    glBindBuffer(GL_ARRAY_BUFFER,mVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(mVertexArray),mVertexArray,GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(mIndices),mIndices,GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mVertexArray), mVertexArray, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)0);
-    glEnableVertexAttribArray(0);  
-    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(void*)(3*sizeof(float)));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
+
     int a = SCR_WIDTH;
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
     mTextShader->use();
     glUniformMatrix4fv(glGetUniformLocation(mTextShader->ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
 
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&mFreeType))
@@ -59,18 +58,19 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
     }
 
-	// find path to font
+    // find path to font
     std::string font_name = "resource/font/LINESeedSans_A_Th.ttf";
     if (font_name.empty())
     {
         std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
     }
 
-   
-    if (FT_New_Face(mFreeType, mFont.c_str(), 0, &mFace)) {
+    if (FT_New_Face(mFreeType, mFont.c_str(), 0, &mFace))
+    {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
     }
-    else {
+    else
+    {
         // set size to load glyphs as
         FT_Set_Pixel_Sizes(mFace, 0, 48);
 
@@ -80,7 +80,7 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
         // load first 128 characters of ASCII set
         for (unsigned char c = 0; c < 128; c++)
         {
-            // Load character glyph 
+            // Load character glyph
             if (FT_Load_Char(mFace, c, FT_LOAD_RENDER))
             {
                 std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
@@ -99,8 +99,7 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
                 0,
                 GL_RED,
                 GL_UNSIGNED_BYTE,
-                mFace->glyph->bitmap.buffer
-            );
+                mFace->glyph->bitmap.buffer);
             // set texture options
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -111,8 +110,7 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
                 texture,
                 glm::ivec2(mFace->glyph->bitmap.width, mFace->glyph->bitmap.rows),
                 glm::ivec2(mFace->glyph->bitmap_left, mFace->glyph->bitmap_top),
-                static_cast<unsigned int>(mFace->glyph->advance.x)
-            };
+                static_cast<unsigned int>(mFace->glyph->advance.x)};
             mCharacters.insert(std::pair<char, Character>(c, character));
         }
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -121,8 +119,9 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
     FT_Done_Face(mFace);
     FT_Done_FreeType(mFreeType);
 
-    mStr=text;
+    SetText(text);
 
+    mTextSize=textSize;
     glGenVertexArrays(1, &mTextVAO);
     glGenBuffers(1, &mTextVBO);
     glBindVertexArray(mTextVAO);
@@ -132,48 +131,60 @@ TextBox::TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text,
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    
 }
 
-void TextBox::OnPointerDown(float xpos, float ypos,float xdelta,float ydelta){
-    glm::vec3 pointNDC = ScreenToNDC(glm::vec2(xpos,ypos));
-    glm::vec2 sizeHalf = glm::vec2(mSizeX/2,mSizeY/2);
+void TextBox::OnPointerDown(float xpos, float ypos, float xdelta, float ydelta)
+{
+    glm::vec3 pointNDC = ScreenToNDC(glm::vec2(xpos, ypos));
+    glm::vec2 sizeHalf = glm::vec2(mSizeX / 2, mSizeY / 2);
 
-    if(pointNDC.x>=(mPos.x-sizeHalf.x)
-        &&pointNDC.x<=(mPos.x+sizeHalf.x)
-        &&pointNDC.y>=(mPos.y-sizeHalf.y)
-        &&pointNDC.y<=(mPos.y+sizeHalf.y)){
-            bTextActive=true;
-        }
-    else{
-        bTextActive=false;
+    if (pointNDC.x >= (mPos.x - sizeHalf.x) && pointNDC.x <= (mPos.x + sizeHalf.x) && pointNDC.y >= (mPos.y - sizeHalf.y) && pointNDC.y <= (mPos.y + sizeHalf.y))
+    {
+        bTextActive = true;
+    }
+    else
+    {
+        bTextActive = false;
     }
 }
 
 void TextBox::GeyKeyDown(std::string str)
 {
-    if(!bTextActive)
+    if (!bTextActive)
         return;
-    
-    //TODO : 뒤로가기 키 누르면 삭제 및 문자 외 글자는 리턴
+    // TODO : 뒤로가기 키 누르면 삭제 및 문자 외 글자는 리턴
 
-    if(!bString && str[0]<48 && str[0]>58){
+    if (!bString && str[0] < 48 && str[0] > 58)
+    {
         return;
     }
 
     mStr.append(str);
+    mEventCallback(mStr);
 }
 
+void TextBox::SetText(std::string str)
+{
+    mStr = str;
+}
 
-void TextBox::renderText(Shader* shader, std::string text, float scale, glm::vec3 color){
-    float halfX = mSizeX/2;
-    float halfY = mSizeY/2;
+void TextBox::SetEventCallback(std::function<void(std::string)> str)
+{
+    if (!str)
+        return;
+    mEventCallback = str;
+}
 
-    glm::vec2 screenPoint = NDCToScreen(glm::vec2(mPos.x-halfX,mPos.y-halfY));
+void TextBox::renderText(Shader *shader, std::string text, float scale, glm::vec3 color)
+{
+    float halfX = mSizeX / 2;
+    float halfY = mSizeY / 2;
+
+    glm::vec2 screenPoint = NDCToScreen(glm::vec2(mPos.x - halfX, mPos.y - halfY));
     float x = screenPoint.x;
     float y = screenPoint.y;
 
-    // activate corresponding render state	
+    // activate corresponding render state
     shader->use();
     glUniform3f(glGetUniformLocation(shader->ID, "textColor"), color.x, color.y, color.z);
     glActiveTexture(GL_TEXTURE0);
@@ -181,7 +192,7 @@ void TextBox::renderText(Shader* shader, std::string text, float scale, glm::vec
 
     // iterate through all characters
     std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++) 
+    for (c = text.begin(); c != text.end(); c++)
     {
         Character ch = mCharacters[*c];
 
@@ -192,14 +203,13 @@ void TextBox::renderText(Shader* shader, std::string text, float scale, glm::vec
         float h = ch.Size.y * scale;
         // update VBO for each character
         float vertices[6][4] = {
-            { xpos,     ypos + h,   0.0f, 0.0f },            
-            { xpos,     ypos,       0.0f, 1.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
+            {xpos, ypos + h, 0.0f, 0.0f},
+            {xpos, ypos, 0.0f, 1.0f},
+            {xpos + w, ypos, 1.0f, 1.0f},
 
-            { xpos,     ypos + h,   0.0f, 0.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
-            { xpos + w, ypos + h,   1.0f, 0.0f }           
-        };
+            {xpos, ypos + h, 0.0f, 0.0f},
+            {xpos + w, ypos, 1.0f, 1.0f},
+            {xpos + w, ypos + h, 1.0f, 0.0f}};
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
         // update content of VBO memory
@@ -216,7 +226,8 @@ void TextBox::renderText(Shader* shader, std::string text, float scale, glm::vec
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void TextBox::Draw(){
+void TextBox::Draw()
+{
     glEnable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -224,15 +235,13 @@ void TextBox::Draw(){
     glStencilMask(0xFF);
     UIShader->use();
     glBindVertexArray(mVAO);
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-    glStencilFunc(GL_EQUAL,1,0xFF);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
     glStencilMask(0x00);
-    renderText(mTextShader, mStr, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+    renderText(mTextShader, mStr, mTextSize, glm::vec3(0.5, 0.8f, 0.2f));
 
     glStencilFunc(GL_ALWAYS, 0, 0xFF); // Restore default stencil function
     glStencilMask(0xFF);
     glEnable(GL_DEPTH_TEST);
-   
 }

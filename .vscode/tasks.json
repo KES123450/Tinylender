@@ -60,6 +60,7 @@
                 "${workspaceFolder}/src/GUI/Canvas.cpp",
                 "${workspaceFolder}/src/GUI/Button.cpp",
                 "${workspaceFolder}/src/GUI/TextBox.cpp",
+                "${workspaceFolder}/src/GUI/InspectorCanvas.cpp",
                 "${workspaceFolder}/src/Utils.cpp",
                 "${file}",
                 "-o",
