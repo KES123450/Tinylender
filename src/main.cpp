@@ -39,8 +39,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void rotateView(float xoffset, float yoffset);
 void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color);
 
-InputEventSystem* eventSystem = new InputEventSystem();
-
 
 float lastX =0.0f,lastY=0.0f;
 float x=0.0f,y=0.0f;
@@ -120,16 +118,16 @@ int main()
     Pen* lineState = new Pen();
     Extrude* surfaceState = new Extrude();
 
-    eventSystem->AddPressed(dotState);
-    eventSystem->AddPressedDown(dotState);
-    eventSystem->AddPressedUp(dotState);
+    InputEventSystem::GetInstance()->AddPressed(dotState);
+    InputEventSystem::GetInstance()->AddPressedDown(dotState);
+    InputEventSystem::GetInstance()->AddPressedUp(dotState);
 
-    eventSystem->AddPressedDown(lineState);
-    eventSystem->AddMoved(lineState);
+    InputEventSystem::GetInstance()->AddPressedDown(lineState);
+    InputEventSystem::GetInstance()->AddMoved(lineState);
 
-    eventSystem->AddPressed(surfaceState);
-    eventSystem->AddPressedDown(surfaceState);
-    eventSystem->AddPressedUp(surfaceState);
+    InputEventSystem::GetInstance()->AddPressed(surfaceState);
+    InputEventSystem::GetInstance()->AddPressedDown(surfaceState);
+    InputEventSystem::GetInstance()->AddPressedUp(surfaceState);
 
     Context* context = new Context(layerState,dotState,lineState,surfaceState);
 
@@ -151,9 +149,9 @@ int main()
     Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
-    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,1.0f,"Fuck",true);
-    eventSystem->AddKeyDown(t);
-    eventSystem->AddPressedDown(t);
+    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,"Fuck",1.0f,true);
+    InputEventSystem::GetInstance()->AddKeyDown(t);
+    InputEventSystem::GetInstance()->AddPressedDown(t);
     canvas->AddWidget(t);
 
     Button* fileBtn = new Button(glm::vec3(-0.957418496340652f,0.9390243902439024f,0.0f)
@@ -269,9 +267,9 @@ int main()
     Panel* layerPanel = new Panel(glm::vec3(-0.844311377245509f,-0.060975609756097615f,0.0f),0.31137724550898205f,1.8780487804878048f,"resource/LayerPanel.jpg",eImageType::JPG);
     canvas->AddWidget(layerPanel);
 
-    eventSystem->AddPressedUp(canvas);
-    eventSystem->AddPressedDown(collectionCanvas);
-    eventSystem -> AddScrolled(collectionCanvas);
+    InputEventSystem::GetInstance()->AddPressedUp(canvas);
+    InputEventSystem::GetInstance()->AddPressedDown(collectionCanvas);
+    InputEventSystem::GetInstance() -> AddScrolled(collectionCanvas);
 
 
     // 메인 루프튵ㅌㅌㅌ
@@ -351,8 +349,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }   
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-    if(eventSystem){
-        eventSystem->HandleKeyEvent(key,action);
+    if(InputEventSystem::GetInstance()){
+        InputEventSystem::GetInstance()->HandleKeyEvent(key,action);
     }
 }
 
@@ -373,8 +371,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     if(bLastRightBtn)
         rotateView(xoffset,yoffset);
 
-    if(eventSystem){
-        eventSystem->HandleInputPos(xpos,ypos);
+    if(InputEventSystem::GetInstance()){
+        InputEventSystem::GetInstance()->HandleInputPos(xpos,ypos);
     }
 }
 
@@ -388,14 +386,14 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         bLastRightBtn=false;
     }
     
-    if(eventSystem){
-        eventSystem->HandleInputEvent(button,action);
+    if(InputEventSystem::GetInstance()){
+        InputEventSystem::GetInstance()->HandleInputEvent(button,action);
     }
 }
 
 void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
-    if(eventSystem){
-        eventSystem->HandleScrollEvent(xoffset,yoffset);
+    if(InputEventSystem::GetInstance()){
+        InputEventSystem::GetInstance()->HandleScrollEvent(xoffset,yoffset);
     }
 }
 

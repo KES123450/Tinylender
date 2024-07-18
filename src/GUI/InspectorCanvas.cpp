@@ -2,7 +2,7 @@
 
 InspectorCanvas::InspectorCanvas()
 {
-    mPositionTextBoxX= new TextBox(glm::vec3(0.8196939454424483f,0.7682926829268293f,0.0f),0.0385894876912841f,0.02926829268292683f,0.3f,false);
+    mPositionTextBoxX= new TextBox(glm::vec3(0.8196939454424483f,0.7682926829268293f,0.0f),0.0385894876912841f,0.02926829268292683f,"123.3",0.3f,false);
 
 }
 

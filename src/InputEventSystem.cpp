@@ -1,5 +1,12 @@
 #include "InputEventSystem.h"
 
+InputEventSystem* InputEventSystem::instance = nullptr;
+
+InputEventSystem* InputEventSystem::GetInstance(){
+    if(instance==NULL)
+        instance = new InputEventSystem();
+    return instance;
+}
 
 void InputEventSystem::AddPressed(IPressed* pressed){
     mPressed.push_back(pressed);
