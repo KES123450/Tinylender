@@ -25,6 +25,7 @@
 #include "Extrude.h"
 #include "GUI/CollectionCanvas.h"
 #include "GUI/LayerUI.h"
+#include "GUI/InspectorCanvas.h"
 #include "stb_image.h"
 #include "Character.h"
 
@@ -144,12 +145,12 @@ int main()
          Collection::GetInstance()->SetMesh(m);
      } */
 
-
-    CollectionCanvas* collectionCanvas = new CollectionCanvas();
+    InspectorCanvas* inspectorCanvas = new InspectorCanvas();
+    CollectionCanvas* collectionCanvas = new CollectionCanvas(inspectorCanvas);
     Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
-    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,"Fuck",1.0f,true);
+    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,"Fuck",1.0f,glm::vec3(0.3f,0.3f,0.3f),true);
     InputEventSystem::GetInstance()->AddKeyDown(t);
     InputEventSystem::GetInstance()->AddPressedDown(t);
     canvas->AddWidget(t);
@@ -303,6 +304,7 @@ int main()
         Collection::GetInstance()->Rendering(instance->GetRootLayer());
         collectionCanvas->Rendering();
         canvas->Rendering();
+        inspectorCanvas->Rendering();
        
         // 버퍼 출력
         glfwSwapBuffers(window);

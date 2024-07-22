@@ -2,18 +2,20 @@
 #include <glm/glm.hpp>
 #include <cmath>
 #include "LayerUI.h"
+#include "InspectorCanvas.h"
 #include "../Layer.h"
 #include "../IPressed.h"
 #include "../IPressedUp.h"
 #include "../IPressedDown.h"
 #include "../IScrolled.h"
+
 #pragma once
 class Collection;
 
 class CollectionCanvas : public IPressed, public IPressedDown, public IPressedUp, public IScrolled
 {
 public:
-    CollectionCanvas();
+    CollectionCanvas(InspectorCanvas* inspector);
     void AddLayerUI(Layer *layer);
     void Rendering();
     void RenderingLayer(LayerUI *layer, int depth = 0, int count = 0);
@@ -42,6 +44,7 @@ private:
         0, 1, 2,
         2, 1, 3};
 
+    InspectorCanvas* mInspector;
     int countNodes(LayerUI *layer);
     int findLayer(float yPos, LayerUI *layer);
     LayerUI *findLayer(LayerUI *layerUI);

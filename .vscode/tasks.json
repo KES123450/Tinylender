@@ -53,6 +53,7 @@
                 "${workspaceFolder}/src/Extrude.cpp",
                 "${workspaceFolder}/src/Context.cpp",
                 "${workspaceFolder}/src/Collection.cpp",
+                "${workspaceFolder}/src/Layer.cpp",
                 "${workspaceFolder}/src/GUI/Widget.cpp",
                 "${workspaceFolder}/src/GUI/Panel.cpp",
                 "${workspaceFolder}/src/GUI/LayerUI.cpp",

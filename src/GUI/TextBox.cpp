@@ -1,6 +1,6 @@
 #include "TextBox.h"
 
-TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text,float textSize,bool stringFlag)
+TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text,float textSize,glm::vec3 textColor,bool stringFlag)
 {
     mPushed = false;
     mSizeX = sizeX;
@@ -122,6 +122,7 @@ TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string tex
     SetText(text);
 
     mTextSize=textSize;
+    mTextColor =textColor;
     glGenVertexArrays(1, &mTextVAO);
     glGenBuffers(1, &mTextVBO);
     glBindVertexArray(mTextVAO);
@@ -152,7 +153,13 @@ void TextBox::GeyKeyDown(std::string str)
 {
     if (!bTextActive)
         return;
-    // TODO : 뒤로가기 키 누르면 삭제 및 문자 외 글자는 리턴
+    
+    if(str=="BACKSPACE"){
+        mStr.pop_back();
+        if(mEventCallback)
+            mEventCallback(mStr);
+        return;
+    }
 
     if (!bString && str[0] < 48 && str[0] > 58)
     {
@@ -160,7 +167,8 @@ void TextBox::GeyKeyDown(std::string str)
     }
 
     mStr.append(str);
-    mEventCallback(mStr);
+    if(mEventCallback)
+        mEventCallback(mStr);
 }
 
 void TextBox::SetText(std::string str)
@@ -239,7 +247,7 @@ void TextBox::Draw()
 
     glStencilFunc(GL_EQUAL, 1, 0xFF);
     glStencilMask(0x00);
-    renderText(mTextShader, mStr, mTextSize, glm::vec3(0.5, 0.8f, 0.2f));
+    renderText(mTextShader, mStr, mTextSize, mTextColor);
 
     glStencilFunc(GL_ALWAYS, 0, 0xFF); // Restore default stencil function
     glStencilMask(0xFF);

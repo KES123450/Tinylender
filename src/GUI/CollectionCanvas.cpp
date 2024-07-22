@@ -1,8 +1,9 @@
 #include "CollectionCanvas.h"
 #include "../Collection.h"
 
-CollectionCanvas::CollectionCanvas()
+CollectionCanvas::CollectionCanvas(InspectorCanvas* inspector)
 {
+    mInspector = inspector;
     mMaskShader = new Shader("Shader/UIVertexShader.glsl", "Shader/maskFragShader.glsl");
     Collection *collection = Collection::GetInstance();
     glm::vec3 layerUIPos = glm::vec3(-0.8510978043912175f, 0.8338536585365853f, 0.0f);
@@ -113,8 +114,10 @@ void CollectionCanvas::OnPointerDown(float xpos, float ypos, float xdelta, float
     mCount = selectedLayerIndex;
     LayerUI *selectedLayerUI = findLayer(mRootLayerUI);
     selectedLayerUI->SelectLayerUI();
+    mInspector->SetInspector(selectedLayerUI->GetLayer());
     Collection::GetInstance()->SelectLayer(selectedLayerUI->GetLayer());
     mPrevSelectedLayerUI = selectedLayerUI;
+
 }
 
 void CollectionCanvas::OnPointer(float xpos, float ypos, float xdelta, float ydelta)

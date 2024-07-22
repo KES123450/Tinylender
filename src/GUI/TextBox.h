@@ -18,7 +18,7 @@
 
 class TextBox : public Widget,public IPressedDown,public IKeyDown{
     public:
-        TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text, float textSize, bool stringFlag);
+        TextBox(glm::vec3 textBoxPos,float sizeX, float sizeY,std::string text, float textSize,glm::vec3 textColor, bool stringFlag);
         void OnPointerDown(float xpos, float ypos,float xdelta,float ydelta) override;
         void GeyKeyDown(std::string str) override;
         void SetText(std::string str);
@@ -41,12 +41,13 @@ class TextBox : public Widget,public IPressedDown,public IKeyDown{
         Shader* mTextShader = new Shader("Shader/fontVertex.glsl", "Shader/fontFrag.glsl");
         float mTextSize=1.0f;
         std::string mStr;
+        glm::vec3 mTextColor;
       
         FT_Library mFreeType;
         std::string mFont = "resource/font/LINESeedSans_A_Th.ttf";
         FT_Face mFace;
         std::map<GLchar, Character> mCharacters;
-        std::function<void(std::string str)> mEventCallback;
+        std::function<void(std::string str)> mEventCallback=NULL;
 
         void renderText(Shader* shader, std::string text, float scale, glm::vec3 color);
 };

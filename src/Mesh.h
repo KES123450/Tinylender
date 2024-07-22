@@ -25,6 +25,9 @@ class Mesh{
         void DrawSelected();
         void SetMesh();
         unsigned int GetVBO() const {return mVBO;}
+        unsigned int GetVAO() const {return mVAO;}
+        std::vector<Texture> GetTexture() const {return textures;}
+        int GetVerticeCount() const {return vertices.size();}
 
     private:
         unsigned int mVAO, mVBO, mEBO;

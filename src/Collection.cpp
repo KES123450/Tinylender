@@ -40,8 +40,8 @@ void Collection::AddLayer(Layer* layer){
 
 void Collection::Rendering(Layer* layer){
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-    if(layer->visible&&layer->layerType==eLayerType::SHAPE){
-        static_cast<ShapeLayer*>(layer)->mesh->Draw();
+    if(layer->GetVisible()&&layer->layerType==eLayerType::SHAPE){
+        static_cast<ShapeLayer*>(layer)->Draw();
     }
     
     if(layer->children.size()==0)
