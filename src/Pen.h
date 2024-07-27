@@ -15,38 +15,42 @@
 #include "Collection.h"
 #include "ShapeLayer.h"
 #include "constants.h"
+#include "Utils.h"
 
 #pragma once
 extern glm::mat4 view;
 extern glm::mat4 projection;
 extern glm::vec3 cameraFront;
 
-class Pen: public IPressedDown,public IMoved,public IState{
-    public:
-        Pen();
-        void DrawMesh();
-        void OnPointerDown(float xpos, float ypos,float xdelta,float ydelta) override;
-        void OnMove(float xpos, float ypos,float xdelta,float ydelta) override;
-        void Handle() override;
-        void HandleOut() override;
-    
-    private:
-        std::vector<Vertex> mVertices;
-        std::vector<unsigned int> mIndice;
-        unsigned int mVBO;
-        unsigned int mVAO;
-        unsigned int mEBO;
+class Pen : public IPressedDown, public IPressed, public IPressedUp, public IMoved, public IState
+{
+public:
+    Pen();
+    void DrawMesh();
+    void OnPointerDown(float xpos, float ypos, float xdelta, float ydelta) override;
+    void OnPointer(float xpos, float ypos, float xdelta, float ydelta) override;
+    void OnPointerUp(float xpos, float ypos, float xdelta, float ydelta) override;
+    void OnMove(float xpos, float ypos, float xdelta, float ydelta) override;
+    void Handle() override;
+    void HandleOut() override;
 
-        float mLineVertices[9] = {
+private:
+    std::vector<Vertex> mVertices;
+    std::vector<unsigned int> mIndice;
+    unsigned int mVBO;
+    unsigned int mVAO;
+    unsigned int mEBO;
+
+    float mLineVertices[9] = {
         0.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 0.0f};
-    
-        unsigned int mLineVBO;
-        unsigned int mLineVAO;
-        bool bDraw=false;
-        bool bFirst=true;
 
-        glm::vec3 screenToLocal(glm::vec2 screen);
-    
+    unsigned int mLineVBO;
+    unsigned int mLineVAO;
+    bool bDraw = false;
+    bool bFirst = true;
+    glm::vec3 mNowPoint;
+
+    float[] bezierSpline(float point1, float point2, float Point3, int pointNum);
 };

@@ -124,6 +124,8 @@ int main()
     InputEventSystem::GetInstance()->AddPressedUp(dotState);
 
     InputEventSystem::GetInstance()->AddPressedDown(lineState);
+    InputEventSystem::GetInstance()->AddPressed(lineState);
+    InputEventSystem::GetInstance()->AddPressedUp(lineState);
     InputEventSystem::GetInstance()->AddMoved(lineState);
 
     InputEventSystem::GetInstance()->AddPressed(surfaceState);
