@@ -14,6 +14,7 @@ class ShapeLayer : public Layer
         ShapeLayer(Mesh* m, std::string name);
         void SetPosition(glm::vec3 pos);
         void SetRotation(glm::vec3 rot);
+        void SetScale(glm::vec3 scale);
         void Draw();
         Mesh* mesh;
     

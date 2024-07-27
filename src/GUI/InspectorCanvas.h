@@ -23,6 +23,8 @@ class InspectorCanvas{
         ,*mScaleTextBoxX, *mScaleTextBoxY, *mScaleTextBoxZ;
         Panel *mInspectorPanel;
 
+        TextBox* t;
+
         void setPositionX(std::string str);
         void setPositionY(std::string str);
         void setPositionZ(std::string str);

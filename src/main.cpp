@@ -14,7 +14,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdio.h>
-#include "Fucking.h"
+#include "FreeTypeImporter.h"
 #include "constants.h"
 #include "InputEventSystem.h"
 #include "Model.h"
@@ -150,10 +150,6 @@ int main()
     Collection::GetInstance() -> SetCollectionCanvas(collectionCanvas);
     Canvas* canvas = new Canvas();
 
-    TextBox* t = new TextBox(glm::vec3(0.5f,0.2f,0.0f),0.6f,0.4f,"Fuck",1.0f,glm::vec3(0.3f,0.3f,0.3f),true);
-    InputEventSystem::GetInstance()->AddKeyDown(t);
-    InputEventSystem::GetInstance()->AddPressedDown(t);
-    canvas->AddWidget(t);
 
     Button* fileBtn = new Button(glm::vec3(-0.957418496340652f,0.9390243902439024f,0.0f)
     ,0.05056553559547571f,0.09268292682926829f,"resource/state/fileIcon.png",eImageType::PNG);
@@ -284,7 +280,6 @@ int main()
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
       
-        //RenderText(textShader, "Tinylender is vert very very tiny lender2343454565", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
         glm::mat4 model=glm::mat4(1.0f);
         ourShader.use();
         unsigned int modelLoc =glGetUniformLocation(ourShader.ID,"model");

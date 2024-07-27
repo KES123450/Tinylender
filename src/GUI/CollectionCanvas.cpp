@@ -208,8 +208,6 @@ void CollectionCanvas::ScrollLayer(LayerUI *layer, float xoffset, float yoffset,
 void CollectionCanvas::drawMask()
 {
     mMaskShader->use();
-    // glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    // glStencilMask(0xFF);
     glBindVertexArray(mMaskVAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

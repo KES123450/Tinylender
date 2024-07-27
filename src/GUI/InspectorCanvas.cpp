@@ -45,7 +45,12 @@ InspectorCanvas::InspectorCanvas()
     InputEventSystem::GetInstance()->AddKeyDown(mRotationTextBoxZ);
     mRotationTextBoxZ->SetEventCallback([this](std::string str)
                                         { setRotationZ(str); });
-    AddWidget(mRotationTextBoxZ);
+    AddWidget(mRotationTextBoxZ); 
+/*
+    t = new TextBox(glm::vec3(0.2f,0.5f, 0.0f),0.5f, 0.5f, "tinylender", 0.8f, glm::vec3(0.3f, 0.3f, 0.3f), true);
+    InputEventSystem::GetInstance()->AddPressedDown(t);
+    InputEventSystem::GetInstance()->AddKeyDown(t);
+    AddWidget(t);*/
 }
 
 void InspectorCanvas::AddWidget(Widget *w)
