@@ -41,16 +41,21 @@ private:
     unsigned int mVAO;
     unsigned int mEBO;
 
-    float mLineVertices[9] = {
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f};
-
+    float mLineVertices[9] = {0};
     unsigned int mLineVBO;
     unsigned int mLineVAO;
+
+    float mSplineVertices[270] = {0};
+    unsigned int mSplineVBO;
+    unsigned int mSplineVAO;
+
     bool bDraw = false;
+    bool bPressed = false;
+    bool bCurve=false;
+    bool bCurve2nd=false;
     bool bFirst = true;
     glm::vec3 mNowPoint;
+    glm::vec3 mControlPoint1;
 
-    float[] bezierSpline(float point1, float point2, float Point3, int pointNum);
+    std::vector<glm::vec3> bezierSpline(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, int pointNum);
 };
