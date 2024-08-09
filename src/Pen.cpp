@@ -173,6 +173,10 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
         {
             if (bCurve)
             {
+                if (mVertices.size() == 2)
+                {
+                    mVertices.push_back(mVertices[mVertices.size() - 1]);
+                }
                 glm::vec3 controlPoint = ScreenToNDC(glm::vec2(xpos, ypos));
                 Vertex temp = mVertices[mVertices.size() - 1];
                 std::vector<glm::vec3> bezierPoints = bezierSpline(mVertices[mVertices.size() - 1].Position, controlPoint, mNowPoint, 30);
@@ -202,7 +206,7 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
                 mVertices.push_back(mVertices[0]);
                 mVertices.push_back(Vertex{bezierPoints[29], glm::vec3(1.0f), glm::vec2(1.0f), glm::vec3(1.0f)});
                 mVertices.push_back(vert);
-                 bCurve2nd = false;
+                bCurve2nd = false;
             }
             else
             {

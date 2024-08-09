@@ -179,7 +179,7 @@ int main()
         }
     };
     dotBtn->SetbuttonCallback(std::function<void(double, double)>(dotBtnCallback));
-    canvas->AddWidget(dotBtn);
+    canvas->AddWidget(dotBtn); 
 
     Button *lineBtn = new Button(glm::vec3(-0.7964071856287425f, 0.9390243902439024f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/lineIcon.png", eImageType::PNG);
     auto lineBtnCallback = [&lineBtn, &context](double xpos, double ypos)

@@ -53,6 +53,7 @@ private:
     bool bPressed = false;
     bool bCurve=false;
     bool bCurve2nd=false;
+    bool bCurve3rd=false;
     bool bFirst = true;
     glm::vec3 mNowPoint;
     glm::vec3 mControlPoint1;
