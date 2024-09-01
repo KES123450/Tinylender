@@ -15,10 +15,12 @@ class ShapeLayer : public Layer
         void SetPosition(glm::vec3 pos);
         void SetRotation(glm::vec3 rot);
         void SetScale(glm::vec3 scale);
+        void SetColor(glm::vec3 color);
         void Draw();
         Mesh* mesh;
     
     private:
+        glm::vec3 mColor;
         Shader mShader;
 
 };

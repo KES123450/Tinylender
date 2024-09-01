@@ -51,12 +51,13 @@ private:
 
     bool bDraw = false;
     bool bPressed = false;
-    bool bCurve=false;
-    bool bCurve2nd=false;
-    bool bCurve3rd=false;
+    bool bCurve = false;
+    bool bCurve2nd = false;
+    bool bCurve3rd = false;
     bool bFirst = true;
     glm::vec3 mNowPoint;
     glm::vec3 mControlPoint1;
 
     std::vector<glm::vec3> bezierSpline(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, int pointNum);
+    std::vector<glm::vec3> bezierSpline(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 point4, int pointNum);
 };

@@ -45,8 +45,7 @@ InspectorCanvas::InspectorCanvas()
     InputEventSystem::GetInstance()->AddKeyDown(mRotationTextBoxZ);
     mRotationTextBoxZ->SetEventCallback([this](std::string str)
                                         { setRotationZ(str); });
-    AddWidget(mRotationTextBoxZ); 
-
+    AddWidget(mRotationTextBoxZ);
 }
 
 void InspectorCanvas::AddWidget(Widget *w)
@@ -211,6 +210,14 @@ void InspectorCanvas::setRotationZ(std::string str)
     default:
         break;
     }
+}
+
+void InspectorCanvas::SetColor(glm::vec3 color)
+{
+    if(mSelectedLayer->layerType!=eLayerType::SHAPE)
+        return;
+    
+    static_cast<
 }
 
 void InspectorCanvas::SetInspector(Layer *layer)

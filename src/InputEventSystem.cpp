@@ -199,4 +199,13 @@ void InputEventSystem::HandleKeyEvent(int key, int action)
         }
         return;
     }
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        for (IKeyDown *child : mKeyDown)
+        {
+            child->GeyKeyDown("ESC");
+        }
+        return;
+    }
 }

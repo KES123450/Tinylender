@@ -179,7 +179,7 @@ int main()
         }
     };
     dotBtn->SetbuttonCallback(std::function<void(double, double)>(dotBtnCallback));
-    canvas->AddWidget(dotBtn); 
+    canvas->AddWidget(dotBtn);
 
     Button *lineBtn = new Button(glm::vec3(-0.7964071856287425f, 0.9390243902439024f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/lineIcon.png", eImageType::PNG);
     auto lineBtnCallback = [&lineBtn, &context](double xpos, double ypos)
@@ -190,7 +190,6 @@ int main()
         {
             lineBtn->SetTexture("resource/state/lineIconPushed.png", eImageType::PNG);
             context->Transition(eUIState::LINE);
-            printf("%s", "  lineBTN  ");
         }
         else
         {
@@ -305,9 +304,8 @@ int main()
         glfwPollEvents();
     }
 
-    // glDeleteVertexArrays(1, &VAO);
-    // glDeleteBuffers(1, &VBO);
-    // glDeleteProgram(shaderProgram);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 
     delete (fileBtn);
     // delete(panel);
@@ -322,8 +320,8 @@ void processInput(GLFWwindow *window)
 {
     float cameraSpeed = 0.05f;
 
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    //  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    //     glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;

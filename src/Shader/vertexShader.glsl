@@ -10,6 +10,7 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform vec3 cameraPosition;
 uniform vec3 val=vec3(0.5f);
+uniform vec3 inColor = vec3(0.3f,0.3f,0.3f);
 out vec3 valColor=vec3(0.5f,0.5f,0.5f);
 out vec3 color;
 out vec3 FragPos;
@@ -19,7 +20,7 @@ void main()
 {
    //vec3 lightDir =vec3(0.5f,0.1f,0.2f);
    //vec4 normal = projection*view*model*vec4(aNormal.x,aNormal.y,aNormal.z,1.0f); 
-   color= aNormal;
+   color= inColor;
    valColor=val;
    FragPos=vec3(model * vec4(aPos, 1.0));
    cameraPos=cameraPosition;

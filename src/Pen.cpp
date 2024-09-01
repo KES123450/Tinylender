@@ -106,7 +106,6 @@ void Pen::DrawMesh()
 
 void Pen::OnPointerDown(float xpos, float ypos, float xdelta, float ydelta)
 {
-    printf("%s", "  down  ");
     if (!bDraw)
         return;
 
@@ -115,11 +114,16 @@ void Pen::OnPointerDown(float xpos, float ypos, float xdelta, float ydelta)
 
 void Pen::OnPointer(float xpos, float ypos, float xdelta, float ydelta)
 {
-    printf("%s", "  press  ");
     if (!bDraw)
         return;
 
     bPressed = true;
+
+    if (bCurve2nd)
+    {
+        bCurve2nd = false;
+        bCurve3rd = true;
+    }
 }
 
 void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
@@ -129,7 +133,6 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
 
     if (glm::length(mNowPoint - mVertices[0].Position) <= 0.1f && mVertices.size() > 3)
     {
-        printf("%s", "  done  \n");
         // mesh로 만들어서 collection에 추가
         std::vector<std::vector<unsigned int>> faces;
         std::vector<unsigned int> f;
@@ -150,6 +153,10 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
         mVertices.push_back({glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(0.0f), glm::vec3(0.0f)});
         mIndice.clear();
         bFirst = true;
+        bPressed = false;
+        bCurve = false;
+        bCurve2nd = false;
+        bCurve3rd = false;
     }
     else
     {
@@ -226,6 +233,24 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
                 mVertices.push_back(Vertex{bezierPoints[29], glm::vec3(1.0f), glm::vec2(1.0f), glm::vec3(1.0f)});
                 mVertices.push_back(vert);
                 bCurve2nd = false;
+                mControlPoint1 = mNowPoint + mNowPoint - controlPoint;
+            }
+            else if (bCurve3rd)
+            {
+                glm::vec3 controlPoint = ScreenToNDC(glm::vec2(xpos, ypos));
+                std::vector<glm::vec3> bezierPoints = bezierSpline(mVertices[mVertices.size() - 1].Position, mControlPoint1, controlPoint, mNowPoint, 30);
+                for (int i = 0; i < 29; i++)
+                {
+                    mVertices.push_back(mVertices[0]);
+                    mVertices.push_back(Vertex{bezierPoints[i], glm::vec3(1.0f), glm::vec2(1.0f), glm::vec3(1.0f)});
+                    mVertices.push_back(Vertex{bezierPoints[i + 1], glm::vec3(1.0f), glm::vec2(1.0f), glm::vec3(1.0f)});
+                }
+                mVertices.push_back(mVertices[0]);
+                mVertices.push_back(Vertex{bezierPoints[29], glm::vec3(1.0f), glm::vec2(1.0f), glm::vec3(1.0f)});
+                mVertices.push_back(vert);
+                bCurve2nd = true;
+                bCurve3rd = false;
+                mControlPoint1 = mNowPoint + mNowPoint - controlPoint;
             }
             else
             {
@@ -260,7 +285,6 @@ void Pen::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
 
 void Pen::OnMove(float xpos, float ypos, float xdelta, float ydelta)
 {
-    printf("%s", "  move  ");
     if (!bDraw)
         return;
 
@@ -274,25 +298,49 @@ void Pen::OnMove(float xpos, float ypos, float xdelta, float ydelta)
             return;
         }
 
-        bCurve = true;
-        std::vector<glm::vec3> bezierPoints = bezierSpline(mNowPoint, point, mVertices[mVertices.size() - 1].Position, 30);
-        for (int i = 0; i < 30; i++)
+        if (bCurve3rd)
         {
-            mSplineVertices[9 * i] = mVertices[0].Position.x;
-            mSplineVertices[9 * i + 1] = mVertices[0].Position.y;
-            mSplineVertices[9 * i + 2] = mVertices[0].Position.z;
+            std::vector<glm::vec3> bezierPoints = bezierSpline(mVertices[mVertices.size() - 1].Position, mControlPoint1, point, mNowPoint, 30);
+            for (int i = 0; i < 30; i++)
+            {
+                mSplineVertices[9 * i] = mVertices[0].Position.x;
+                mSplineVertices[9 * i + 1] = mVertices[0].Position.y;
+                mSplineVertices[9 * i + 2] = mVertices[0].Position.z;
 
-            mSplineVertices[9 * i + 3] = bezierPoints[i].x;
-            mSplineVertices[9 * i + 4] = bezierPoints[i].y;
-            mSplineVertices[9 * i + 5] = bezierPoints[i].z;
+                mSplineVertices[9 * i + 3] = bezierPoints[i].x;
+                mSplineVertices[9 * i + 4] = bezierPoints[i].y;
+                mSplineVertices[9 * i + 5] = bezierPoints[i].z;
 
-            mSplineVertices[9 * i + 6] = bezierPoints[i + 1].x;
-            mSplineVertices[9 * i + 7] = bezierPoints[i + 1].y;
-            mSplineVertices[9 * i + 8] = bezierPoints[i + 1].z;
+                mSplineVertices[9 * i + 6] = bezierPoints[i + 1].x;
+                mSplineVertices[9 * i + 7] = bezierPoints[i + 1].y;
+                mSplineVertices[9 * i + 8] = bezierPoints[i + 1].z;
+            }
+            mSplineVertices[267] = mVertices[0].Position.x;
+            mSplineVertices[268] = mVertices[0].Position.y;
+            mSplineVertices[269] = mVertices[0].Position.z;
         }
-        mSplineVertices[267] = mVertices[mVertices.size() - 1].Position.x;
-        mSplineVertices[268] = mVertices[mVertices.size() - 1].Position.y;
-        mSplineVertices[269] = mVertices[mVertices.size() - 1].Position.z;
+        else
+        {
+            bCurve = true;
+            std::vector<glm::vec3> bezierPoints = bezierSpline(mNowPoint, point, mVertices[mVertices.size() - 1].Position, 30);
+            for (int i = 0; i < 30; i++)
+            {
+                mSplineVertices[9 * i] = mVertices[0].Position.x;
+                mSplineVertices[9 * i + 1] = mVertices[0].Position.y;
+                mSplineVertices[9 * i + 2] = mVertices[0].Position.z;
+
+                mSplineVertices[9 * i + 3] = bezierPoints[i].x;
+                mSplineVertices[9 * i + 4] = bezierPoints[i].y;
+                mSplineVertices[9 * i + 5] = bezierPoints[i].z;
+
+                mSplineVertices[9 * i + 6] = bezierPoints[i + 1].x;
+                mSplineVertices[9 * i + 7] = bezierPoints[i + 1].y;
+                mSplineVertices[9 * i + 8] = bezierPoints[i + 1].z;
+            }
+            mSplineVertices[267] = mVertices[mVertices.size() - 1].Position.x;
+            mSplineVertices[268] = mVertices[mVertices.size() - 1].Position.y;
+            mSplineVertices[269] = mVertices[mVertices.size() - 1].Position.z;
+        }
     }
     else
     {
@@ -342,6 +390,38 @@ std::vector<glm::vec3> Pen::bezierSpline(glm::vec3 point1, glm::vec3 point2, glm
 
         float x = lerp(ax, bx, space * i);
         float y = lerp(ay, by, space * i);
+        bezierPoint.push_back(glm::vec3(x, y, 0.0f));
+    }
+
+    return bezierPoint;
+}
+
+std::vector<glm::vec3> Pen::bezierSpline(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 point4, int pointNum)
+{
+    std::vector<glm::vec3> bezierPoint;
+    bezierPoint.reserve(pointNum);
+
+    float space = 1.0f / static_cast<float>(pointNum);
+    for (int i = 0; i < pointNum; i++)
+    {
+        float ax = lerp(point1.x, point2.x, space * i);
+        float ay = lerp(point1.y, point2.y, space * i);
+
+        float bx = lerp(point2.x, point3.x, space * i);
+        float by = lerp(point2.y, point3.y, space * i);
+
+        float cx = lerp(point3.x, point4.x, space * i);
+        float cy = lerp(point3.y, point4.y, space * i);
+
+        float dx = lerp(ax, bx, space * i);
+        float dy = lerp(ay, by, space * i);
+
+        float ex = lerp(bx, cx, space * i);
+        float ey = lerp(by, cy, space * i);
+
+        float x = lerp(dx, ex, space * i);
+        float y = lerp(dy, ey, space * i);
+
         bezierPoint.push_back(glm::vec3(x, y, 0.0f));
     }
 

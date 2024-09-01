@@ -1,5 +1,5 @@
 #pragma once
-
+#include <glm/glm.hpp>
 #include "Widget.h"
 #include "TextBox.h"
 #include "../Layer.h"
@@ -31,5 +31,6 @@ class InspectorCanvas{
         void setRotationX(std::string str);
         void setRotationY(std::string str);
         void setRotationZ(std::string str);
+        void SetColor(glm::vec3 color);
         
 };
