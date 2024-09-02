@@ -3,6 +3,7 @@
 Button::Button(glm::vec3 buttonPos,float sizeX, float sizeY,const char *texPath, eImageType imageType)
 : UIShader("Shader/UIVertexShader.glsl", "Shader/UIFragmentShader.glsl"){
     mPushed=false;
+    mType=eUIType::BUTTON;
     mSizeX =sizeX;
     mSizeY=sizeY;
     mPos=buttonPos;
@@ -107,4 +108,15 @@ void Button::Pushed(){
     }
 
 }
+
+
+
+void Button::Callbtn(){
+    mbuttonCallback(0.0f,0.0f);
+}
+
+void Button::SetbuttonCallback(std::function<void(double xpos, double ypos)> callback){
+    mbuttonCallback = callback;
+}
+
 

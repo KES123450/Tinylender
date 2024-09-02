@@ -3,7 +3,7 @@
 LayerUI::LayerUI(Layer* layer,float layerSizeX,float layerSizeY,glm::vec3 layerPos){
     mLayerUIShader = new Shader("Shader/LayerUIVertexShader.glsl", "Shader/UIFragmentShader.glsl");
     mLayer=layer;
-
+    mType=eUIType::LAYER;
     mSizeX =layerSizeX;
     mSizeY = layerSizeY;
     mPos = layerPos;

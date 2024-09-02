@@ -3,6 +3,7 @@
 TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text,float textSize,glm::vec3 textColor,bool stringFlag)
 {
     mPushed = false;
+    mType=eUIType::TEXTBOX;
     mSizeX = sizeX;
     mSizeY = sizeY;
     mPos = textBoxPos;

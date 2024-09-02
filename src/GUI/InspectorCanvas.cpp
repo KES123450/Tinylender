@@ -214,10 +214,10 @@ void InspectorCanvas::setRotationZ(std::string str)
 
 void InspectorCanvas::SetColor(glm::vec3 color)
 {
-    if(mSelectedLayer->layerType!=eLayerType::SHAPE)
+    if (mSelectedLayer->layerType != eLayerType::SHAPE)
         return;
-    
-    static_cast<
+
+    static_cast<ShapeLayer *>(mSelectedLayer)->SetColor(color);
 }
 
 void InspectorCanvas::SetInspector(Layer *layer)
@@ -243,6 +243,28 @@ void InspectorCanvas::Rendering()
         if (child->GetVisible())
         {
             child->Draw();
+        }
+    }
+}
+
+void InspectorCanvas::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
+{
+    float ndcX = (2 * xpos / SCR_WIDTH) - 1;
+    float ndcY = 1 - (2 * ypos / SCR_HEIGHT);
+
+    for (Widget *child : mChild)
+    {
+        if (child->GetType() != eUIType::BUTTON)
+            continue;
+        Button *b = static_cast<Button *>(child);
+        glm::vec3 pos = b->GetPos();
+        glm::vec2 size = b->GetSize();
+        glm::vec2 sizeHalf = glm::vec2(size.x / 2, size.y / 2);
+
+        if (ndcX >= (pos.x - sizeHalf.x) && ndcX <= (pos.x + sizeHalf.x) && ndcY >= (pos.y - sizeHalf.y) && ndcY <= (pos.y + sizeHalf.y))
+        {
+            if (b->getButtonCallback() != NULL)
+                b->Callbtn();
         }
     }
 }

@@ -6,7 +6,7 @@ Panel::Panel(glm::vec3 buttonPos,float sizeX, float sizeY, const char *texPath,e
     mSizeX =sizeX;
     mSizeY=sizeY;
     mPos=buttonPos;
-
+    mType=eUIType::PANEL;
     float halfX = mSizeX/2;
     float halfY = mSizeY/2;
 
