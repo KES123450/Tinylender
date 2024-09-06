@@ -2,7 +2,7 @@
 
 out vec4 FragColor;
 in vec3 color;
-in vec3 valColor;
+in vec3 objectColor;
 in vec3 FragPos;
 in vec3 cameraPos;
 
@@ -23,8 +23,8 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * vec3(1.0f,1.0f,1.0f);  
         
-    vec3 result = (ambient+diffuse+specular) * valColor;
-    FragColor = vec4(result.x+0.2f,result.y+0.2f,result.z+0.2f, 1.0);
+    vec3 result = (ambient+diffuse+specular) * objectColor;
+    FragColor = vec4(result, 1.0);
 
    //FragColor = vec4(((color.x+1)/2)*valColor.x+0.2f, ((color.y+1)/2)*valColor.y+0.2f, ((color.z+1)/2)*valColor.z+0.2f, 1.0f);
    //FragColor = vec4(valColor.x,valColor.y,valColor.z, 1.0f);

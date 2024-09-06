@@ -28,6 +28,7 @@
 #include "GUI/InspectorCanvas.h"
 #include "stb_image.h"
 #include "Character.h"
+#include "ShapeLayer.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -127,19 +128,8 @@ int main()
     InputEventSystem::GetInstance()->AddPressedUp(surfaceState);
 
     Context *context = new Context(layerState, dotState, lineState, surfaceState);
-    /*std::vector<Mesh>* meshes= backpack->GetMeshes();
-    for(int i=0;i<meshes->size();i++){
-         Mesh* m = &(*meshes)[i];
-         Collection::GetInstance()->SetMesh(m);
-    } */
 
-    /*std::vector<Mesh>* meshes=cube->GetMeshes();
-     for(int i=0;i<meshes->size();i++){
-         Mesh* m = &(*meshes)[i];
-         Collection::GetInstance()->SetMesh(m);
-     } */
-
-    InspectorCanvas *inspectorCanvas = new InspectorCanvas();
+    InspectorCanvas *inspectorCanvas = new InspectorCanvas(Collection::GetInstance()->GetRootLayer());
     CollectionCanvas *collectionCanvas = new CollectionCanvas(inspectorCanvas);
     Collection::GetInstance()->SetCollectionCanvas(collectionCanvas);
     Canvas *canvas = new Canvas();
@@ -266,7 +256,21 @@ int main()
     InputEventSystem::GetInstance()->AddPressedUp(canvas);
     InputEventSystem::GetInstance()->AddPressedDown(collectionCanvas);
     InputEventSystem::GetInstance()->AddScrolled(collectionCanvas);
+    InputEventSystem::GetInstance()->AddPressedUp(inspectorCanvas);
 
+    /*std::vector<Mesh>* meshes= backpack->GetMeshes();
+    for(int i=0;i<meshes->size();i++){
+         Mesh* m = &(*meshes)[i];
+         Collection::GetInstance()->SetMesh(m);
+    } */
+/*
+    std::vector<Mesh>* meshes=cube->GetMeshes();
+    for(int i=0;i<meshes->size();i++){
+         Mesh* m = &(*meshes)[i];
+         ShapeLayer* l = new ShapeLayer(m,"cube");
+         Collection::GetInstance()->AddLayer(l);
+     }
+*/
     // 메인 루프튵ㅌㅌㅌ
     while (!glfwWindowShouldClose(window))
     {

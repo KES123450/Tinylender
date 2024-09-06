@@ -1,12 +1,13 @@
 #include "TextBox.h"
 
-TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text,float textSize,glm::vec3 textColor,bool stringFlag)
+TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string text, float textSize, glm::vec3 textColor, bool stringFlag, float dragOffset)
 {
     mPushed = false;
-    mType=eUIType::TEXTBOX;
+    mType = eUIType::TEXTBOX;
     mSizeX = sizeX;
     mSizeY = sizeY;
     mPos = textBoxPos;
+    mDragOffset = dragOffset;
 
     float halfX = mSizeX / 2;
     float halfY = mSizeY / 2;
@@ -122,8 +123,8 @@ TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string tex
 
     SetText(text);
 
-    mTextSize=textSize;
-    mTextColor =textColor;
+    mTextSize = textSize;
+    mTextColor = textColor;
     glGenVertexArrays(1, &mTextVAO);
     glGenBuffers(1, &mTextVBO);
     glBindVertexArray(mTextVAO);
@@ -137,27 +138,53 @@ TextBox::TextBox(glm::vec3 textBoxPos, float sizeX, float sizeY, std::string tex
 
 void TextBox::OnPointerDown(float xpos, float ypos, float xdelta, float ydelta)
 {
+    if (!bVisible)
+        return;
+
     glm::vec3 pointNDC = ScreenToNDC(glm::vec2(xpos, ypos));
     glm::vec2 sizeHalf = glm::vec2(mSizeX / 2, mSizeY / 2);
 
     if (pointNDC.x >= (mPos.x - sizeHalf.x) && pointNDC.x <= (mPos.x + sizeHalf.x) && pointNDC.y >= (mPos.y - sizeHalf.y) && pointNDC.y <= (mPos.y + sizeHalf.y))
     {
         bTextActive = true;
+        bDragged = true;
     }
     else
     {
         bTextActive = false;
+        bDragged = false;
     }
+}
+
+void TextBox::OnPointer(float xpos, float ypos, float xdelta, float ydelta)
+{
+    if (!bVisible || !bDragged || bString)
+        return;
+
+    float textDelta = std::stof(mStr) + xdelta * mDragOffset;
+    mStr = std::to_string(textDelta);
+    
+    if (mEventCallback)
+        mEventCallback(mStr);
+}
+
+void TextBox::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
+{
+    bDragged = false;
 }
 
 void TextBox::GeyKeyDown(std::string str)
 {
+    if (!bVisible)
+        return;
+
     if (!bTextActive)
         return;
-    
-    if(str=="BACKSPACE"){
+
+    if (str == "BACKSPACE")
+    {
         mStr.pop_back();
-        if(mEventCallback)
+        if (mEventCallback)
             mEventCallback(mStr);
         return;
     }
@@ -168,7 +195,7 @@ void TextBox::GeyKeyDown(std::string str)
     }
 
     mStr.append(str);
-    if(mEventCallback)
+    if (mEventCallback)
         mEventCallback(mStr);
 }
 
@@ -237,6 +264,9 @@ void TextBox::renderText(Shader *shader, std::string text, float scale, glm::vec
 
 void TextBox::Draw()
 {
+    if (!bVisible)
+        return;
+
     glEnable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);

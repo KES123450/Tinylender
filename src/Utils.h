@@ -11,4 +11,3 @@ T lerp(T a, T b, T t)
 {
     return a + t * (b - a);
 }
-

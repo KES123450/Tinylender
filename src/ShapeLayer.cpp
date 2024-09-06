@@ -52,4 +52,6 @@ void ShapeLayer::SetScale(glm::vec3 scale)
 
 void ShapeLayer::SetColor(glm::vec3 color)
 {
+    mShader.use();
+    glUniform3f(glGetUniformLocation(mShader.ID, "inColor"), color.x, color.y, color.z);
 }

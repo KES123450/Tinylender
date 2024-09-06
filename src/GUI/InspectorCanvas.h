@@ -1,5 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <array>
+#include <tuple>
+#include <string>
 #include "Widget.h"
 #include "TextBox.h"
 #include "button.h"
@@ -12,16 +15,18 @@
 class InspectorCanvas : public IPressedUp
 {
 public:
-    InspectorCanvas();
+    InspectorCanvas(Layer *rootLayer);
     void Rendering();
     void SetInspector(Layer *layer);
     void AddWidget(Widget *w);
-    void OnPointerUp(float xpos, float ypos,float xdelta,float ydelta) override;
+    void OnPointerUp(float xpos, float ypos, float xdelta, float ydelta) override;
+    void SetColor(glm::vec3 color);
 
 private:
     Layer *mSelectedLayer;
     std::vector<Widget *> mChild;
     TextBox *mPositionTextBoxX, *mPositionTextBoxY, *mPositionTextBoxZ, *mRotationTextBoxX, *mRotationTextBoxY, *mRotationTextBoxZ, *mScaleTextBoxX, *mScaleTextBoxY, *mScaleTextBoxZ;
+    std::array<Button *, 21> mButtons = {nullptr};
     Panel *mInspectorPanel;
 
     TextBox *t;
@@ -32,5 +37,4 @@ private:
     void setRotationX(std::string str);
     void setRotationY(std::string str);
     void setRotationZ(std::string str);
-    void SetColor(glm::vec3 color);
 };
