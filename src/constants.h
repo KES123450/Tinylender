@@ -15,6 +15,8 @@ const float LAYER_SIZE_Y = 0.08351219512195122f;
 const float UI_GAURD_SCR_X = 310.0f;
 const float CURVE_DISTANCE = 0.1f;
 
+const unsigned int LIGHT_SIZE = 96;
+
 enum class eImageType
 {
     JPG,

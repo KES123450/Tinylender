@@ -29,6 +29,7 @@
 #include "stb_image.h"
 #include "Character.h"
 #include "ShapeLayer.h"
+#include "LightLayer.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -258,19 +259,22 @@ int main()
     InputEventSystem::GetInstance()->AddScrolled(collectionCanvas);
     InputEventSystem::GetInstance()->AddPressedUp(inspectorCanvas);
 
+    LightLayer *lightTest = new LightLayer("test1",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
+    Collection::GetInstance()->AddLayer(lightTest);
+
     /*std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
          Mesh* m = &(*meshes)[i];
          Collection::GetInstance()->SetMesh(m);
     } */
-/*
-    std::vector<Mesh>* meshes=cube->GetMeshes();
-    for(int i=0;i<meshes->size();i++){
-         Mesh* m = &(*meshes)[i];
-         ShapeLayer* l = new ShapeLayer(m,"cube");
-         Collection::GetInstance()->AddLayer(l);
-     }
-*/
+    /*
+        std::vector<Mesh>* meshes=cube->GetMeshes();
+        for(int i=0;i<meshes->size();i++){
+             Mesh* m = &(*meshes)[i];
+             ShapeLayer* l = new ShapeLayer(m,"cube");
+             Collection::GetInstance()->AddLayer(l);
+         }
+    */
     // 메인 루프튵ㅌㅌㅌ
     while (!glfwWindowShouldClose(window))
     {

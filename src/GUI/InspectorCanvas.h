@@ -8,6 +8,7 @@
 #include "button.h"
 #include "../Layer.h"
 #include "../ShapeLayer.h"
+#include "../LightLayer.h"
 #include "../InputEventSystem.h"
 #include "../IPressedUp.h"
 #include "Panel.h"

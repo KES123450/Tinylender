@@ -63,6 +63,7 @@
                 "${workspaceFolder}/src/GUI/TextBox.cpp",
                 "${workspaceFolder}/src/GUI/InspectorCanvas.cpp",
                 "${workspaceFolder}/src/Utils.cpp",
+                "${workspaceFolder}/src/LightLayer.cpp",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",

@@ -6,11 +6,13 @@ ShapeLayer::ShapeLayer(Mesh *m, std::string name)
     this->name = name;
     layerType = eLayerType::SHAPE;
     mesh = m;
+    mUniformBlockIndex = glGetUniformBlockIndex(mShader.ID, "Lights");
+    glUniformBlockBinding(mShader.ID, mUniformBlockIndex, 0);
+    SetColor(glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void ShapeLayer::Draw()
 {
-
     mShader.use();
 
     glm::mat4 transform = glm::mat4(1.0f);

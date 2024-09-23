@@ -21,6 +21,8 @@ class ShapeLayer : public Layer
     
     private:
         glm::vec3 mColor;
+        unsigned int mUniformBlockIndex;
         Shader mShader;
+        
 
 };

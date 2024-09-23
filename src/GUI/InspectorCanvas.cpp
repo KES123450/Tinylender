@@ -30,24 +30,22 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
         std::make_tuple(glm::vec3(0.9574f, 0.3119f, 0.0f), glm::vec3(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f), "resource/Color/Color21.png"),
     };
 
-    
     for (int i = 0; i < 21; i++)
     {
         mButtons[i] = new Button(std::get<0>(buttonDatas[i]), 0.02395f, 0.04390f, std::get<2>(buttonDatas[i]), eImageType::PNG);
         glm::vec3 color = std::get<1>(buttonDatas[i]);
-        auto BtnCallback = [this,color](double xpos, double ypos)
+        auto BtnCallback = [this, color](double xpos, double ypos)
         {
             this->SetColor(color);
         };
         mButtons[i]->SetbuttonCallback(std::function<void(double, double)>(BtnCallback));
         AddWidget(mButtons[i]);
     }
-    
 
     mInspectorPanel = new Panel(glm::vec3(0.8443113772455091f, -0.06008536585365842f, 0.0f), 0.31137724550898205f, 1.879829268292683, "resource/inspector.png", eImageType::PNG);
     AddWidget(mInspectorPanel);
 
-    mPositionTextBoxX = new TextBox(glm::vec3(0.8196939454424483f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mPositionTextBoxX = new TextBox(glm::vec3(0.8196939454424483f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mPositionTextBoxX);
     InputEventSystem::GetInstance()->AddPressed(mPositionTextBoxX);
     InputEventSystem::GetInstance()->AddPressedUp(mPositionTextBoxX);
@@ -56,7 +54,7 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
                                         { setPositionX(str); });
     AddWidget(mPositionTextBoxX);
 
-    mPositionTextBoxY = new TextBox(glm::vec3(0.8875582168995342f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mPositionTextBoxY = new TextBox(glm::vec3(0.8875582168995342f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mPositionTextBoxY);
     InputEventSystem::GetInstance()->AddPressed(mPositionTextBoxY);
     InputEventSystem::GetInstance()->AddPressedUp(mPositionTextBoxY);
@@ -65,7 +63,7 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
                                         { setPositionY(str); });
     AddWidget(mPositionTextBoxY);
 
-    mPositionTextBoxZ = new TextBox(glm::vec3(0.95542248835662f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mPositionTextBoxZ = new TextBox(glm::vec3(0.95542248835662f, 0.7682926829268293f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mPositionTextBoxZ);
     InputEventSystem::GetInstance()->AddPressed(mPositionTextBoxZ);
     InputEventSystem::GetInstance()->AddPressedUp(mPositionTextBoxZ);
@@ -74,7 +72,7 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
                                         { setPositionZ(str); });
     AddWidget(mPositionTextBoxZ);
 
-    mRotationTextBoxX = new TextBox(glm::vec3(0.8196939454424483f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mRotationTextBoxX = new TextBox(glm::vec3(0.8196939454424483f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mRotationTextBoxX);
     InputEventSystem::GetInstance()->AddPressed(mRotationTextBoxX);
     InputEventSystem::GetInstance()->AddPressedUp(mRotationTextBoxX);
@@ -83,7 +81,7 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
                                         { setRotationX(str); });
     AddWidget(mRotationTextBoxX);
 
-    mRotationTextBoxY = new TextBox(glm::vec3(0.8875582168995342f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mRotationTextBoxY = new TextBox(glm::vec3(0.8875582168995342f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mRotationTextBoxY);
     InputEventSystem::GetInstance()->AddPressed(mRotationTextBoxY);
     InputEventSystem::GetInstance()->AddPressedUp(mRotationTextBoxY);
@@ -92,7 +90,7 @@ InspectorCanvas::InspectorCanvas(Layer *rootLayer)
                                         { setRotationY(str); });
     AddWidget(mRotationTextBoxY);
 
-    mRotationTextBoxZ = new TextBox(glm::vec3(0.95542248835662f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false,1.0f);
+    mRotationTextBoxZ = new TextBox(glm::vec3(0.95542248835662f, 0.7012195121951219f, 0.0f), 0.0385894876912841f, 0.02926829268292683f, "1", 0.3f, glm::vec3(0.85098039215f, 0.85098039215f, 0.85098039215f), false, 1.0f);
     InputEventSystem::GetInstance()->AddPressedDown(mRotationTextBoxZ);
     InputEventSystem::GetInstance()->AddPressed(mRotationTextBoxZ);
     InputEventSystem::GetInstance()->AddPressedUp(mRotationTextBoxZ);
@@ -126,6 +124,10 @@ void InspectorCanvas::setPositionX(std::string str)
     {
     case eLayerType::SHAPE:
         static_cast<ShapeLayer *>(mSelectedLayer)->SetPosition(newPosition);
+        break;
+
+    case eLayerType::LIGHT:
+        static_cast<LightLayer *>(mSelectedLayer)->SetPosition(newPosition);
         break;
 
     default:
@@ -268,10 +270,17 @@ void InspectorCanvas::setRotationZ(std::string str)
 
 void InspectorCanvas::SetColor(glm::vec3 color)
 {
-    if (mSelectedLayer->layerType != eLayerType::SHAPE)
+    if (mSelectedLayer->layerType == eLayerType::SHAPE)
+    {
+        static_cast<ShapeLayer *>(mSelectedLayer)->SetColor(color);
         return;
+    }
 
-    static_cast<ShapeLayer *>(mSelectedLayer)->SetColor(color);
+    if (mSelectedLayer->layerType == eLayerType::LIGHT)
+    {
+        static_cast<LightLayer *>(mSelectedLayer)->SetColor(color);
+        return;
+    }
 }
 
 void InspectorCanvas::SetInspector(Layer *layer)
