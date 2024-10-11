@@ -32,6 +32,7 @@ private:
     bool bFindVertex = false;
     float mDeltaX, mDeltaY;
     int mSelectedIdx = 0;
+    std::vector<int> mSelectedIndices;
     glm::vec2 coordinatelocalToScreen(float x, float y, float z);
     bool searchVertex(float xpos, float ypos);
 };

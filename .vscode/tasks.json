@@ -2,32 +2,6 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: g++ 활성 파일 빌드",
-            "command": "/usr/bin/g++",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++11",
-                "-std=c++14",
-                "-I${workspaceFolder}/include",
-                "-L${workspaceFolder}/lib",
-                "${file}",
-                "-o",
-                "${workspaceRoot}/mains",
-                "-lglfw3"
-                
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-            "detail": "디버거에서 생성된 작업입니다."
-        },
-        {
-            "type": "cppbuild",
             "label": "C/C++: clang++ 활성 파일 빌드",
             "command": "/usr/bin/clang++",
             "args": [
@@ -91,6 +65,32 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "detail": "디버거에서 생성된 작업입니다."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ 활성 파일 빌드",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-std=c++14",
+                "-I${workspaceFolder}/include",
+                "-L${workspaceFolder}/lib",
+                "${file}",
+                "-o",
+                "${workspaceRoot}/mains",
+                "-lglfw3"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build"
             },
             "detail": "디버거에서 생성된 작업입니다."
         },

@@ -32,7 +32,6 @@ class LayerUI: public Widget{
         unsigned int mVBO;
         unsigned int mVAO;
         unsigned int mEBO;
-        const char *mTexPath="resource/Layer.jpg";
         unsigned int mTexture;
         int mWidth, mHeight, mMinimaps;
         float mVertexArray[20];

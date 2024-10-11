@@ -15,17 +15,21 @@ void ModifyVertex::Handle()
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 right = glm::normalize(glm::cross(up, -(cameraFront)));
 
-        Vertex offset = selectMesh->vertices[mSelectedIdx];
-        offset.Position.x += mDeltaX * right.x * MODIFY_VERTEX_SPEED;
-        offset.Position.y += -mDeltaY * MODIFY_VERTEX_SPEED;
-        offset.Position.z += mDeltaX * right.z * MODIFY_VERTEX_SPEED;
+        for (int i = 0; i < mSelectedIndices.size(); i++)
+        {
+            Vertex offset = selectMesh->vertices[mSelectedIndices[i]];
+            offset.Position.x += mDeltaX * right.x * MODIFY_VERTEX_SPEED;
+            offset.Position.y += -mDeltaY * MODIFY_VERTEX_SPEED;
+            offset.Position.z += mDeltaX * right.z * MODIFY_VERTEX_SPEED;
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, mSelectedIdx * sizeof(Vertex), sizeof(offset), &offset);
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, mSelectedIndices[i] * sizeof(Vertex), sizeof(offset), &offset);
 
-        selectMesh->vertices[mSelectedIdx].Position.x += mDeltaX * right.x * MODIFY_VERTEX_SPEED;
-        selectMesh->vertices[mSelectedIdx].Position.y += -mDeltaY * MODIFY_VERTEX_SPEED;
-        selectMesh->vertices[mSelectedIdx].Position.z += mDeltaX * right.z * MODIFY_VERTEX_SPEED;
+            selectMesh->vertices[mSelectedIndices[i]].Position.x += mDeltaX * right.x * MODIFY_VERTEX_SPEED;
+            selectMesh->vertices[mSelectedIndices[i]].Position.y += -mDeltaY * MODIFY_VERTEX_SPEED;
+            selectMesh->vertices[mSelectedIndices[i]].Position.z += mDeltaX * right.z * MODIFY_VERTEX_SPEED;
+        }
+        
     }
 }
 
@@ -46,6 +50,7 @@ void ModifyVertex::OnPointer(float xpos, float ypos, float xdelta, float ydelta)
 
 void ModifyVertex::OnPointerUp(float xpos, float ypos, float xdelta, float ydelta)
 {
+    mSelectedIndices.clear();
     bPushed = false;
     bFindVertex = false;
 }
@@ -53,16 +58,17 @@ void ModifyVertex::OnPointerUp(float xpos, float ypos, float xdelta, float ydelt
 glm::vec2 ModifyVertex::coordinatelocalToScreen(float x, float y, float z)
 { //[TODO] 나중에 static으로 유틸함수로 빼버리기
     glm::vec4 local = glm::vec4(x, y, z, 1.0f);
-    glm::vec4 viewCoord = view * local;
-    glm::vec4 clipCoord = projection * viewCoord;
-    glm::vec3 ndc = glm::vec3(clipCoord) / clipCoord.w;
-    glm::vec2 screen = glm::vec2((ndc.x + 1) * (SCR_WIDTH / 2), (ndc.y + 1) * (SCR_HEIGHT / 2));
+    // glm::vec4 viewCoord = view * local;
+    // glm::vec4 clipCoord = projection * viewCoord;
+    // glm::vec3 ndc = glm::vec3(clipCoord) / clipCoord.w;
+    glm::vec2 screen = glm::vec2((local.x + 1) * (SCR_WIDTH / 2), (local.y + 1) * (SCR_HEIGHT / 2));
 
     return screen;
 }
 
 bool ModifyVertex::searchVertex(float xpos, float ypos)
 {
+    bool findCheck = false;
     Layer *layer = Collection::GetInstance()->GetSelectedLayer();
     if (layer->layerType != eLayerType::SHAPE)
     {
@@ -76,9 +82,10 @@ bool ModifyVertex::searchVertex(float xpos, float ypos)
         if (abs(screenMesh.x - xpos) <= 70 && abs(screenMesh.y - (SCR_HEIGHT - ypos)) <= 70)
         {
             mSelectedIdx = i;
-            return true;
+            mSelectedIndices.push_back(i);
+            findCheck = true;
         }
     }
 
-    return false;
+    return findCheck;
 }

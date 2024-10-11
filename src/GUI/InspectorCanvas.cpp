@@ -156,6 +156,10 @@ void InspectorCanvas::setPositionY(std::string str)
         static_cast<ShapeLayer *>(mSelectedLayer)->SetPosition(newPosition);
         break;
 
+    case eLayerType::LIGHT:
+        static_cast<LightLayer *>(mSelectedLayer)->SetPosition(newPosition);
+        break;
+
     default:
         break;
     }
@@ -180,6 +184,10 @@ void InspectorCanvas::setPositionZ(std::string str)
     {
     case eLayerType::SHAPE:
         static_cast<ShapeLayer *>(mSelectedLayer)->SetPosition(newPosition);
+        break;
+    
+    case eLayerType::LIGHT:
+        static_cast<LightLayer *>(mSelectedLayer)->SetPosition(newPosition);
         break;
 
     default:

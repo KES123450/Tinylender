@@ -6,8 +6,8 @@ Collection::Collection()
 {
     glGenBuffers(1, &lightsUBO);
     glBindBuffer(GL_UNIFORM_BUFFER, lightsUBO);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * 4 * 6 * 32, NULL, GL_STATIC_DRAW);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightsUBO, 0, sizeof(float) * 4 * 6 * 32);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * 4 * 2 * 32, NULL, GL_STATIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightsUBO, 0, sizeof(float) * 4 * 2 * 32);
 }
 
 Collection *Collection::GetInstance()

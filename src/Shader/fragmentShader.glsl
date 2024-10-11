@@ -1,6 +1,6 @@
 #version 330 core
 
-struct DirectionalLight
+struct BlinnPhongLight
 {
    vec3 lightColor;
    vec3 lightPos;
@@ -8,7 +8,7 @@ struct DirectionalLight
 
 layout (std140) uniform Lights
 {
-   DirectionalLight dirLights[32];
+    BlinnPhongLight lights[32];
    
 };
 
@@ -18,22 +18,24 @@ in vec3 objectColor;
 in vec3 FragPos;
 in vec3 cameraPos;
  
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
+vec3 CalcBlinnPhongLight(BlinnPhongLight light, vec3 normal, vec3 viewDir);
 
 void main()
 {
+    FragColor = vec4(0.3f,0.3f,0.3f, 1.0f);
+    
     vec3 norm = normalize(normal);
     vec3 viewDir = normalize(cameraPos - FragPos);
     vec3 result;
     for(int i=0; i<5; i++)
     {
-        result+=CalcDirectionalLight(dirLights[i],norm,viewDir);
+        result+=CalcBlinnPhongLight(lights[i],norm,viewDir);
     }
     result *= objectColor;
     FragColor = vec4(result, 1.0);
 }
 
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
+vec3 CalcBlinnPhongLight(BlinnPhongLight light, vec3 normal, vec3 viewDir)
 {
     //ambient light
     vec3 ambient = vec3(1.0,1.0,1.0)*light.lightColor;

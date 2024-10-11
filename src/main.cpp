@@ -94,6 +94,7 @@ int main()
         return -1;
     }
 
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -248,6 +249,15 @@ int main()
     textBtn->SetbuttonCallback(std::function<void(double, double)>(textBtnCallback));
     canvas->AddWidget(textBtn);
 
+    Button *lightBtn = new Button(glm::vec3(-0.47571523f,0.941463414f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/lightIcon.png", eImageType::PNG);
+    auto lightBtnCallback = [&lightBtn, &context](double xpos, double ypos)
+    {
+        LightLayer* light = new LightLayer("layer",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
+        Collection::GetInstance()->AddLayer(light);
+    };
+    lightBtn->SetbuttonCallback(std::function<void(double, double)>(lightBtnCallback));
+    canvas->AddWidget(lightBtn);
+
     Panel *statePanel = new Panel(glm::vec3(0.0f, 0.9390243902439024f, 0.0f), 2.0f, 0.12195121951219512f, "resource/StatePanel.jpg", eImageType::JPG);
     canvas->AddWidget(statePanel);
 
@@ -259,8 +269,8 @@ int main()
     InputEventSystem::GetInstance()->AddScrolled(collectionCanvas);
     InputEventSystem::GetInstance()->AddPressedUp(inspectorCanvas);
 
-    LightLayer *lightTest = new LightLayer("test1",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
-    Collection::GetInstance()->AddLayer(lightTest);
+    //LightLayer *lightTest = new LightLayer("test1",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
+    //Collection::GetInstance()->AddLayer(lightTest);
 
     /*std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
@@ -275,6 +285,7 @@ int main()
              Collection::GetInstance()->AddLayer(l);
          }
     */
+   
     // 메인 루프튵ㅌㅌㅌ
     while (!glfwWindowShouldClose(window))
     {
@@ -285,6 +296,7 @@ int main()
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 
         glm::mat4 model = glm::mat4(1.0f);
         ourShader.use();
@@ -307,6 +319,8 @@ int main()
         canvas->Rendering();
         inspectorCanvas->Rendering();
 
+
+
         // 버퍼 출력
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -316,7 +330,7 @@ int main()
     glDeleteBuffers(1, &VBO);
 
     delete (fileBtn);
-    // delete(panel);
+    //delete(panel);
     delete (canvas);
     glfwTerminate();
 
