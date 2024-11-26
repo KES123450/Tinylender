@@ -20,8 +20,7 @@ void main()
 {
    normal= mat3(transpose(inverse(model)))* aNormal;
    objectColor=inColor;
-   FragPos=vec3(model * vec4(aPos, 1.0));
+   FragPos=vec3(projection * view * model * vec4(aPos, 1.0));
    cameraPos=cameraPosition;
-   gl_Position = model*vec4(aPos,1.0f);
+   gl_Position = projection * view * model*vec4(aPos,1.0f);
 }
-

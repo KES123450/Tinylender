@@ -9,7 +9,6 @@ struct BlinnPhongLight
 layout (std140) uniform Lights
 {
     BlinnPhongLight lights[32];
-   
 };
 
 out vec4 FragColor;
@@ -51,5 +50,4 @@ vec3 CalcBlinnPhongLight(BlinnPhongLight light, vec3 normal, vec3 viewDir)
     vec3 specular = spec*light.lightColor;
 
     return (ambient+diffuse+specular);
-
 }

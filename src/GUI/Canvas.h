@@ -9,16 +9,15 @@
 
 #pragma once
 
-class Canvas : public IPressedUp{
-    public:
-        // 자식들의 draw() bVisible 체크해서 호출
-        void Rendering();
-        void AddWidget(Widget* w);
-        void OnPointerUp(float xpos, float ypos,float xdelta,float ydelta) override;
+class Canvas : public IPressedUp
+{
+public:
+    void Rendering();
+    void AddWidget(Widget *w);
+    void OnPointerUp(float xpos, float ypos, float xdelta, float ydelta) override;
 
-    private:
-        std::vector<Widget*> mChild;
-    
-
+private:
+    std::vector<Widget *> mChild;
 };
+
 

@@ -26,3 +26,5 @@ protected:
     float mSizeY;
     bool bVisible = true;
 };
+
+
