@@ -1,5 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <map>
+#include <assimp/Exporter.hpp>
+#include <assimp/scene.h>
+#include <assimp/vector3.h>
+#include <assimp/mesh.h>
 #include "Shader/Shader.h"
 #include "GUI/button.h"
 #include "GUI/Canvas.h"
@@ -93,7 +97,6 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -230,29 +233,73 @@ int main()
     selectBtn->SetbuttonCallback(std::function<void(double, double)>(selectBtnCallback));
     canvas->AddWidget(selectBtn);
 
-    Button *textBtn = new Button(glm::vec3(-0.5555555555555556f, 0.9390243902439024f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/textIcon.png", eImageType::PNG);
-    auto textBtnCallback = [&textBtn, &context](double xpos, double ypos)
+    Button *saveBtn = new Button(glm::vec3(-0.5555555555555556f, 0.9390243902439024f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/textIcon.png", eImageType::PNG);
+    auto saveBtnCallback = [&saveBtn, &context](double xpos, double ypos)
     {
-        textBtn->Pushed();
+        if (Collection::GetInstance()->GetSelectedLayer()->layerType != eLayerType::SHAPE)
+            return;
 
-        if (textBtn->GetPushed() == true)
+        std::vector<Vertex> targetCopy = static_cast<ShapeLayer *>(Collection::GetInstance()->GetSelectedLayer())->mesh->vertices;
+        aiScene scene;
+        scene.mRootNode = new aiNode();
+
+        scene.mMaterials = new aiMaterial *[1];
+        scene.mMaterials[0] = nullptr;
+        scene.mNumMaterials = 1;
+
+        scene.mMaterials[0] = new aiMaterial();
+
+        scene.mMeshes = new aiMesh *[1];
+        scene.mMeshes[0] = new aiMesh();
+        scene.mNumMeshes = 1;
+
+        aiMesh *mesh = scene.mMeshes[0];
+        mesh->mMaterialIndex = 0;
+        mesh->mNumVertices = targetCopy.size();
+        mesh->mNumFaces = targetCopy.size() / 3;
+
+        mesh->mVertices = new aiVector3D[mesh->mNumVertices];
+        mesh->mNormals = new aiVector3D[mesh->mNumVertices];
+        for (int i = 0; i < mesh->mNumVertices; i++)
         {
-            textBtn->SetTexture("resource/state/textIconPushed.png", eImageType::PNG);
-            context->Transition(eUIState::SURFACE);
+            mesh->mVertices[i] = aiVector3D(targetCopy[i].Position.x,
+                                            targetCopy[i].Position.y,
+                                            targetCopy[i].Position.z);
+
+            mesh->mNormals[i] = aiVector3D(targetCopy[i].Normal.x,
+                                           targetCopy[i].Normal.y,
+                                           targetCopy[i].Normal.z);
+        }
+        mesh->mFaces = new aiFace[0];
+        mesh->mFaces = new aiFace[mesh->mNumFaces];
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+        {
+            mesh->mFaces[i].mNumIndices = 3;                                             // 삼각형 면
+            mesh->mFaces[i].mIndices = new unsigned int[3]{i * 3, i * 3 + 1, i * 3 + 2}; // 삼각형의 인덱스
+        }
+
+        scene.mRootNode->mNumMeshes = 1;
+        scene.mRootNode->mMeshes = new unsigned int[1];
+        scene.mRootNode->mMeshes[0] = 0;
+
+        Assimp::Exporter exporter;
+        aiReturn result = exporter.Export(&scene, "obj", "/Users/a5520/Desktop/GIF/output_test.obj");
+        if (result == aiReturn_SUCCESS)
+        {
+            std::cout << "Export successful!" << std::endl;
         }
         else
         {
-            textBtn->SetTexture("resource/state/textIcon.png", eImageType::PNG);
-            context->Transition(eUIState::EMPTY);
+            std::cerr << "Export failed: " << exporter.GetErrorString() << std::endl;
         }
     };
-    textBtn->SetbuttonCallback(std::function<void(double, double)>(textBtnCallback));
-    canvas->AddWidget(textBtn);
+    saveBtn->SetbuttonCallback(std::function<void(double, double)>(saveBtnCallback));
+    canvas->AddWidget(saveBtn);
 
-    Button *lightBtn = new Button(glm::vec3(-0.47571523f,0.941463414f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/lightIcon.png", eImageType::PNG);
+    Button *lightBtn = new Button(glm::vec3(-0.47571523f, 0.941463414f, 0.0f), 0.05056553559547571f, 0.09268292682926829f, "resource/state/lightIcon.png", eImageType::PNG);
     auto lightBtnCallback = [&lightBtn, &context](double xpos, double ypos)
     {
-        LightLayer* light = new LightLayer("layer",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
+        LightLayer *light = new LightLayer("layer", glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 0.0f));
         Collection::GetInstance()->AddLayer(light);
     };
     lightBtn->SetbuttonCallback(std::function<void(double, double)>(lightBtnCallback));
@@ -269,8 +316,8 @@ int main()
     InputEventSystem::GetInstance()->AddScrolled(collectionCanvas);
     InputEventSystem::GetInstance()->AddPressedUp(inspectorCanvas);
 
-    //LightLayer *lightTest = new LightLayer("test1",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
-    //Collection::GetInstance()->AddLayer(lightTest);
+    // LightLayer *lightTest = new LightLayer("test1",glm::vec3(0.5f,0.5f,0.5f),glm::vec3(0.0f,0.0f,0.0f));
+    // Collection::GetInstance()->AddLayer(lightTest);
 
     /*std::vector<Mesh>* meshes= backpack->GetMeshes();
     for(int i=0;i<meshes->size();i++){
@@ -285,7 +332,7 @@ int main()
              Collection::GetInstance()->AddLayer(l);
          }
     */
-   
+
     // 메인 루프튵ㅌㅌㅌ
     while (!glfwWindowShouldClose(window))
     {
@@ -296,7 +343,6 @@ int main()
         // 버퍼 초기화
         glClearColor(0.95294117647f, 0.95686274509f, 0.9294117647f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 
         glm::mat4 model = glm::mat4(1.0f);
         ourShader.use();
@@ -319,8 +365,6 @@ int main()
         canvas->Rendering();
         inspectorCanvas->Rendering();
 
-
-
         // 버퍼 출력
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -330,7 +374,7 @@ int main()
     glDeleteBuffers(1, &VBO);
 
     delete (fileBtn);
-    //delete(panel);
+    // delete(panel);
     delete (canvas);
     glfwTerminate();
 
